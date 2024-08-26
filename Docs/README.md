@@ -1,0 +1,1 @@
+# 1. mainpage 생성 및 PWA 설정
