@@ -25,3 +25,10 @@
 ### Next.js 공부
  - Next.js 시작
  - 공통 때 진행했던 react를 기반으로 next.js를 활용하여 프로젝트 진행 위함
+
+# 240902
+## 안홍찬
+### tailwind css 공부
+ - tailwind css 정리 시작
+ - default로 지정된 것이 많기 때문에 하나 하나 외우기보다 css 작업을 할 때 docs를 잘 활용하는 걸로 목표를 잡음
+ - Typescript + next.js + tailwind.css 를 기반으로 최신 프론트엔드 셋을 제대로 경험해보는 게 목적
