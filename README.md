@@ -29,3 +29,8 @@ public class WebCosConfig implements WebMvcConfigurer {
     }
 }
 ```
+
+# 09-02 (월)
+### 프로젝트 주제 상세화 고안
+- 기존 ESG에서 eco만 살리기
+- 백엔드 기능적인 부분 보다 성능적인 부분 강화 (보안 or 대용량 트래픽/데이터 처리)
