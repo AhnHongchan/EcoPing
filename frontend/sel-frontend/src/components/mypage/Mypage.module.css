@@ -1,0 +1,59 @@
+.fullBackGroundColor {
+  width: 100%;
+  background: linear-gradient(to bottom, #009CF4 200px, #F4F7FE 200px);
+  display: flex;
+  justify-content: center;
+}
+
+.myPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  width: 390px;
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f7fa;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.headerTop {
+  background-color: #009CF4;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Remove or comment out the styles for .userInfoBox, .buttonGroup, .button */
+
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navItem {
+  text-align: center;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.navIcon {
+  width: 24px;
+  height: 24px;
+  background-color: #374957;
+  margin-bottom: 5px;
+}

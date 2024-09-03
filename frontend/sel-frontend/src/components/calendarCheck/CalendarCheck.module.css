@@ -1,0 +1,168 @@
+/* CalenderCheck.moudule.css */
+.fullBackGroundColor {
+  width: 100%;
+  background: linear-gradient(to bottom, #009CF4 200px, #F4F7FE 200px);
+  display: flex;
+  justify-content: center;
+}
+
+.IntroduceCalendarCheck{
+  width: 90%;
+  justify-content: center;
+}
+
+.IntroduceTitle{
+  font-weight: bold;
+  font-size: 26px;
+  width: 100%;
+  color: white;
+}
+
+.IntroduceContent{
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+}
+
+.IntroduceText{
+  font-size: 14px;
+  line-height: 0.5; /* Example: Set line height */
+  color: whitesmoke;
+}
+
+.mascotTree{
+  height: 110px;
+  margin-bottom: 0;
+  margin-left: 30px;
+}
+
+.HowManyBox {
+  position: absolute;
+  top: 210px;
+  margin-top: 0;
+  width: 90%;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(160, 212, 104, 0.95);
+  border-radius: 10px;
+  padding: 0 20px; /* Add padding to give some space inside the box */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.HowManyBox::before {
+  content: "";
+  position: absolute;
+  left: 50%; /* Position the line in the middle */
+  top: 10%;
+  bottom: 10%;
+  width: 1px; /* Thin line */
+  background-color: #666; /* Color of the line */
+  transform: translateX(-50%); /* Center the line precisely */
+}
+
+.ThisMonthCount,
+.ThisMonthPoint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 45%; /* Adjust width to allow space for the middle line */
+}
+
+.ThisMonthCount p,
+.ThisMonthPoint p {
+  margin: 0;
+  font-size: 14px; /* Adjust the font size if needed */
+}
+
+.ThisMonthCount b,
+.ThisMonthPoint b {
+  font-size: 18px; /* Adjust the font size if needed */
+}
+
+.calendarContent{
+  margin-top: 90px;
+  background-color: white;
+  width: 90%;
+  border-radius: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dateText {
+  font-size: 18px;
+  margin-left: 26px;
+  margin-bottom: 0px;
+  color: black;
+}
+.MainCalendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 390px;
+    height: 844px;
+    padding-top: 60px;
+    border-radius: 12px;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .calendar {
+    border: none !important;
+    background-color: white;
+    padding: 6px 20px 20px 20px;
+  }
+  .react-calendar__tile {
+    height: 50px !important;
+    width: 50px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .react-calendar__month-view__weekdays__weekday {
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .attended {
+    background-color: #0047ab !important;
+    color: white !important;
+    border-radius: 50%;
+  }
+  
+  .today {
+    background-color: #0047ab !important;
+    color: white !important;
+    border-radius: 50%;
+  }
+  
+  .attendanceButton {
+    margin: 20px auto; /* Center horizontally by setting auto margin */
+    padding: 10px 20px;
+    background-color: #0047ab;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block; /* Make the button a block element to center it */
+    text-align: center; /* Ensure the text is centered inside the button */
+  }
+  
+  .attendanceButton:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+  }
+  
+  .attendanceButton:hover:not(:disabled) {
+    background-color: #00368b;
+  }
+  

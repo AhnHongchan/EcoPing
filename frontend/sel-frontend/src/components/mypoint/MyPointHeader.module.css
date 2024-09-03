@@ -1,0 +1,80 @@
+.allcontainer{
+  display: flex;
+  justify-content: center;
+}
+
+.headerBottom {
+  background-color: #fff;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+  border-radius: 15px 15px 0px 0px;
+  padding: 20px;
+  position: relative;
+  top: -50px; /* Adjust to overlap with the blue part */
+  /* width: calc(100% - 40px); Adjust for padding */
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the left */
+}
+
+
+
+.userInfoBox {
+  width: 100%; /* Take full width for proper alignment */
+  text-align: left; /* Align text to the left */
+}
+
+.userName {
+  font-size: 16px; /* Adjust font size */
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.pointAmount {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: normal; /* Default font weight for point amount */
+}
+
+.pointAmount span {
+  font-weight: bold; /* Bold font weight for '포인트' */
+}
+.pointInfo {
+  margin-bottom: 20px;
+}
+
+.pointLabel {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.pointAmount {
+  font-size: 24px;
+  font-weight: bold;
+  color: #006bcf;
+}
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%; /* Take full width for proper alignment */
+}
+
+.historyButton, .chargeButton {
+  background-color: #fff;
+  color: #006bcf;
+  border: 1px solid #006bcf;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px; /* Ensure font size consistency */
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.historyButton:hover, .chargeButton:hover {
+  background-color: #006bcf;
+  color: #fff;
+}

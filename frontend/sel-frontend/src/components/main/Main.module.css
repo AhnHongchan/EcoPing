@@ -1,0 +1,324 @@
+.bluebg {
+  height: 281px;
+  width: 100%;
+  background-color: #009CF4;
+  position: absolute; 
+  z-index: -1; 
+  left: 0;
+  right: 0;
+}
+
+.contentContainer {
+  width: 100%; /* 부모 컨테이너의 너비를 차지 */
+  max-width: 800px; /* 너비를 제한하여 중앙 정렬 효과 */
+  margin: 0 auto; /* 가로 중앙 정렬 */
+  display: flex;
+  flex-direction: column;
+  padding-top: 70px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.titlename{
+width: 100%;
+max-width: 500px;
+display: flex;
+align-items: center;
+}
+
+.pointText {
+  font-size: 18px;
+  color: white;
+  margin-bottom: 10px;
+  margin-left: 32px;
+  /* max-width: 400px; */
+}
+
+.gameBox {
+  margin-top: 15px;
+  background: #fff;
+  padding: 20px;
+  text-align: center;
+  width: 70%;
+  max-width: 400px;
+  height: 232px;
+  border-radius: 30px;
+  /* background: linear-gradient(180deg, #9EACF7 0%, #716AE7 100%); */
+  background-color: #F58C00;
+  box-shadow: 0px 14px 20px 0px #f58b0035;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden; /* 이미지가 부모 요소를 벗어나지 않도록 설정 */
+}
+
+@media (max-width: 768px) {
+.gameBox {
+  height: 210px;
+}
+}
+
+.treegrow{
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+}
+
+.gameTitle1, .gameTitle2 {
+  font-size: 36px;    
+  color: white;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  white-space: nowrap; /* 한 줄로 유지 */
+  overflow: hidden; /* 넘치는 부분 숨기기 */
+  text-overflow: ellipsis; /* 넘치는 부분에 ... 표시 */
+}
+
+
+@media (max-width: 768px) {
+.gameTitle1, .gameTitle2 {
+    font-size: 30px; /* 작은 화면에서 폰트 크기 줄이기 */
+}
+}
+
+
+.gameTitle1{
+  margin-top: 38px;
+}
+
+.gameButton {
+  background-color: #ffffff;
+  color: #736DE8;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin-top: 30px;
+  transition: 0.3s ease;
+}
+
+.gameButton:hover {
+  background-color: hsl(243, 100%, 85%);
+  color: white;
+  transition: 0.3s ease;
+}
+
+.treeImage {
+max-width: 50%;
+height: auto;
+display: block;
+object-fit: contain;
+margin-left: 20px;
+
+}
+
+
+.campaignContainer {
+  padding: 20px;
+  width: 85%;
+  margin-top: 15px;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.campaignTitle {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.rigthtext{
+  display: flex;
+  justify-content: right;
+}
+
+.rigthtext2{
+  display: flex;
+  justify-content: right;
+}
+
+.campaignImage {
+  width: 100%;  /* 부모 요소의 너비에 맞추기 */
+  height: 400px; /* 원하는 고정 높이 설정 */
+  object-fit: cover; /* 이미지가 비율을 유지하면서 크기에 맞도록 조정 */
+  border-radius: 30px; /* 이미지의 모서리 둥글게 만들기 */
+}
+
+.campaignDetails {
+  margin-top: 10px;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 30px;
+}
+
+.campaignText {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.campaignInfo {
+  display: flex;
+  justify-content: space-between;
+  /* margin-bottom: 5px; */
+}
+
+.campaignDays, .campaignAmount {
+  font-size: 14px;
+}
+
+.campaignProgress {
+  font-size: 14px;
+  color: #009CF4;
+}
+
+
+.mainstyle{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60px;
+  /* align-items: center; */
+  width: 100%;
+  /* justify-content: center; */
+}
+
+.cardcontain{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.campaignlink{
+  text-decoration: none;
+  color: black;
+  display: block;
+  
+}
+
+  .carouselContainer {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+.campaignDetails {
+  flex: 0 0 100%; /* 각 캠페인이 100% 너비를 차지하도록 설정 */
+  scroll-snap-align: start;
+  box-sizing: border-box;
+  padding: 10px;
+  /* 나머지 스타일링 */
+}
+
+.carouselContainer::-webkit-scrollbar {
+  display: none; /* 스크롤바 숨기기 */
+}
+
+
+/* From Uiverse.io by preshpi */ 
+.spinner {
+width: 46px;
+height: 46px;
+display: grid;
+animation: spinner-plncf9 3s infinite;
+}
+
+.spinner::before,
+.spinner::after {
+content: "";
+grid-area: 1/1;
+border: 9px solid;
+border-radius: 50%;
+border-color: #009CF4 #009CF4 #0000 #0000;
+mix-blend-mode: darken;
+animation: spinner-plncf9 1s infinite linear;
+}
+
+.spinner::after {
+border-color: #0000 #0000 #eff0ff #eff0ff;
+animation-direction: reverse;
+}
+
+@keyframes spinner-plncf9 {
+100% {
+  transform: rotate(1turn);
+}
+}
+
+.loadingcontainer{
+  display: flex;
+  justify-content: center;
+  height: 300px;
+  align-items: center;
+}
+
+.gameButton2, .gameButton3 {
+  margin-top: 30px;
+  padding: 10px 20px;
+  border: unset;
+  border-radius: 30px;
+  color: #F58C00;
+  z-index: 1;
+  background: #ffffff;
+  position: relative;
+  font-weight: 1000;
+  font-size: 17px;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  transition: all 250ms;
+  overflow: hidden;
+  }
+
+  .gameButton3{
+    max-width: 440px;
+  }
+
+.gameButton2::before,.gameButton3::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 15px;
+  background-color: #212121;
+  z-index: -1;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  transition: all 250ms
+ }
+ 
+ .gameButton2:hover, .gameButton3:hover {
+  color: #e8e8e8;
+ }
+ 
+ .gameButton2:hover::before, .gameButton3:hover::before {
+  width: 100%;
+ }
+
+ .todayQuiz{
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+ }
+
+ .quizbanner{
+  width: 80%;
+  max-width: 400px;
+ }
+
+ .lefttext{
+  width: 80%;
+  max-width: 440px;
+ }
+
+ .lefttext p{
+  margin-bottom: 0px;
+ }

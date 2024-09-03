@@ -1,0 +1,103 @@
+.fullBackGroundColor {
+  width: 100%;
+  background: linear-gradient(to bottom, #009CF4 200px, #F4F7FE 200px);
+  display: flex;
+  justify-content: center;
+}
+
+
+.myPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f5f7fa;
+  height: 100vh;
+  width: 390px;
+  font-family: 'Arial, sans-serif';
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.headerTop {
+  background-color: #009CF4;
+  height: 150px; /* Adjust the height as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 24px; /* Font size for the header title */
+  font-weight: bold; /* Font weight for the header title */
+}
+
+.userInfoBox {
+  width: 100%; /* Take full width for proper alignment */
+  text-align: left; /* Align text to the left */
+}
+
+.userName {
+  font-size: 16px; /* Adjust font size */
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.pointAmount {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%; /* Take full width for proper alignment */
+}
+
+.historyButton, .chargeButton {
+  background-color: #fff;
+  color: #006bcf;
+  border: 1px solid #006bcf;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px; /* Ensure font size consistency */
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.historyButton:hover, .chargeButton:hover {
+  background-color: #006bcf;
+  color: #fff;
+}
+
+.pointAmount {
+  font-weight: normal; /* Default font weight for point amount */
+}
+
+.pointAmount span {
+  font-weight: bold; /* Bold font weight for '포인트' */
+}
+
+.filterSection {
+  width: 100%;
+  margin: 15px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filterButton {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.pointHistory {
+  width: 100%;
+}
