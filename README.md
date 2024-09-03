@@ -34,3 +34,9 @@ public class WebCosConfig implements WebMvcConfigurer {
 ### 프로젝트 주제 상세화 고안
 - 기존 ESG에서 eco만 살리기
 - 백엔드 기능적인 부분 보다 성능적인 부분 강화 (보안 or 대용량 트래픽/데이터 처리)
+
+# 09-03 (화)
+### 스프링 Batch 학습 1
+**batch :** 실시간으로 처리하기에 크기가 너무 커서 리소스가 많이 필요할 때, 특정 시간에 특정 양을 한번에 처리하는 방식.  
+**Process Flow**  
+![image.png](/image.png)
