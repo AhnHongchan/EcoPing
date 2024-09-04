@@ -1,0 +1,247 @@
+/* Container for the entire page */
+.mainstyle {
+  position: relative;
+  width: 375px;
+  height: 812px;
+  background: linear-gradient(0deg, #FFFFFF, #FFFFFF);
+}
+
+/* Background Blue Section */
+.bluebg {
+  width: 100%;
+  height: 169px;
+  top: 0;
+  background: #009CF4;
+}
+
+/* Top Icons */
+.topIcons {
+  position: absolute;
+  display: flex;
+  margin-top : 30px;
+  justify-content: space-between;
+  padding-left: 5%;
+  width: 90%;
+}
+
+.moreIcon, .userIcon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Campaign List Title */
+.campaignTitle {
+  position: absolute;
+  left: 120px;
+  top: 55px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+/* Search Bar Container */
+.searchBarContainer {
+  position: absolute;
+  width: 325px;
+  height: 40px;
+  left: 25px;
+  top: 104px;
+  background: #F5F7FA;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  margin-top: 10px;
+}
+
+.searchIcon {
+  width: 16px;
+  height: 16px;
+  color: #718EBF;
+}
+
+.searchBar {
+  border: none;
+  outline: none;
+  width: 85%;
+  height: 90%;
+  padding-left: 10px;
+  font-size: 13px;
+  line-height: 16px;
+  color: #8BA3CB;
+  background-color: #F5F7FA;
+}
+
+/* Campaign Container */
+.campaignContainer {
+  top: 0px; /* Adjusted to start below the search bar */
+  bottom: 50px; /* Stops 80px before the bottom to account for the footer */
+  left: 0;
+  right: 0;
+  overflow-y: auto; /* Allows scrolling if content overflows */
+  padding-bottom: 20px; /* Padding to avoid content touching the footer */
+}
+
+/* Campaign List Style */
+.campaignList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0px 0 0 0; /* Adjusted margin to bring list closer to search bar */
+}
+
+/* Campaign Count */
+.campaignCount {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  color: #555555;
+  margin-left: 25px; /* Align with search bar */
+}
+
+/* Campaign Item Style */
+.campaignItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 35px; /* Reduced spacing between items */
+  background: #F8F8F8;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.campaignList .campaignItem:last-child {
+  margin-bottom: 0px; /* 마지막 항목의 margin-bottom을 0으로 설정 */
+}
+
+.campaignLink {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.campaignImage {
+  width: 100%;
+  height: 140px; /* Slightly reduced height */
+  object-fit: cover;
+}
+
+.campaignDetails {
+  width: 90%;
+  margin-top: 5px; /* Reduced space between image and details */
+}
+
+.campaignText {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px; /* Slightly reduced font size */
+  line-height: 18px;
+  color: #333333;
+  margin: 0px;
+}
+
+.campaignInfo {
+  display: flex;
+  justify-content: space-between;
+  height: 14px;
+  margin: 0px; /* Reduced space between info and progress */
+}
+
+.campaignDays, .campaignAmount {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px; /* Slightly reduced font size */
+  line-height: 16px;
+  color: #555555;
+}
+
+.campaignProgress {
+  font-family: 'Itim';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  color: #008DFF;
+  text-align: center;
+  margin: 0px; /* Reduced margin to tighten layout */
+}
+
+
+/* Bottom Navigation Bar */
+.bottomNav {
+  position: absolute;
+  width: 375px;
+  height: 60px;
+  left: 0;
+  bottom: 0;
+  background: #FFFFFF;
+  box-shadow: -6px 0px 47px 27px rgba(217, 217, 217, 0.26);
+  border-radius: 16px 16px 0px 0px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.navIcon {
+  width: 24px;
+  height: 24px;
+  color: #000000;
+}
+
+/* Progress Line */
+.progressBar {
+  position: absolute;
+  width: 180px;
+  height: 7px;
+  left: 81px;
+  top: 425px;
+  background: #DDDDDD;
+  border-radius: 50px;
+}
+
+.progressFill {
+  width: 43px; /* Adjust dynamically */
+  height: 7px;
+  background: #008DFF;
+  border-radius: 50px;
+}
+/* overlapping from main css */
+.progressVisualFull {
+  display: flex;
+  height: 6px;
+  margin: 0 !important;
+  color: red;
+}
+
+/* Bottom Navigation Bar */
+.bottomNav {
+  position: absolute;
+  width: 375px;
+  height: 60px;
+  left: 0;
+  bottom: 0;
+  background: #FFFFFF;
+  box-shadow: -6px 0px 47px 27px rgba(217, 217, 217, 0.26);
+  border-radius: 16px 16px 0px 0px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.navIcon {
+  width: 24px;
+  height: 24px;
+  color: #000000;
+}

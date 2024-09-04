@@ -1,0 +1,28 @@
+spring:
+    application:
+        name: sel
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: sel
+        password: Ssafy2024!
+        url: jdbc:mysql://3.39.71.225:3306/sel?useUnicode=true&serverTimezone=Asia/Seoul
+    jpa:
+        database: mysql
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        generate-ddl: false
+        hibernate:
+            ddl-auto: update
+            naming:
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+                strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        properties:
+            hibernate:
+                format_sql: true
+        show-sql: true
+
+api:
+    key: bd337e60c9164c25928cd98017ed7562
+    url: https://finopenapi.ssafy.io/ssafy/api/v1/
+
+file:
+    upload-dir: ${FILE_UPLOAD_DIR:/backend/uploads}

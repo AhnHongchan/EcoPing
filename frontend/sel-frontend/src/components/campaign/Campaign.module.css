@@ -1,0 +1,29 @@
+.campaignContainer {
+  position: relative;
+  width: 390px;
+  height: calc(100vh - 160px); /* Adjust height based on header and footer */
+  margin-top: 80px; /* Adjust based on header height */
+  margin-bottom: 80px; /* Adjust based on footer height */
+  overflow: hidden; /* Prevents overflow from causing issues */
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
+  border: none; /* Removes iframe border */
+}
+
+.openModalButton {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000; /* High enough to be above other content */
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #008DFF;
+  color: white;
+  cursor: pointer;
+}

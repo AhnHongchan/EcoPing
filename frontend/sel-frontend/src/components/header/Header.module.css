@@ -1,0 +1,112 @@
+.HeaderWrapper {
+    position: fixed;
+    width: 100%;
+    z-index: 1000; /* Ensure header stays on top */
+  }
+  
+  .HeaderBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: transparent; /* Default background color */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+  }
+  
+  .scrolled {
+    background-color: #009CF4; /* Background color when scrolled */
+  }
+  
+  .HeaderMain {
+    display: flex;
+    justify-content: space-between;
+    top: 10px;
+    width: 90%;
+    margin: 0 auto; /* Center the content */
+    position: relative;
+  }
+  
+  /* Side Menu */
+  .SideMenu {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Start off-screen to the left */
+    width: 250px;
+    height: 100vh;
+    background-color: #fff;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease; /* Animate from left */
+    z-index: 1500;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .SideMenu.show {
+    left: 0; /* Slide in from the left */
+  }
+  
+  .MenuHeader {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px;
+  }
+  
+  .CloseIcon {
+    cursor: pointer;
+    font-size: 2rem;
+  }
+  
+  .MenuContent {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .SectionHeader {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .MenuItem {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    color: #333;
+    text-decoration: none;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .MenuIcon {
+    margin-right: 10px;
+    font-size: 1.5rem;
+  }
+  
+  .MenuItem:hover {
+    color: #007bff; /* Trendy blue color for hover effect */
+  }
+  
+  /* Overlay for menu */
+  .Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1400;
+  }
+  
+  /* Media query to fix header width at 393px when screen width is greater than 450px */
+  @media (min-width: 450px) {
+    .HeaderMain {
+      width: 350px;
+    }
+  }
+  

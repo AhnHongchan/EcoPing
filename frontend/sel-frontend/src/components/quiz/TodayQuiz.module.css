@@ -1,0 +1,138 @@
+.nav {
+  color: white;
+  /* padding: 15px; */
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.quizContainer {
+  /* width: 350px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+ width: 100%;
+  background-color: #F4F7FE ;
+}
+
+
+.quizBox {
+  background-color: white;
+  /* padding: 30px; */
+  border-radius: 0px 0px 10px 10px ;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+  height: 400px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading {
+  font-size: 18px;
+  color: #888;
+}
+
+.questionBox {
+  margin-bottom: 20px;
+}
+
+.question {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  height: 180px;
+  width: 100%;
+  color: #333;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap:30px;
+}
+
+.answerButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.answerButton:hover {
+  background-color: #006ce0;
+}
+
+.answerButtonx {
+  background-color: #ff4136;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.answerButtonx:hover {
+  background-color: #ea3a31;
+}
+
+.titlecontainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 60px;
+  background-color: #009CF4;
+  border-bottom: 4px solid #1387ca;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.spinner {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  animation: spinner-plncf9 3s infinite;
+}
+
+.spinner::before,
+.spinner::after {
+  content: "";
+  grid-area: 1/1;
+  border: 9px solid;
+  border-radius: 50%;
+  border-color: #009CF4 #009CF4 #0000 #0000;
+  mix-blend-mode: darken;
+  animation: spinner-plncf9 1s infinite linear;
+}
+
+.spinner::after {
+  border-color: #0000 #0000 #eff0ff #eff0ff;
+  animation-direction: reverse;
+}
+
+@keyframes spinner-plncf9 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.loadingcontainer{
+  display: flex;
+  justify-content: center;
+  height: 300px;
+  align-items: center;
+}

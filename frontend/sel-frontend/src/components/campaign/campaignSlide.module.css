@@ -1,0 +1,175 @@
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: white;
+  padding-bottom: 80px; /* 네비게이션 바와 겹치지 않도록 패딩 추가 */
+}
+
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000; /* 네비게이션 바보다 위에 오도록 z-index 설정 */
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  max-width: 500px;
+  animation: slideUp 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+}
+
+.modalOverlay.closing .modalContent {
+  transform: translateY(100%);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.campaignInfo {
+  margin-bottom: 20px;
+}
+
+.progressBar {
+  width: 100%;
+  height: 10px;
+  background-color: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: #009cf4;
+}
+
+.input {
+  width: 94%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.donateButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #009cf4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.allDonateButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.modalContent h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.modalContent p {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .modalContent {
+    padding: 15px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+
+  .donateButton, .allDonateButton {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .container {
+    padding-bottom: 100px; /* 네비게이션 바가 커졌을 때 겹치지 않도록 추가 패딩 */
+  }
+}
+
+/* 네비게이션 바 스타일 */
+.nav {
+  display: flex;
+  justify-content: space-evenly;
+  position: fixed;
+  bottom: 0px;
+  padding: 12px 0px;
+  width: 100%;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 24px 24px 0px 0px;
+  background-color: #FFF;
+  box-shadow: -6px 0px 47px 27px rgba(217, 217, 217, 0.26);
+  z-index: 999; /* 모달보다 뒤로 가도록 설정 */
+}
+
+.nav a {
+  display: flex;
+  padding: 10px;
+}
+
+.nav a.selected {
+  background-color: #f0f0f0; /* 원하는 배경색으로 변경 */
+  border-radius: 16px; /* 원하는 모서리 반경으로 변경 */
+}
+
+.nav a.notselected {
+  /* Not selected 스타일 */
+}
+
+.nav img {
+  width: 20px;
+}
+
+/* 반응형 네비게이션 바 */
+@media (max-width: 768px) {
+  .nav {
+    padding: 16px 0px;
+  }
+
+  .nav img {
+    width: 18px;
+  }
+}

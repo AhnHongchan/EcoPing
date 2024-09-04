@@ -1,0 +1,12 @@
+.progressVisualFull {
+    display: flex;
+    height: 30px; /* 프로그레스 바 두께 */
+    margin: 20px 0;
+    color: red;
+    width: 300px;
+  }
+  
+  .progressVisualPart {
+    transition: width 2s; /* 애니메이션 지속 시간 */
+  }
+  

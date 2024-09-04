@@ -1,0 +1,131 @@
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Dim the background */
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000; /* 네비게이션 바 위로 오도록 설정 */
+}
+
+.filterPopup {
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 12px 12px 0 0;
+  padding: 20px;
+  width: 100%;
+  max-width: 500px; /* Adjust as needed */
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.closeBtn {
+  position: absolute;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.header h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.separator {
+  border-top: 2px solid #d9d9d9;
+  margin: 15px 0;
+}
+
+.filterBox {
+  margin-bottom: 20px;
+}
+
+.filterSection {
+  margin-bottom: 20px;
+}
+
+.filterSection h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.filterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filterButton {
+  background-color: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  flex: 1 1 auto; /* Adjust flex-grow and flex-shrink */
+}
+
+.filterButton.active {
+  border-color: #0046ff;
+  color: #0046ff;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.cancelBtn {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  padding: 15px;
+  flex: 1;
+  font-size: 15px;
+}
+
+.applyBtn {
+  background-color: #396aff;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  flex: 3;
+  font-size: 15px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .filterPopup {
+    padding: 15px;
+  }
+
+  .header h2 {
+    font-size: 16px;
+  }
+
+  .filterButton {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .cancelBtn, .applyBtn {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
