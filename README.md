@@ -40,3 +40,7 @@ public class WebCosConfig implements WebMvcConfigurer {
 **batch :** 실시간으로 처리하기에 크기가 너무 커서 리소스가 많이 필요할 때, 특정 시간에 특정 양을 한번에 처리하는 방식.  
 **Process Flow**  
 ![image.png](/image.png)
+
+# 09-05 (목)
+### 기획 상세화
+해커톤 주제에서 확장
