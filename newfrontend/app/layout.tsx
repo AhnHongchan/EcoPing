@@ -30,7 +30,7 @@ const RootLayout = ({
       <head>
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className="bg-white min-h-screen relative">
+      <body className="bg-white min-h-screen relative min-w-max">
         {/* 헤더나 기타 공통 요소가 필요하다면 여기에 추가 */}
         <div className="absolute top-0 left-0 w-full h-16 bg-green-400 z-1"></div>
         <div className="relative z-10">
