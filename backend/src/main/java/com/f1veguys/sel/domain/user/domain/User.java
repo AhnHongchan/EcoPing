@@ -44,6 +44,12 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "gender")
+    private int gender;
+
+    @Column(name = "birth_date")
+    private LocalDateTime birthDate;
+
     @CreationTimestamp
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate;
