@@ -41,6 +41,9 @@ public class User {
     @Column(name = "api_id")
     private String apiId;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @CreationTimestamp
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate;

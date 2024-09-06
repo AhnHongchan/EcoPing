@@ -13,14 +13,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
 import java.io.IOException;
 
-
+// JWT 인증 필터 클래스
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
 
     @Autowired
     private JwtUtil jwtUtil;
+
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -28,27 +29,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        // 요청 헤더에서 "Authorization" 헤더를 가져옴
         final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
         String jwt = null;
 
+        // Authorization 헤더가 있고 "Bearer "로 시작하는 경우 JWT 토큰을 추출
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            username = jwtUtil.getUsernameFromToken(jwt);
+            jwt = authorizationHeader.substring(7); // "Bearer " 이후의 JWT 토큰 부분만 추출
+            username = jwtUtil.getUsernameFromToken(jwt); // JWT에서 사용자 이름 추출
         }
 
+        // 사용자가 인증되지 않았고 유효한 사용자 이름이 있는 경우
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // 사용자 이름으로 사용자 정보 로드
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
+            // JWT 토큰이 유효한 경우
             if (jwtUtil.validateToken(jwt)) {
+                // 사용자 인증을 위한 인증 토큰 생성
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
+                // 요청 정보로부터 인증 세부 사항 설정
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // 보안 컨텍스트에 인증 정보 설정
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+        // 다음 필터로 요청과 응답을 전달
         filterChain.doFilter(request, response);
     }
 }

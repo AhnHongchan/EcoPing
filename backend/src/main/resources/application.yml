@@ -28,6 +28,7 @@ file:
     upload-dir: ${FILE_UPLOAD_DIR:/backend/uploads}
 
 jwt:
-    secret : "secret"
-    expiration : 360000
+    secret : 5543db1f2e54b5626c948f4cf35481aa1fb3f43446ac583aacdabf46afc3a81d946388442fd5c9e6df0fce58d4f877a8467cbe3095ef40cd2e877f9a586a00a7
+    expiration : 4320000
+    refreshexpiration : 25920000
 
