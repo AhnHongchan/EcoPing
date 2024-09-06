@@ -45,7 +45,7 @@ public class User {
     private String phoneNumber;
 
     @Column(name = "gender")
-    private int gender;
+    private String gender;
 
     @Column(name = "birth_date")
     private LocalDateTime birthDate;

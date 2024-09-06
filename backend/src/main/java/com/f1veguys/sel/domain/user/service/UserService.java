@@ -9,4 +9,6 @@ public interface UserService {
     User register(User user) ;
 
     String login(LoginRequest loginRequest, HttpServletResponse httpServletResponse) throws JsonProcessingException;
+
+    boolean emailExist(String email);
 }

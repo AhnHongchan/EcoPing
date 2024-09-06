@@ -45,4 +45,13 @@ public class UserController {
         String user = userService.login(loginRequest, response);
         return ResponseEntity.ok(user); //user Name
     }
+
+    // 로그인 API
+    @PostMapping("/emailExist")
+    public ResponseEntity<?> emailExist(@RequestParam String email){ //로그인 성공시 UniqueNo 반환
+        if(userService.emailExist(email)){
+            return ResponseEntity.status(409).body("email already exist");
+        }
+        return ResponseEntity.ok("email is available");
+    }
 }

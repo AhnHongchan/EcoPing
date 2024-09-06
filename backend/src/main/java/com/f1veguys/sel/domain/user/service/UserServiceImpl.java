@@ -118,4 +118,9 @@ public class UserServiceImpl implements UserService {
         response.addCookie(refreshCookie);
         return user.getName();
     }
+
+    @Override
+    public boolean emailExist(String email) {
+        return userRepository.findByEmail(email).isPresent(); //있으면 true, 없으면 false
+    }
 }
