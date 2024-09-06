@@ -8,5 +8,5 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface UserService {
     User register(User user) ;
 
-    void login(LoginRequest loginRequest, HttpServletResponse httpServletResponse) throws JsonProcessingException;
+    String login(LoginRequest loginRequest, HttpServletResponse httpServletResponse) throws JsonProcessingException;
 }

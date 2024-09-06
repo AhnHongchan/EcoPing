@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void login(LoginRequest loginRequest, HttpServletResponse response) {
+    public String login(LoginRequest loginRequest, HttpServletResponse response) {
         // 이메일로 사용자 찾기
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .filter(u -> passwordEncoder.matches(loginRequest.getPassword(), u.getPassword())) // 비밀번호 비교
@@ -116,5 +116,6 @@ public class UserServiceImpl implements UserService {
 
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
+        return user.getName();
     }
 }
