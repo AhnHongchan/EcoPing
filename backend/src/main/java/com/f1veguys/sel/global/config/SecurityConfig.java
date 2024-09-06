@@ -13,22 +13,41 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    CorsConfigurationSource corsConfigurationSource() {
-        return request -> {
-            CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedHeaders(Collections.singletonList("*"));
-            config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000/"));
-            config.setAllowCredentials(true);
-            return config;
-        };
+    public static CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        //리소스를 허용할 URL 지정
+        ArrayList<String> allowedOriginPatterns = new ArrayList<>();
+        allowedOriginPatterns.add("http://localhost:3000");
+        configuration.setAllowedOrigins(allowedOriginPatterns);
+
+        //허용하는 HTTP METHOD 지정
+        ArrayList<String> allowedHttpMethods = new ArrayList<>();
+        allowedHttpMethods.add("GET");
+        allowedHttpMethods.add("POST");
+        allowedHttpMethods.add("PUT");
+        allowedHttpMethods.add("DELETE");
+        configuration.setAllowedMethods(allowedHttpMethods);
+
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+//        configuration.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
+
+        //인증, 인가를 위한 credentials 를 TRUE로 설정
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 
     @Bean
@@ -39,6 +58,8 @@ public class SecurityConfig {
                 .authorizeRequests(auth -> auth
                         .requestMatchers("/api/users/**","/**").permitAll()
                         .anyRequest().authenticated())
+                .cors(cors->cors
+                        .configurationSource(corsConfigurationSource()))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
