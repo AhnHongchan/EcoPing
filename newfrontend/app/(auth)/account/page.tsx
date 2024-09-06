@@ -8,7 +8,6 @@ import "../../../styles/globals.css";
 import { ko } from "date-fns/locale";
 import instance from "@/lib/axios"; // axios 인스턴스 임포트
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 
 const CreateAccount = () => {
   const smallTitle = "text-lg font-bold mt-5";
@@ -84,11 +83,7 @@ const CreateAccount = () => {
         phoneNumber,
       });
 
-      if (
-        response.status === 200 &&
-        Cookies.get("accessToken") &&
-        Cookies.get("refreshToken")
-      ) {
+      if (response.status === 200) {
         console.log("회원 가입 성공:", response);
         alert("회원 가입이 성공적으로 완료되었습니다!");
         router.push("/");
