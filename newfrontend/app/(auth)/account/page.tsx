@@ -7,9 +7,11 @@ import "../../../styles/account.css";
 import "../../../styles/globals.css";
 import { ko } from "date-fns/locale";
 import instance from "@/lib/axios"; // axios 인스턴스 임포트
+import { useRouter } from "next/router";
 
 const CreateAccount = () => {
   const smallTitle = "text-lg font-bold mt-5";
+  const router = useRouter(); // useRouter 훅 사용
 
   // useRef로 input 요소를 참조하여 직접 값을 가져오도록 설정
   const nameRef = useRef<HTMLInputElement>(null);
@@ -29,14 +31,14 @@ const CreateAccount = () => {
 
   // 이메일 중복 확인 요청 함수
   const checkEmailDuplication = async () => {
-    const email = emailRef.current?.value || '';
+    const email:string = emailRef.current?.value || '';
     if (!email) {
       alert("이메일을 입력해주세요.");
       return;
     }
 
     try {
-      const response = await instance.post("/users/check-email", { email });
+      const response = await instance.get("/users/emailExists", {params: {email}});
 
       if (response.status === 200) {
         // 이메일 사용 가능
@@ -77,12 +79,12 @@ const CreateAccount = () => {
         phoneNumber,
       });
 
-      const data = response.data;
-      if (data.success) {
-        console.log("회원 가입 성공:", data);
+      if (response.status === 200) {
+        console.log("회원 가입 성공:", response);
         alert("회원 가입이 성공적으로 완료되었습니다!");
+        router.push('/')
       } else {
-        console.error("회원가입 실패:", data.message);
+        console.error("회원가입 실패:", response);
         alert("회원 가입에 실패했습니다.");
       }
     } catch (error) {
