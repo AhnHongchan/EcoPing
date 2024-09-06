@@ -6,11 +6,11 @@ import Link from "next/link";
 import moment from "moment";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // Carousel 스타일
-import ProgressLine from "../components/progress-line"; // ProgressLine 컴포넌트 임포트
-import Campaign from "./types/campaign";
+import ProgressLine from "../../../components/progress-line"; // ProgressLine 컴포넌트 임포트
+import Campaign from "../../types/campaign";
 import TreeGame from "@/components/tree-game";
 import CampaignCarousel from "@/components/campaign-carousel";
-import CampaignCarouselProps from "./types/campaign-carousel-props";
+import CampaignCarouselProps from "../../types/campaign-carousel-props";
 
 const Main: React.FC = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -53,11 +53,11 @@ const Main: React.FC = () => {
     <div>
       <div>
         <TreeGame />
-        <CampaignCarousel 
-          campaigns={campaigns} 
-          currentSlide={currentSlide} 
-          setCurrentSlide={setCurrentSlide} 
-          imagesLoaded={imagesLoaded} 
+        <CampaignCarousel
+          campaigns={campaigns}
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          imagesLoaded={imagesLoaded}
         />
       </div>
     </div>
