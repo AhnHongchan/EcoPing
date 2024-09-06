@@ -6,7 +6,7 @@ import { BiMenu, BiSolidHome, BiLogIn, BiX, BiSolidUserCircle, BiWon, BiLineChar
 
 // 메뉴 항목 데이터를 정의
 const menuItems = [
-  { href: "/", icon: BiSolidHome, text: "홈 화면" },
+  { href: "/dashboard", icon: BiSolidHome, text: "홈 화면" },
   { href: "/mypage", icon: BiSolidUserCircle, text: "내 정보" },
   { href: "/mypoint", icon: BiWon, text: "내 포인트" },
   { href: "/analytics", icon: BiLineChart, text: "나의 에코 소비 분석" },
@@ -48,7 +48,7 @@ const Header: React.FC = () => {
           onClick={toggleMenu}
           className="absolute top-4 left-4 text-gray-700 text-3xl cursor-pointer z-50"
         />
-          <BiLogIn onClick={() => {router.push('/login'); }} className="absolute top-4 right-4 text-gray-700 text-3xl cursor-pointer z-50 mr-2"/>
+          <BiLogIn onClick={() => {router.push('/'); }} className="absolute top-4 right-4 text-gray-700 text-3xl cursor-pointer z-50 mr-2"/>
       </div>
 
       <div

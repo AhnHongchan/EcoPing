@@ -25,3 +25,10 @@ body {
     text-wrap: balance;
   }
 }
+
+/* 반복 가능한 분야는 components를 붙여서 처리한다 */
+@layer components {
+  .input-style {
+    @apply my-2 pl-2 py-1 shadow-md rounded-md bg-green-100;
+  }
+}
