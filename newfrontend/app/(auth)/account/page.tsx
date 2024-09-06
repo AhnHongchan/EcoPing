@@ -16,6 +16,7 @@ const CreateAccount = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const phoneNumberRef = useRef<HTMLInputElement>(null);
+  const [emailValid, setEmailValid] = useState<boolean | null>(null); // 이메일 중복 확인 결과 상태
   const [gender, setGender] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -26,12 +27,45 @@ const CreateAccount = () => {
     { label: "비공개", value: "private" },
   ];
 
+  // 이메일 중복 확인 요청 함수
+  const checkEmailDuplication = async () => {
+    const email = emailRef.current?.value || '';
+    if (!email) {
+      alert("이메일을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await instance.post("/users/check-email", { email });
+
+      if (response.status === 200) {
+        // 이메일 사용 가능
+        setEmailValid(true);
+        alert("사용 가능한 이메일입니다.");
+      } 
+    } catch (error: any) {
+      if (error.response && error.response.status === 409) {
+        // 이메일 중복됨
+        setEmailValid(false);
+        alert("이미 사용 중인 이메일입니다.");
+      } else {
+        console.error("Error during email check:", error);
+        alert("이메일 중복 확인 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
   // 회원 가입 요청 처리 함수
   const handleCreateAccount = async () => {
     const name = nameRef.current?.value || '';
     const email = emailRef.current?.value || '';
     const password = passwordRef.current?.value || '';
     const phoneNumber = phoneNumberRef.current?.value || '';
+
+    if (emailValid === false) {
+      alert("이미 사용 중인 이메일입니다. 다른 이메일을 사용해 주세요.");
+      return;
+    }
 
     try {
       const response = await instance.post("/users/register", {
@@ -114,7 +148,9 @@ const CreateAccount = () => {
           className="input-style"
           ref={emailRef} // input 요소에 useRef 연결
         />
-        <button className="bg-green-700 text-white rounded-md ml-3 p-1">중복 확인</button>
+        <button className="bg-green-700 text-white rounded-md ml-3 p-1" onClick={checkEmailDuplication}>
+          중복 확인
+        </button>
       </div>
       <p className={smallTitle}>비밀번호</p>
       <div>
