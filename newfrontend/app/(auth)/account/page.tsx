@@ -8,6 +8,7 @@ import "../../../styles/globals.css";
 import { ko } from "date-fns/locale";
 import instance from "@/lib/axios"; // axios 인스턴스 임포트
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const CreateAccount = () => {
   const smallTitle = "text-lg font-bold mt-5";
@@ -31,20 +32,22 @@ const CreateAccount = () => {
 
   // 이메일 중복 확인 요청 함수
   const checkEmailDuplication = async () => {
-    const email:string = emailRef.current?.value || '';
+    const email: string = emailRef.current?.value || "";
     if (!email) {
       alert("이메일을 입력해주세요.");
       return;
     }
 
     try {
-      const response = await instance.get("/users/emailExists", {params: {email}});
+      const response = await instance.get("/users/emailExist", {
+        params: { email },
+      });
 
       if (response.status === 200) {
         // 이메일 사용 가능
         setEmailValid(true);
         alert("사용 가능한 이메일입니다.");
-      } 
+      }
     } catch (error: any) {
       if (error.response && error.response.status === 409) {
         // 이메일 중복됨
@@ -59,10 +62,10 @@ const CreateAccount = () => {
 
   // 회원 가입 요청 처리 함수
   const handleCreateAccount = async () => {
-    const name = nameRef.current?.value || '';
-    const email = emailRef.current?.value || '';
-    const password = passwordRef.current?.value || '';
-    const phoneNumber = phoneNumberRef.current?.value || '';
+    const name = nameRef.current?.value || "";
+    const email = emailRef.current?.value || "";
+    const password = passwordRef.current?.value || "";
+    const phoneNumber = phoneNumberRef.current?.value || "";
 
     if (emailValid === false) {
       alert("이미 사용 중인 이메일입니다. 다른 이메일을 사용해 주세요.");
@@ -73,16 +76,22 @@ const CreateAccount = () => {
       const response = await instance.post("/users/register", {
         name,
         gender,
-        birthDate: selectedDate ? selectedDate.toISOString().split("T")[0] : null,
+        birthDate: selectedDate
+          ? selectedDate.toISOString().split("T")[0]
+          : null,
         email,
         password,
         phoneNumber,
       });
 
-      if (response.status === 200) {
+      if (
+        response.status === 200 &&
+        Cookies.get("accessToken") &&
+        Cookies.get("refreshToken")
+      ) {
         console.log("회원 가입 성공:", response);
         alert("회원 가입이 성공적으로 완료되었습니다!");
-        router.push('/')
+        router.push("/");
       } else {
         console.error("회원가입 실패:", response);
         alert("회원 가입에 실패했습니다.");
@@ -140,7 +149,12 @@ const CreateAccount = () => {
       </div>
       <p className={smallTitle}>핸드폰 번호</p>
       <div>
-        <input type="text" placeholder="010-1234-5678" className="input-style" ref={phoneNumberRef}/>
+        <input
+          type="text"
+          placeholder="010-1234-5678"
+          className="input-style"
+          ref={phoneNumberRef}
+        />
       </div>
       <p className={smallTitle}>아이디</p>
       <div>
@@ -150,7 +164,10 @@ const CreateAccount = () => {
           className="input-style"
           ref={emailRef} // input 요소에 useRef 연결
         />
-        <button className="bg-green-700 text-white rounded-md ml-3 p-1" onClick={checkEmailDuplication}>
+        <button
+          className="bg-green-700 text-white rounded-md ml-3 p-1"
+          onClick={checkEmailDuplication}
+        >
           중복 확인
         </button>
       </div>
