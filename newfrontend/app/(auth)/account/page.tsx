@@ -7,7 +7,7 @@ import "../../../styles/account.css";
 import "../../../styles/globals.css";
 import { ko } from "date-fns/locale";
 import instance from "@/lib/axios"; // axios 인스턴스 임포트
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const CreateAccount = () => {
   const smallTitle = "text-lg font-bold mt-5";
