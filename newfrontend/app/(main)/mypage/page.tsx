@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./Mypage.module.css";
 import MypagePoint from "@/components/mypage-component/mypage-point";
-import MyPageSlide from "./MyPageSlide";
-import UserInfoSection from "./UserInfoSection";
+import MyPageSlide from "@/components/mypage-component/mypage-slide";
+import MypageUserButton from "@/components/mypage-component/mypage-userbutton";
 
 const MyPage = () => {
   const userPoints: number = 1251;
@@ -14,8 +14,8 @@ const MyPage = () => {
           <div className={styles.headerTop}>마이페이지</div>
           <MypagePoint/>
         </div>
-        {/* <UserInfoSection /> */}
-        {/* <MyPageSlide /> */}
+        <MypageUserButton />
+        <MyPageSlide />
       </div>
     </div>
   );
