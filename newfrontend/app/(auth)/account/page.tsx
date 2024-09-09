@@ -15,6 +15,7 @@ const CreateAccount = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const phoneNumberRef = useRef<HTMLInputElement>(null);
   const [emailValid, setEmailValid] = useState<boolean | null>(null);
+  const [emailMessage, setEmailMessage] = useState<string>(""); // 이메일 상태 메시지
   const [gender, setGender] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
   const [selectedMonth, setSelectedMonth] = useState<string>("1");
@@ -39,7 +40,7 @@ const CreateAccount = () => {
     const domain = selectedDomain === "직접 입력" ? customDomain : selectedDomain;
     
     if (!email || !domain) {
-      alert("이메일을 입력하거나 선택해주세요.");
+      setEmailMessage("이메일을 입력하거나 선택해주세요.");
       return;
     }
 
@@ -50,12 +51,17 @@ const CreateAccount = () => {
         params: { email: fullEmail },
       });
 
-      setEmailValid(response.status === 200);
+      if (response.status === 200) {
+        setEmailValid(true);
+        setEmailMessage("사용 가능한 이메일입니다."); // 사용 가능 메시지
+      }
     } catch (error: any) {
       if (error.response?.status === 409) {
         setEmailValid(false);
+        setEmailMessage("이미 사용 중인 이메일입니다. 다른 이메일을 사용해 주세요.");
       } else {
         console.error("Error during email check:", error);
+        setEmailMessage("서버 오류로 이메일 중복 확인에 실패했습니다.");
       }
     }
   };
@@ -91,11 +97,7 @@ const CreateAccount = () => {
     const password = passwordRef.current?.value || "";
     const phoneNumber = phoneNumberRef.current?.value || "";
 
-    if (!emailValid) {
-      alert("이미 사용 중인 이메일입니다. 다른 이메일을 사용해 주세요.");
-      return;
-    }
-
+    // 이메일 유효성 검사를 제거
     if (!validatePassword(password)) return;
 
     const birthDate = `${selectedYear}-${selectedMonth.padStart(2, '0')}-${selectedDay.padStart(2, '0')}`;
@@ -217,6 +219,9 @@ const CreateAccount = () => {
       >
         중복 확인
       </button>
+      {emailMessage && (
+        <p className={`text-sm mt-1 ${emailValid ? "text-green-500" : "text-red-500"}`}>{emailMessage}</p>
+      )}
       <p className={smallTitle}>비밀번호</p>
       <form onSubmit={(e) => e.preventDefault()}>
         <input
