@@ -15,10 +15,10 @@ import java.util.Map;
 public class ApiUtil {
 
 
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     public Mono<Map<String, Object>> callFinApi(String url, HttpMethod method, Object body) {
-        return webClient.method(method)
+        return webClientBuilder.build().method(method)
                 .uri(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(body)
