@@ -24,6 +24,5 @@ api:
   key: bd337e60c9164c25928cd98017ed7562
   url: https://finopenapi.ssafy.io/ssafy/api/v1/
 
-file:
   upload-dir: ${FILE_UPLOAD_DIR:/backend/uploads}
 
