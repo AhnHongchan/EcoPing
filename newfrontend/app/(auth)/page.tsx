@@ -51,7 +51,7 @@ const Login = () => {
           ref={idRef} // input 요소에 useRef 연결
           type="text"
           name="username"
-          placeholder="Email"
+          placeholder="아이디"
           className="input-style"
         />
         <div className="min-w-max">
@@ -59,7 +59,7 @@ const Login = () => {
             ref={passwordRef} // input 요소에 useRef 연결
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="비밀번호"
             className="input-style"
           />
           <button
