@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,6 +41,15 @@ public class User {
 
     @Column(name = "api_id")
     private String apiId;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
     @CreationTimestamp
     @Column(name = "created_date", nullable = false, updatable = false)
