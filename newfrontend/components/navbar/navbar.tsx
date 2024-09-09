@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
 
   const navItems = [
     { href: "/dashboard", activeIcon: <BiSolidHome className="text-green-500 text-2xl" />, inactiveIcon: <BiHome className="text-gray-500 text-2xl" /> },
-    { href: "/analytics", activeIcon: <BiSolidBarChartAlt2 className="text-green-500 text-2xl" />, inactiveIcon: <BiBarChartAlt2 className="text-gray-500 text-2xl" /> },
+    { href: "/analysis", activeIcon: <BiSolidBarChartAlt2 className="text-green-500 text-2xl" />, inactiveIcon: <BiBarChartAlt2 className="text-gray-500 text-2xl" /> },
     { href: "/tree", activeIcon: <BiSolidJoystick className="text-green-500 text-2xl" />, inactiveIcon: <BiJoystick className="text-gray-500 text-2xl" /> },
     { href: "/mypage", activeIcon: <BiSolidUser className="text-green-500 text-2xl" />, inactiveIcon: <BiUser className="text-gray-500 text-2xl" /> },
   ];
