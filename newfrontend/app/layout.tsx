@@ -11,7 +11,7 @@ const GlobalLayout = ({
 }>) => {
   return (
     <html>
-      <body className="bg-green-50">
+      <body className="bg-white">
         {children}
       </body>
     </html>

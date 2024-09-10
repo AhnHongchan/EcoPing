@@ -83,7 +83,7 @@ const Analysis: React.FC = () => {
   const router = useRouter();
 
   const totalSpendData: number[] = [1200, 1500, 1800, 1400, 1600, 1700, 1900, 2100, 2000, 2300, 2200, 2400];
-  const ecoSpendData: number[] = [200, 300, 250, 220, 350, 280, 400, 450, 380, 500, 420, 460];
+  const ecoSpendData: number[] = [200, 300, 250, 220, 350, 280, 400, 450, 680, 500, 620, 860];
 
   // 차트 데이터 및 옵션 정의
   const lineChartData = {
@@ -225,68 +225,61 @@ const Analysis: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full flex justify-center">
-      <div className="flex flex-col items-center relative w-[390px] h-[844px]">
-        {/* 상단 콘텐츠 */}
-        <div className="flex flex-col items-center justify-center w-full mt-6 pb-5 border-b-2 border-blue-100">
-          <div className="text-2xl font-bold text-black shadow-sm">
-            내 소비 보기
-          </div>
+    <div className="">
+      {/* 상단 콘텐츠 */}
+      <div className="mt-6 pb-5 border-b-4 m-auto border-mainGreen">
+        <div className="text-2xl font-bold text-black text-center shadow-sm pb-3 mb-5 border-b-4 m-auto border-mainGreen">
+          내 소비 보기
+        </div>
           <LineChart totalSpendData={totalSpendData} ecoSpendData={ecoSpendData}/>
-          <img
-            src="../../public/assets/analyticsMain.png"
-            alt="Analytics Logo"
-            className="h-36 mt-0 rounded-full"
-          />
+      </div>
+
+      <div className="mt-6">
+        {/* 버튼 섹션 */}
+        <div className="flex justify-around mb-5">
+          {["일간", "주간", "월간"].map((button) => (
+            <button
+              key={button}
+              className={`px-5 py-2 rounded-lg shadow-md font-bold mx-1 ${
+                selectedButton === button ? "bg-lightWalnutBrown text-white" : "bg-mainGreen text-black"
+              }`}
+              onClick={() => handleButtonClick(button)}
+            >
+              {button}
+            </button>
+          ))}
         </div>
 
-        <div className="flex flex-col items-center w-[90%] mt-6">
-          {/* 버튼 섹션 */}
-          <div className="flex justify-between w-full mb-5">
-            {["일간", "주간", "월간"].map((button) => (
-              <button
-                key={button}
-                className={`flex-1 px-5 py-2 bg-yellow-400 text-black rounded-lg shadow-md font-bold mx-1 ${
-                  selectedButton === button ? "bg-yellow-800 text-white" : ""
-                }`}
-                onClick={() => handleButtonClick(button)}
-              >
-                {button}
-              </button>
-            ))}
+        {/* 차트 섹션 */}
+        {/* <div className="justify-between mb-5">
+          <div className="relative h-[160px] bg-white rounded-lg p-5 shadow-md overflow-hidden w-1/3">
+            <h4 className="absolute top-2 left-5 text-sm font-bold">
+              6787 걸음
+            </h4>
+            <Bar data={barChartData} options={barChartOptions} />
           </div>
-
-          {/* 차트 섹션 */}
-          <div className="flex justify-between w-full mb-5">
-            <div className="relative h-[160px] bg-white rounded-lg p-5 shadow-md overflow-hidden w-1/3">
-              <h4 className="absolute top-2 left-5 text-sm font-bold">
-                6787 걸음
-              </h4>
-              <Bar data={barChartData} options={barChartOptions} />
-            </div>
-            <div className="relative h-[160px] bg-white rounded-lg p-5 shadow-md overflow-hidden w-1/3">
-              <h4 className="absolute top-2 left-5 text-sm font-bold">
-                내 에코 소비 비율
-              </h4>
-              <Doughnut
-                data={doughnutChartData}
-                options={doughnutChartOptions}
-              />
-              <div className="absolute bottom-2 left-5 right-5 flex justify-between">
-                <div>
-                  <span className="inline-block w-3.5 h-3.5 bg-blue-400 mr-1"></span>{" "}
-                  에코
-                </div>
-                <div>
-                  <span className="inline-block w-3.5 h-3.5 bg-red-400 mr-1"></span>{" "}
-                  일반
-                </div>
+          <div className="relative h-[160px] bg-white rounded-lg p-5 shadow-md overflow-hidden w-1/3">
+            <h4 className="absolute top-2 left-5 text-sm font-bold">
+              내 에코 소비 비율
+            </h4>
+            <Doughnut
+              data={doughnutChartData}
+              options={doughnutChartOptions}
+            />
+            <div className="absolute bottom-2 left-5 right-5 justify-between">
+              <div>
+                <span className="inline-block w-3.5 h-3.5 bg-blue-400 mr-1"></span>{" "}
+                에코
+              </div>
+              <div>
+                <span className="inline-block w-3.5 h-3.5 bg-red-400 mr-1"></span>{" "}
+                일반
               </div>
             </div>
           </div>
+        </div> */}
 
-          {/* 나머지 섹션들 ... */}
-        </div>
+        {/* 나머지 섹션들 ... */}
       </div>
     </div>
   );
