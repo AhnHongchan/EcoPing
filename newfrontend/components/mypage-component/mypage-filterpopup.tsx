@@ -18,9 +18,9 @@ interface MypageFilterPopupProps {
 const MypageFilterPopup = ({ currentFilter, onApply, onClose }: MypageFilterPopupProps) => {
   const [localFilter, setLocalFilter] = useState<Filter>(currentFilter);
   const [isCustomInput, setIsCustomInput] = useState(false);
-  const [customPeriod, setCustomPeriod] = useState<string>(''); // 사용자 입력값
-  const [isPeriodValid, setIsPeriodValid] = useState(true); // 입력값 검증 상태
-  const [applyAfterChange, setApplyAfterChange] = useState(false); // 상태 업데이트 후 적용하기 위한 상태
+  const [customPeriod, setCustomPeriod] = useState<string>(''); 
+  const [isPeriodValid, setIsPeriodValid] = useState(true); 
+  const [applyAfterChange, setApplyAfterChange] = useState(false); 
 
   const handleChange = (key: keyof Filter, value: string) => {
     setLocalFilter({ ...localFilter, [key]: value });
@@ -29,7 +29,7 @@ const MypageFilterPopup = ({ currentFilter, onApply, onClose }: MypageFilterPopu
   const handleApply = () => {
     if (isCustomInput && customPeriod) {
       handleChange('period', `${customPeriod}개월`);
-      setApplyAfterChange(true); // 상태 업데이트 후 적용하도록 설정
+      setApplyAfterChange(true); 
     } else {
       onApply(localFilter);
     }
@@ -38,16 +38,16 @@ const MypageFilterPopup = ({ currentFilter, onApply, onClose }: MypageFilterPopu
   const validatePeriod = (value: string) => {
     const periodNumber = parseInt(value, 10);
     if (!isNaN(periodNumber) && periodNumber >= 13) {
-      setIsPeriodValid(false); // 13개월 이상일 경우 경고
+      setIsPeriodValid(false); 
     } else {
-      setIsPeriodValid(true); // 13개월 미만일 경우 유효
+      setIsPeriodValid(true); 
     }
   };
 
   useEffect(() => {
     if (applyAfterChange) {
       onApply(localFilter);
-      setApplyAfterChange(false); // 적용 후 초기화
+      setApplyAfterChange(false);
     }
   }, [localFilter, applyAfterChange, onApply]);
 
@@ -73,7 +73,7 @@ const MypageFilterPopup = ({ currentFilter, onApply, onClose }: MypageFilterPopu
                   }`}
                   onClick={() => {
                     handleChange('period', period);
-                    setIsCustomInput(false); // 기존 버튼을 클릭하면 직접입력 비활성화
+                    setIsCustomInput(false); 
                   }}
                 >
                   {period}
@@ -81,7 +81,7 @@ const MypageFilterPopup = ({ currentFilter, onApply, onClose }: MypageFilterPopu
               ))}
               <button
                 className={`${styles.filterButton} ${isCustomInput ? styles.active : ''}`}
-                onClick={() => setIsCustomInput(true)} // 직접입력 활성화
+                onClick={() => setIsCustomInput(true)} 
               >
                 직접입력
               </button>
@@ -92,13 +92,13 @@ const MypageFilterPopup = ({ currentFilter, onApply, onClose }: MypageFilterPopu
                     value={customPeriod}
                     onChange={(e) => {
                       setCustomPeriod(e.target.value);
-                      validatePeriod(e.target.value); // 입력값 검증 함수 호출
+                      validatePeriod(e.target.value);
                     }}
                     placeholder="개월 입력"
                     className={styles.customInput}
                   />
                   {!isPeriodValid && (
-                    <p className={styles.errorMessage}>1년 이하만 조회 가능합니다</p> // 경고 메시지 표시
+                    <p className={styles.errorMessage}>1년 이하만 조회 가능합니다</p> 
                   )}
                 </>
               )}
@@ -146,7 +146,7 @@ const MypageFilterPopup = ({ currentFilter, onApply, onClose }: MypageFilterPopu
           <button
             className={styles.applyBtn}
             onClick={handleApply}
-            disabled={!isPeriodValid} // 유효하지 않을 경우 비활성화
+            disabled={!isPeriodValid}
           >
             적용
           </button>

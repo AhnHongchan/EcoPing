@@ -6,7 +6,7 @@ import styles from './mypage-point.module.css';
 import instance from "@/lib/axios";
 
 interface MypagePointProps {
-  showHistoryButton?: boolean; // 버튼 표시 여부를 위한 props
+  showHistoryButton?: boolean; 
 }
 
 const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
