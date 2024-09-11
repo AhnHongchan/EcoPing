@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 import styles from './mypage-point.module.css';
 import instance from "@/lib/axios";
 
-const MypagePoint = () => {
+interface MypagePointProps {
+  showHistoryButton?: boolean; 
+}
+
+const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
   const router = useRouter();
   const dummyUser: number = 1;  
 
@@ -59,7 +63,11 @@ const MypagePoint = () => {
             </p>
           </div>
           <div className={styles.buttonGroup}>
-            <button className={styles.historyButton} onClick={handleViewPoints}>내역보기</button>
+          {showHistoryButton && (
+              <button className={styles.historyButton} onClick={handleViewPoints}>
+                내역보기
+              </button>
+            )}
             <button className={styles.chargeButton} onClick={handleUsePoints}>사용하기</button>
           </div>
         </div>

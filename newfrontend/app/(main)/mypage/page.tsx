@@ -5,14 +5,14 @@ import MyPageSlide from "@/components/mypage-component/mypage-slide";
 import MypageUserButton from "@/components/mypage-component/mypage-userbutton";
 
 const MyPage = () => {
-  const userPoints: number = 1251;
+  // const userPoints: number = 1251;
 
   return (
     <div className={styles.fullBackGroundColor}>
       <div className={styles.myPage}>
         <div className={styles.header}>
           <div className={styles.headerTop}>마이페이지</div>
-          <MypagePoint/>
+          <MypagePoint showHistoryButton={true} />
         </div>
         <MypageUserButton />
         <MyPageSlide />
