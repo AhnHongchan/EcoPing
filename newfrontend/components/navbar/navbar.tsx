@@ -26,14 +26,14 @@ const Navbar: React.FC = () => {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/dashboard", activeIcon: <BiSolidHome className="text-green-500 text-2xl" />, inactiveIcon: <BiHome className="text-gray-500 text-2xl" /> },
-    { href: "/analytics", activeIcon: <BiSolidBarChartAlt2 className="text-green-500 text-2xl" />, inactiveIcon: <BiBarChartAlt2 className="text-gray-500 text-2xl" /> },
-    { href: "/tree", activeIcon: <BiSolidJoystick className="text-green-500 text-2xl" />, inactiveIcon: <BiJoystick className="text-gray-500 text-2xl" /> },
-    { href: "/mypage", activeIcon: <BiSolidUser className="text-green-500 text-2xl" />, inactiveIcon: <BiUser className="text-gray-500 text-2xl" /> },
+    { href: "/dashboard", activeIcon: <BiSolidHome className="text-black text-2xl" />, inactiveIcon: <BiHome className="text-gray-500 text-2xl" /> },
+    { href: "/analysis", activeIcon: <BiSolidBarChartAlt2 className="text-black text-2xl" />, inactiveIcon: <BiBarChartAlt2 className="text-gray-500 text-2xl" /> },
+    { href: "/tree", activeIcon: <BiSolidJoystick className="text-black text-2xl" />, inactiveIcon: <BiJoystick className="text-gray-500 text-2xl" /> },
+    { href: "/mypage", activeIcon: <BiSolidUser className="text-black text-2xl" />, inactiveIcon: <BiUser className="text-gray-500 text-2xl" /> },
   ];
 
   return (
-    <header className="fixed bottom-0 w-full bg-white flex justify-around items-center h-16 border-t">
+    <header className="fixed bottom-0 w-full bg-mainGreen flex justify-around items-center h-16 border-t">
       {navItems.map((item) => (
         <NavItem
           key={item.href}

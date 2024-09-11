@@ -56,7 +56,7 @@ const Header: React.FC = () => {
           showMenu ? 'translate-x-0' : '-translate-x-full'
         } overflow-y-auto scrollbar-hide`}
       >
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-b ">
           <h2 className="text-xl font-bold">Menu</h2>
           <BiX onClick={toggleMenu} className="text-2xl cursor-pointer" />
         </div>
