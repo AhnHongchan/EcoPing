@@ -22,7 +22,7 @@ const RootLayout = ({
       </div>
       
       {/* Main Content */}
-      <main className="px-4 pt-24 w-11/12 max-w-[400px] mx-auto relative z-10">
+      <main className="px-4 pt-24 w-full max-w-[400px] mx-auto relative z-10 overflow-x-auto">
         {children}
       </main>
       
