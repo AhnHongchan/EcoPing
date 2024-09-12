@@ -37,8 +37,8 @@ const MypageSlide = () => {
       },
     ];
 
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-// const [campaigns, setCampaigns] = useState<Campaign[]>(dummyData); 더미데이터 테스트
+  // const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+const [campaigns, setCampaigns] = useState<Campaign[]>(dummyData);
 
   const userId: number = 1;
   const router = useRouter();
@@ -80,6 +80,7 @@ const MypageSlide = () => {
   };
 
   return (
+    <div className={styles.allContainer}>
     <div className={styles.campaignContainer}>
       <div className={styles.campaignHeader}>
         <p className={styles.campaignTitle}>참여한 캠페인</p>
@@ -115,6 +116,7 @@ const MypageSlide = () => {
           </div>
         ))}
       </Carousel>
+    </div>
     </div>
   );
 };
