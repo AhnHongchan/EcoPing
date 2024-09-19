@@ -5,7 +5,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 const MypageUserButton = () => {
   return (
     <div className="flex justify-center">
-      <div className="bg-zinc-300 rounded-lg p-5 mt-6 w-11/12 shadow-custom-lg">
+      <div className="bg-gray-200  rounded-lg p-5 mt-6 w-11/12 shadow-custom-lg">
         <div className="flex justify-between">
           <Link href="/profile" className="flex flex-col items-center text-sm text-gray-800">
             <i className="bi bi-person text-2xl mb-1 text-mainDarkGreen"></i>

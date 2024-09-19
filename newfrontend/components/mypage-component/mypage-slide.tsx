@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; 
-import styles from './mypage-slide.module.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { useRouter } from 'next/navigation';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css'; 
+import 'slick-carousel/slick/slick-theme.css';
 import instance from "@/lib/axios";
 
 interface Campaign {
@@ -37,21 +36,16 @@ const MypageSlide = () => {
       },
     ];
 
-  // const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-const [campaigns, setCampaigns] = useState<Campaign[]>(dummyData);
+  const [campaigns, setCampaigns] = useState<Campaign[]>(dummyData);
 
   const userId: number = 1;
   const router = useRouter();
 
-
-
-  
   useEffect(() => {
     const fetchCampaigns = async () => {
       try {
         const response = await instance.get(`/campaignhistory/${userId}`);
         console.log(response.data);
-        // setCampaigns(response.data); 
       } catch (error) {
         console.error('Failed to fetch campaigns:', error);
       }
@@ -69,54 +63,58 @@ const [campaigns, setCampaigns] = useState<Campaign[]>(dummyData);
   };
 
   const settings = {
-    showIndicators: false,
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
     adaptiveHeight: true,
-    infiniteLoop: true, 
   };
 
   return (
-    <div className={styles.allContainer}>
-    <div className={styles.campaignContainer}>
-      <div className={styles.campaignHeader}>
-        <p className={styles.campaignTitle}>참여한 캠페인</p>
+    <div className="flex justify-center">
+      <div className="mt-8 mb-20 relative w-11/12 overflow-hidden bg-gray-200 rounded-xl">
+        <div className="flex justify-between items-center mb-4">
+          <p className="text-lg mt-8 ml-5">참여한 캠페인</p>
+        </div>
+        <Slider {...settings} className="carosize">
+          {campaigns.map((campaign) => (
+            <div key={campaign.campaignId} className="p-2">
+              <div className="w-full overflow-hidden rounded-lg">
+                <img
+                  className="w-full h-[300px] object-cover"
+                  src={`/assets/${campaign.campaignId + 1}.png`}
+                  alt={`Campaign ${campaign.campaignId}`}
+                />
+              </div>
+              <div className="bg-white p-4 rounded-lg mt-8 mb-4">
+                <p className="text-base text-center">{campaign.title}</p>
+                <div className="flex justify-between mt-4">
+                  <p className={`text-sm ${campaign.completed ? 'text-red-500' : 'text-green-500'}`}>
+                    {campaign.completed ? '종료' : '진행 중'}
+                  </p>
+                </div>
+                <div className="bg-green-50 p-2 rounded-lg text-center font-bold mt-4">
+                  <p>소비한 포인트: {campaign.amount.toLocaleString()} P</p>
+                </div>
+                <div className='flex justify-center'>
+                <button
+                  className={`mt-4 mb-2 px-5 py-2 text-sm border rounded-full ${
+                    campaign.completed
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-white text-mainDarkGreen border-mainDarkGreen hover:bg-mainDarkGreen hover:text-white transition-colors'
+                  }`}
+                  onClick={() => handleClickCampaign(campaign)}
+                  disabled={campaign.completed} 
+                >
+                  캠페인 보러가기
+                </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </Slider>
       </div>
-      <Carousel showStatus={false} {...settings} className={styles.carosize}>
-        {campaigns.map((campaign) => (
-          <div key={campaign.campaignId} className={styles.slide}>
-            <div className={styles.imageWrapper}>
-              <img
-                className={styles.campaignImage}
-                src={`/assets/${campaign.campaignId + 1}.png`}
-                alt={`Campaign ${campaign.campaignId}`}
-              />
-            </div>
-            <div className={styles.campaignDetails}>
-              <p className={styles.campaignText}>{campaign.title}</p>
-              <div className={styles.campaignInfo}>
-                <p className={styles.campaignDays}>
-                  {campaign.completed ? '종료' : '진행 중'}
-                </p>
-              </div>
-              <div className={styles.userPoints}>
-                <p>소비한 포인트: {campaign.amount.toLocaleString()} P</p>
-              </div>
-              <button
-                className={styles.campaignButton}
-                onClick={() => handleClickCampaign(campaign)}
-                disabled={campaign.completed} 
-              >
-                캠페인 보러가기
-              </button>
-            </div>
-          </div>
-        ))}
-      </Carousel>
-    </div>
     </div>
   );
 };
