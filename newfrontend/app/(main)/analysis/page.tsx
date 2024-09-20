@@ -233,11 +233,11 @@ const Analysis: React.FC = () => {
   return (
     <div className="">
       {/* 상단 콘텐츠 */}
-      <div className="mt-6 pb-5 border-b-4 m-auto border-mainGreen">
+      <div className="my-6 pb-8 border-b-4 m-auto border-mainGreen">
         <div className="text-2xl font-bold text-black text-center shadow-sm pb-3 mb-5 border-b-4 m-auto border-mainGreen">
           내 소비 보기
         </div>
-          <LineChart totalSpendData={totalSpendData} ecoSpendData={ecoSpendData}/>
+        <LineChart totalSpendData={totalSpendData} ecoSpendData={ecoSpendData}/>
       </div>
 
       <div className="mt-6">

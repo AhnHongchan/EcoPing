@@ -11,6 +11,8 @@ import {
   Legend,
 } from "chart.js";
 
+import commonAxisOptions from "./chart-options";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -36,27 +38,6 @@ const LineChart = ({ totalSpendData, ecoSpendData }: LineChartProps) => {
   const ecoSpendRatioData = ecoSpendData.map(
     (ecoSpend, index) => (ecoSpend / totalSpendData[index]) * 100
   );
-
-  const commonAxisOptions = {
-    grid: {
-      display: true,
-      drawBorder: true,
-      drawTicks: false,
-    },
-    ticks: {
-      font: {
-        family: "'Noto Sans KR', sans-serif",
-        size: 12,
-        weight: "bold" as "bold", // "bold"를 as "bold"로 명시적으로 지정하여 타입 오류 수정
-      },
-      color: "#333",
-      rotation: 0,
-    },
-    border: {
-      color: "#333",
-      width: 2,
-    },
-  };
 
   const lineChartData = {
     labels: ["9", "10", "11", "12", "1", "2", "3", "4", "5", "6", "7", "8"], // 짧은 레이블 사용
@@ -166,7 +147,7 @@ const LineChart = ({ totalSpendData, ecoSpendData }: LineChartProps) => {
   
 
   return (
-    <div className="h-64">
+    <div>
       <div className="mx-4 mb-4 flex justify-between">
         {[
           {
@@ -193,7 +174,7 @@ const LineChart = ({ totalSpendData, ecoSpendData }: LineChartProps) => {
           </button>
         ))}
       </div>
-      <div className="h-52">
+      <div className="h-60 pt-10 p-5 shadow-lg rounded-3xl">
         <Line data={lineChartData} options={lineChartOptions} />
       </div>
     </div>
