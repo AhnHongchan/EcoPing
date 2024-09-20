@@ -2,11 +2,8 @@ package com.f1veguys.sel.domain.file.controller;
 
 import com.f1veguys.sel.domain.campaign.domain.Campaign;
 import com.f1veguys.sel.domain.campaign.repository.CampaignRepository;
-import com.f1veguys.sel.domain.file.domain.File;
-import com.f1veguys.sel.domain.file.repository.FileRepository;
 import com.f1veguys.sel.domain.file.service.FileService;
 import com.f1veguys.sel.global.error.exception.CampaignNotFoundException;
-import com.f1veguys.sel.global.error.exception.FileNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +33,9 @@ public class FileController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(path="/{fileId}",consumes = "multipart/form-data")
+    @PutMapping(path = "/{fileId}", consumes = "multipart/form-data")
     @Operation(summary = "이미지 수정", description = "이미지 파일을 DB에서 수정합니다.")
-    public ResponseEntity<?> update(@PathVariable("fileId") int fileId, @RequestPart("file")MultipartFile file) throws Exception {
+    public ResponseEntity<?> update(@PathVariable("fileId") int fileId, @RequestPart("file") MultipartFile file) throws Exception {
         return ResponseEntity.ok().body(fileService.updateFile(fileId, file));
     }
 
