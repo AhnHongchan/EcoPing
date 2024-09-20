@@ -12,7 +12,11 @@ const config: Config = {
         foreground: "var(--foreground)",
         lightWalnutBrown: "#A68A6D", // 나무 껍질 색
         mainGreen: "#bcebc4", // 연한 이끼색
-        coralRed: "#e57373"
+        coralRed: "#e57373",
+        mainDarkGreen: "#3c4a3e"
+      },
+      boxShadow: {
+        'custom-lg': '0px 4px 10px 2px rgba(0, 0, 0, 0.1)',
       },
     },
   },

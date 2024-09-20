@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'; 
-import styles from './mypage-point.module.css';
+import { useRouter } from 'next/navigation';
 import instance from "@/lib/axios";
 
 interface MypagePointProps {
-  showHistoryButton?: boolean; 
+  showHistoryButton?: boolean;
 }
 
 const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
@@ -36,13 +35,12 @@ const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
   }, []);
 
   const handleViewPoints = () => {
-    router.push('/mypoint'); 
+    router.push('/mypoint');
   };
 
   const handleUsePoints = () => {
     router.push('/dashboard');
   };
-
 
   if (loading) {
     return (
@@ -53,22 +51,30 @@ const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
   }
 
   return (
-    <div className={styles.allcontainer}>
-      <div className={styles.headerBottom}>
-        <div className={styles.userInfoBox}>
-          <div className={styles.pointInfo}>
-            <p className={styles.pointLabel}>총 사용 가능 포인트</p>
-            <p className={styles.pointAmount}>
+    <div className="flex justify-center">
+      <div className="mt-4 shadow-custom-lg rounded-lg p-5 w-11/12 flex flex-col items-start">
+        <div className="w-full text-left">
+          <div className="mb-5">
+            <p className="text-gray-500 text-sm mb-2">총 사용 가능 포인트</p>
+            <p className="text-lightWalnutBrown text-2xl font-bold">
               {points !== null ? `${points.toLocaleString()} 포인트` : ''}
             </p>
           </div>
-          <div className={styles.buttonGroup}>
-          {showHistoryButton && (
-              <button className={styles.historyButton} onClick={handleViewPoints}>
+          <div className="flex justify-center gap-3 w-full">
+            {showHistoryButton && (
+              <button 
+                className="bg-white text-mainDarkGreen border border-mainDarkGreen px-5 py-2 rounded-full text-sm transition-colors duration-300 hover:bg-mainDarkGreen hover:text-white"
+                onClick={handleViewPoints}
+              >
                 내역보기
               </button>
             )}
-            <button className={styles.chargeButton} onClick={handleUsePoints}>사용하기</button>
+            <button 
+              className="bg-white text-mainDarkGreen border border-mainDarkGreen px-5 py-2 rounded-full text-sm transition-colors duration-300 hover:bg-mainDarkGreen hover:text-white"
+              onClick={handleUsePoints}
+            >
+              사용하기
+            </button>
           </div>
         </div>
       </div>
