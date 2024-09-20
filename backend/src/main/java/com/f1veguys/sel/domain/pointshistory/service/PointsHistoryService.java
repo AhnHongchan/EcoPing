@@ -7,6 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PointsHistoryService {
-    public void savePointsHistory(int userId, Operation action, int amount, String description);
+    public void savePointsHistory(int userId, Operation action, int amount, String description, int nowPoint);
     public List<PointsHistory> getPointsHistory(int userId);
 }
