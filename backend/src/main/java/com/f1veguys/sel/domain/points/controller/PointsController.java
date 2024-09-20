@@ -31,8 +31,7 @@ public class PointsController {
         int userId = request.getIntHeader("userId");
         int amount = pointsCollectRequest.getAmount();
         String description = pointsCollectRequest.getDescription();
-        pointsService.addPoints(userId, amount);
-        pointsHistoryService.savePointsHistory(userId, Operation.EARN, amount, description);
+        pointsService.addPoints(userId, amount, description);
         return ResponseEntity.status(200).body("success");
     }
 

@@ -74,8 +74,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
         SpendingHistory spendingHistory = new SpendingHistory(userId, amount, description);
         if(ecoCompanyRepository.existsByName(description)){
             spendingHistory.setIsEco(true);
-            pointsService.addPoints(userId, (int)(amount*0.005d));
-            pointsHistoryService.savePointsHistory(userId, Operation.EARN, (int)(amount*0.005d), "친환경 소비 : "+description);
+            pointsService.addPoints(userId, (int)(amount*0.005d), "친환경 소비 : "+description);
         }
         spendingHistoryRepository.save(spendingHistory);
     }

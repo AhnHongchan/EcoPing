@@ -43,9 +43,7 @@ public class QuizController {
         response.put("isCorrect", isCorrect);
         if (isCorrect) {
             if(quizService.canUserSolveQuiz(userId)){
-                pointsService.addPoints(userId, 10);
-                pointsHistoryService.savePointsHistory(userId, Operation.EARN,
-                        10, "퀴즈 풀기");
+                pointsService.addPoints(userId, 10, "퀴즈 풀기");
             }
         }
         Quiz quiz = quizService.getRandomQuiz();
