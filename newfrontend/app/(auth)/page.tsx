@@ -7,9 +7,6 @@ import instance from "@/lib/axios";
 
 import Cookies from "js-cookie";
 
-
-import Cookies from "js-cookie";
-
 import "../../styles/globals.css";
 import { BiSolidLockAlt, BiSolidUser, BiSolidShow, BiSolidHide } from "react-icons/bi";
 
@@ -29,7 +26,6 @@ const Login = (): JSX.Element => {
         email: id,
         password: password,
       });
-
 
       if (
         response.status === 200 &&
@@ -53,7 +49,6 @@ const Login = (): JSX.Element => {
         <img className="image1" src="/assets/plant.jpg" alt="Plant" />
         <img className="image2" src="/assets/wave-mask.svg" alt="Plant" />
       </div>
-
       <h2 className="text-2xl font-bold text-center text-loginDarkGreen mt-4">
         환영합니다
       </h2>
