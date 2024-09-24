@@ -17,6 +17,12 @@ import {
 import instance from "../../../lib/axios";
 import { useRouter } from "next/navigation";
 import LineChart from "@/components/yearflow";
+import { BiCheckCircle, BiDownArrow, BiUpArrow } from "react-icons/bi";
+import DailyAnalysis from "@/components/daily-analysis/daily-analysis";
+import WeeklyAnalysis from "@/components/weekly-analysis/weekly-analysis";
+import MonthlyAnalysis from "@/components/montly-analysis/montly-analysis";
+
+
 
 ChartJS.register(
   CategoryScale,
@@ -58,7 +64,7 @@ const Analysis: React.FC = () => {
     campaignPoint: 0,
   });
 
-  const [selectedButton, setSelectedButton] = useState<string>("월간");
+  const [selectedButton, setSelectedButton] = useState<string>("일간");
   const [todoItems, setTodoItems] = useState<TodoItem[]>([
     {
       id: 1,
@@ -227,11 +233,11 @@ const Analysis: React.FC = () => {
   return (
     <div className="">
       {/* 상단 콘텐츠 */}
-      <div className="mt-6 pb-5 border-b-4 m-auto border-mainGreen">
+      <div className="my-6 pb-8 border-b-4 m-auto border-mainGreen">
         <div className="text-2xl font-bold text-black text-center shadow-sm pb-3 mb-5 border-b-4 m-auto border-mainGreen">
           내 소비 보기
         </div>
-          <LineChart totalSpendData={totalSpendData} ecoSpendData={ecoSpendData}/>
+        <LineChart totalSpendData={totalSpendData} ecoSpendData={ecoSpendData}/>
       </div>
 
       <div className="mt-6">
@@ -248,6 +254,13 @@ const Analysis: React.FC = () => {
               {button}
             </button>
           ))}
+        </div>
+      
+      {/* 선택된 버튼에 따른 컴포넌트 렌더링 */}
+        <div>
+          {selectedButton === "일간" && <DailyAnalysis />}
+          {selectedButton === "주간" && <WeeklyAnalysis />}
+          {selectedButton === "월간" && <MonthlyAnalysis />}
         </div>
 
         {/* 차트 섹션 */}
@@ -279,7 +292,101 @@ const Analysis: React.FC = () => {
           </div>
         </div> */}
 
-        {/* 나머지 섹션들 ... */}
+        {/* 비교 섹션 */}
+        {/* <div className="flex justify-between w-full mb-5">
+          <div className="flex items-center w-[41%] h-[40px] p-2 bg-white rounded-lg shadow-md">
+            <div className="flex justify-center items-center w-[35px] h-[35px] rounded-full bg-gray-200 mr-2">
+              <BiCheckCircle className="text-green-500" size={32} />
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[8px] font-bold text-gray-500 m-0">또래보다 친환경적이에요.</p>
+              <p className="text-[10px] font-bold m-0">
+                <span className={statistics.averageCompare > 0 ? "text-green-500" : "text-red-500"}>
+                  {statistics.averageCompare > 0 ? `+${statistics.averageCompare.toFixed(0)}` : `${statistics.averageCompare.toFixed(0)}`}
+                </span>{" "}
+                %의 친환경 소비
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center w-[41%] h-[40px] p-2 bg-white rounded-lg shadow-md">
+            <div className="flex justify-center items-center w-[35px] h-[35px] rounded-full bg-gray-200 mr-2">
+              <BiDownArrow className="text-red-500" size={32} />
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[8px] font-bold text-gray-500 m-0">지난 달보다 줄었어요.</p>
+              <p className="text-[10px] font-bold m-0">
+                <span className={statistics.previousMonthCompare > 0 ? "text-green-500" : "text-red-500"}>
+                  {statistics.previousMonthCompare > 0 ? `+${statistics.previousMonthCompare}` : `${statistics.previousMonthCompare}`}
+                </span>{" "}
+                % 전달 대비
+              </p>
+            </div>
+          </div>
+        </div> */}
+
+        {/* 결제 섹션 */}
+        {/* <div className="flex justify-between w-full mb-5">
+          <div className="w-[41%] h-[40px] p-2 bg-white rounded-lg shadow-md flex flex-col justify-center relative">
+            <div className="ml-2">
+              <p className="text-[8px] font-bold text-gray-500 m-0">기부포인트 총액</p>
+              <p className="text-[14px] font-bold m-0">{myPoint}P 기부</p>
+              <p className="text-green-500 text-[10px] m-0">+23% 지난 주 대비</p>
+            </div>
+          </div>
+
+          <div className="w-[41%] h-[40px] p-2 bg-white rounded-lg shadow-md flex items-center relative">
+            <div className="flex items-center justify-between w-full ml-2">
+              <div>
+                <p className="text-[8px] font-bold text-gray-500 m-0">절약한 환경 비용</p>
+                <p className="text-[14px] font-bold m-0">2,390만원</p>
+              </div>
+              <img src="/assets/icon/tree.png" alt="Tree Icon" className="w-[30px] h-[30px]" />
+              <button onClick={toggleSavedCostList} className="p-0">
+                {showSavedCostList ? <BiUpArrow size={24} /> : <BiDownArrow size={24} />}
+              </button>
+            </div>
+            <ul
+              className={`list-none pl-2 mt-2 text-[12px] absolute top-full left-0 right-0 bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out overflow-hidden ${
+                showSavedCostList ? "max-h-40 opacity-100 visible" : "max-h-0 opacity-0 invisible"
+              }`}
+            >
+              <li>절약한 물 사용량: 120L</li>
+              <li>절약한 전기 사용량: 100kWh</li>
+              <li>절약한 CO2 배출량: 30kg</li>
+            </ul>
+          </div>
+        </div> */}
+
+        {/* 포인트 적립 섹션 */}
+        {/* <div className="w-full">
+          <div className="flex justify-between items-center mb-5">
+            <h3 className="text-lg font-bold">포인트 적립하기</h3>
+            <button className="px-3 py-1 bg-mainGreen text-white rounded-lg">:</button>
+          </div>
+          <div className="bg-white p-5 rounded-lg flex flex-col">
+            {todoItems.map((item) => (
+              <div key={item.id} className="flex items-center mb-3">
+                <input
+                  type="checkbox"
+                  checked={item.completed}
+                  onChange={() => toggleTodo(item.id)}
+                  className="mr-2"
+                />
+                <div className="flex justify-between items-center w-full">
+                  <label className="flex-grow">{item.text}</label>
+                  <button
+                    className="px-2 py-1 bg-[#FF5733] text-white rounded-lg"
+                    onClick={() => handleParticipateClick(item.route)}
+                  >
+                    참여하기
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div> */}
+
       </div>
     </div>
   );

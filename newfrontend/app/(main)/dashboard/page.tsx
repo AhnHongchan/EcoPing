@@ -12,7 +12,12 @@ import TreeGame from "@/components/tree-game";
 import CampaignCarousel from "@/components/campaign-carousel";
 import CampaignCarouselProps from "../../types/campaign-carousel-props";
 
-const Main: React.FC = () => {
+// 제네릭을 사용하여 컴포넌트 props 타입 정의 (현재 props가 없으므로 빈 객체 타입을 사용)
+interface MainProps<T = {}> {
+  // 필요한 props가 있다면 여기 추가
+}
+
+const Main = <T extends {}>({}: MainProps<T>): JSX.Element => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [imagesLoaded, setImagesLoaded] = useState<boolean>(false);
