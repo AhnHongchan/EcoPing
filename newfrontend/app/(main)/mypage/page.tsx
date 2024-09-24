@@ -14,7 +14,7 @@ const MyPage = () => {
           <MypagePoint showHistoryButton={true} />
         </div>
         <MypageUserButton />
-        <MyPageSlide />
+        {/* <MyPageSlide /> */}
       </div>
     </div>
   );
