@@ -23,9 +23,11 @@ pipeline {
             steps {
                 dir('backend') {  // Jenkinsfile이 있는 backend 폴더 기준
                     withCredentials([file(credentialsId: 'application', variable: 'application')]) {
-                        sh '
-                        mkdir -p src/main/resources
-                        cp ${application} src/main/resources/application.yml'
+                        
+                        sh '''
+                            mkdir -p src/main/resources
+                            cp ${application} src/main/resources/application.yml
+                        '''
                     }
                 }
             }
