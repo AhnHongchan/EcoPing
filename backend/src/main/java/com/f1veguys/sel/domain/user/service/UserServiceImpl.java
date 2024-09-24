@@ -66,10 +66,8 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> responseBody = response.getBody();
         String userKey = (String) responseBody.get("userKey");
         user.setApiId(userKey);
-        System.out.println(userKey);
-
         url = baseUrl + "edu/demandDeposit/createDemandDepositAccount";
-        String accountTypeUniqueNo = "088-1-44755da19ce64f";
+        String accountTypeUniqueNo = "001-1-d2f55ed6be7b4a";
         String apiName = "createDemandDepositAccount";
         Map<String, String> headerInfo = headerUtil.createHeaderUser(apiName, apiName, userKey);
         System.out.println(url);
