@@ -144,7 +144,6 @@ const CreateAccount = () => {
         alert("회원 가입에 실패했습니다.");
       }
     } catch (error) {
-      console.error(error);
       alert("서버 오류로 회원 가입에 실패했습니다.");
     } finally {
       setLoading(false); // 로딩 종료

@@ -46,7 +46,7 @@ const MypageSlide = () => {
       try {
         const response = await instance.get(`/campaignhistory/${userId}`);
       } catch (error) {
-        console.error('Failed to fetch campaigns:', error);
+
       }
     };
 

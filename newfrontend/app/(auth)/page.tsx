@@ -33,10 +33,10 @@ const Login = (): JSX.Element => {
       ) {
         router.push("/dashboard");
       } else {
-        console.error("Login failed:", response.data);
+
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      
     }
   };
 
