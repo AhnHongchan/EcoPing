@@ -157,7 +157,7 @@ const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
 
   return (
     <div className="flex justify-center">
-      <div className="w-[calc(98%-20px)] bg-white rounded-lg p-1 mb-[30%] m-[1%]">
+      <div className="w-[calc(98%-20px)] bg-white rounded-lg p-1 m-[1%]">
         {dates.map((date, dateIndex) => (
           <div key={date} className="mb-5">
             <div className="text-lg font-bold mb-2 border-b-2 border-gray-800 pb-1 text-gray-800">

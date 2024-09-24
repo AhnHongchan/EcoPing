@@ -1,11 +1,14 @@
 'use client';
 
 import React, { useState } from "react";
+
 import MypageFilterPopup from "@/components/mypage-component/mypage-filterpopup";
 import PointHistory from "@/components/mypage-component/mypage-pointhistory";
 import MypagePoint from "@/components/mypage-component/mypage-point";
-import 'bootstrap-icons/font/bootstrap-icons.css';
+
 import dayjs from 'dayjs';
+import {BiChevronDown    } from "react-icons/bi";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 interface Filter {
   period: string;
@@ -30,10 +33,10 @@ const MyPoint = () => {
     setShowFilterPopup(false);
   };
 
-  const currentDate = dayjs(); // 현재 날짜
-  const periodValue = parseInt(filter.period.replace('개월', ''), 10); // 필터의 기간 값 추출
-  const pastDate = currentDate.subtract(periodValue, 'month').format('YYYY-MM-DD'); // 과거 날짜 계산
-  const formattedCurrentDate = currentDate.format('YYYY-MM-DD'); // 현재 날짜 포맷팅
+  const currentDate = dayjs(); 
+  const periodValue = parseInt(filter.period.replace('개월', ''), 10); 
+  const pastDate = currentDate.subtract(periodValue, 'month').format('YYYY-MM-DD'); 
+  const formattedCurrentDate = currentDate.format('YYYY-MM-DD'); 
 
   return (
     <div>
@@ -44,8 +47,8 @@ const MyPoint = () => {
         <div>
 
           <div className="mt-12 justify-end text-right">
-            <button onClick={toggleFilterPopup} className="filterButton">
-              {`${filter.period} · ${filter.category} · ${filter.sort}`} <i className="bi bi-chevron-down"></i>
+            <button onClick={toggleFilterPopup} className="filterButton flex items-center justify-end w-full">
+              {`${filter.period} · ${filter.category} · ${filter.sort}`} <BiChevronDown />
             </button>
           </div>
 
