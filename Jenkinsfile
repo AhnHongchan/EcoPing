@@ -9,11 +9,11 @@ pipeline {
         DOCKER_CREDENTIALS_ID = "docker-hub-haejun"
         SSH_CREDENTIALS_ID = "ssafy-ec2-user"
         SERVER_IP = "13.124.102.223"
-        
+
         // 백엔드용 환경 변수
         BACKEND_DOCKER_IMAGE = "seajun/backend"
         BACKEND_DOCKER_TAG = "${GIT_BRANCH.tokenize('/').last()}-${GIT_COMMIT.substring(0,7)}"
-        
+
         // 프론트엔드용 환경 변수
         FRONTEND_DOCKER_IMAGE = "seajun/nextjs-app"
         FRONTEND_DOCKER_TAG = "${GIT_BRANCH.tokenize('/').last()}-${GIT_COMMIT.substring(0,7)}"
@@ -90,6 +90,7 @@ pipeline {
                 }
             }
         }
+
         stage('Prepare Nginx Config') {
             steps {
                 script {
@@ -99,6 +100,7 @@ pipeline {
                 }
             }
         }
+
         // 배포 단계 (백엔드 및 프론트엔드 모두)
         stage('Deploy') {
             steps {
@@ -120,7 +122,7 @@ pipeline {
                             # Nginx 설정 및 실행
                             docker stop nginx || true
                             docker rm nginx || true
-                             docker run -d --name nginx -p 80:80 -v /home/ubuntu/nginx.conf:/etc/nginx/nginx.conf:ro nginx:alpine
+                            docker run -d --name nginx -p 80:80 -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro nginx:alpine
                         '
                     """
                 }
