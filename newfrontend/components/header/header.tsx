@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+
+import Cookies from 'js-cookie';
+
 import { BiMenu, BiSolidHome, BiLogIn, BiX, BiSolidUserCircle, BiWon, BiLineChart, BiSolidParty, BiCalendarCheck, BiSolidTree, BiSolidSchool } from "react-icons/bi";
 
 // 메뉴 항목 데이터를 정의
@@ -48,6 +51,13 @@ const Header = (): JSX.Element => {
     setShowMenu((prevShowMenu) => !prevShowMenu);
   };
 
+  const handleLogout = ()=> {
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
+
+    router.push('/');
+  };
+
   return (
     <div className="relative">
       <div className="relative">
@@ -55,7 +65,7 @@ const Header = (): JSX.Element => {
           onClick={toggleMenu}
           className="absolute top-4 left-4 text-gray-700 text-3xl cursor-pointer z-50"
         />
-          <BiLogIn onClick={() => {router.push('/'); }} className="absolute top-4 right-4 text-gray-700 text-3xl cursor-pointer z-50 mr-2"/>
+          <BiLogIn onClick = {handleLogout} className="absolute top-4 right-4 text-gray-700 text-3xl cursor-pointer z-50 mr-2"/>
       </div>
 
       <div
