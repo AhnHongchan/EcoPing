@@ -44,23 +44,27 @@ pipeline {
         }
 
         stage('Docker Build') {
-            steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                }
+    steps {
+        script {
+            dir('backend') { // Dockerfile이 있는 디렉토리로 이동
+                docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
             }
         }
+    }
+}
 
-        stage('Push to Docker Hub') {
-            steps {
-                script {
-                    docker.withRegistry('', "${DOCKER_CREDENTIALS_ID}") {
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push("latest")
-                    }
+stage('Push to Docker Hub') {
+    steps {
+        script {
+            dir('backend') { // Dockerfile이 있는 디렉토리로 이동
+                docker.withRegistry('', "${DOCKER_CREDENTIALS_ID}") {
+                    docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+                    docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push("latest")
                 }
             }
         }
+    }
+}
 
         stage('Deploy') {
             steps {
