@@ -6,6 +6,7 @@ import com.f1veguys.sel.domain.ecoratio.repository.EcoRatioRepository;
 import com.f1veguys.sel.domain.points.service.PointsService;
 import com.f1veguys.sel.domain.pointshistory.service.PointsHistoryService;
 import com.f1veguys.sel.domain.spendinghistory.domain.SpendingHistory;
+import com.f1veguys.sel.domain.spendinghistory.dto.MonthlySpendingDto;
 import com.f1veguys.sel.domain.spendinghistory.dto.PeriodStatisticsResponse;
 import com.f1veguys.sel.domain.spendinghistory.dto.PreviousMonthSummaryDto;
 import com.f1veguys.sel.domain.user.repository.UserRepository;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -93,5 +96,30 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
             previousMonth = (double) summaryDto.getEcoPreviousMonth() / summaryDto.getTotalPreviousMonth();
         }
         return previousMonth;
+    }
+
+    @Override
+    public List<PeriodStatisticsResponse> getYearlySpendingSummary(int userId) {
+        LocalDateTime endDate = LocalDateTime.now().withDayOfMonth(1);
+        LocalDateTime startDate = endDate.minusYears(1);
+        return spendingHistoryRepository.getMonthlySpendingData(userId, startDate, endDate);
+    }
+
+    @Override
+    public List<Double> getYearlySpendingRates(int userId) {
+        List<Double> result = new ArrayList<>();
+        List<PeriodStatisticsResponse> spendingSummary = getYearlySpendingSummary(userId);
+        for(int i=0; i<spendingSummary.size(); i++){
+            PeriodStatisticsResponse periodSummary = spendingSummary.get(i);
+            if(periodSummary.getTotalSpend()==0){
+                result.add(0d);
+                continue;
+            }
+            double ratio = (double) periodSummary.getEcoSpend()/periodSummary.getTotalSpend();
+            ratio = ratio*100;
+            ratio = Math.round(ratio*10)/10.0;
+            result.add(ratio);
+        }
+        return result;
     }
 }
