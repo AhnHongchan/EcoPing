@@ -27,7 +27,7 @@ const Main = <T extends {}>({}: MainProps<T>): JSX.Element => {
         );
         setCampaigns(response.data);
       } catch (error) {
-        console.error("Failed to fetch campaigns:", error);
+
       }
     };
 

@@ -51,7 +51,7 @@ const Analysis = (): JSX.Element => {
       });
       setStatistics(response.data);
     } catch (error) {
-      console.error(error);
+
     }
   };
 
