@@ -16,17 +16,21 @@ COPY . .
 # 애플리케이션 빌드
 RUN npm run build
 
-# Nginx 사용을 위한 베이스 이미지로 변경
-FROM nginx:alpine
+# 실행 단계
+FROM node:20-alpine
 
-# Nginx 설정 파일 복사
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# 빌드된 React 앱을 Nginx의 루트 디렉토리로 복사
-COPY --from=build /app/dist /app/dist
+# 빌드된 파일과 필요한 파일들만 복사
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+
+# 프로덕션 의존성만 설치
+RUN npm ci --only=production
 
 # 3000 포트 열기
 EXPOSE 3000
 
-# Nginx 실행
-CMD ["nginx", "-g", "daemon off;"]
+# Next.js 애플리케이션 실행
+CMD ["npm", "start"]

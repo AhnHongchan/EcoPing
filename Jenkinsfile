@@ -3,12 +3,12 @@ pipeline {
 
     environment {
         // 공통 환경 변수
-        GITLAB_CREDENTIALS_ID = "haejun"  // GitLab 인증 정보
-        GITLAB_REPO = "https://lab.ssafy.com/s11-fintech-finance-sub1/S11P21A304.git"  // GitLab 저장소 URL
-        BRANCH = "develop"  // 체크아웃할 브랜치
-        DOCKER_CREDENTIALS_ID = "dockerhub-hub-haejun"  // Docker Hub 인증 정보
-        SSH_CREDENTIALS_ID = "ssafy-ec2-ssh"  // SSH 자격증명 ID
-        SERVER_IP = "13.124.102.223"  // 배포할 서버 IP 주소
+        GITLAB_CREDENTIALS_ID = "haejun"
+        GITLAB_REPO = "https://lab.ssafy.com/s11-fintech-finance-sub1/S11P21A304.git"
+        BRANCH = "develop"
+        DOCKER_CREDENTIALS_ID = "dockerhub-hub-haejun"
+        SSH_CREDENTIALS_ID = "ssafy-ec2-ssh"
+        SERVER_IP = "13.124.102.223"
         
         // 백엔드용 환경 변수
         BACKEND_DOCKER_IMAGE = "seajun/backend"
@@ -17,13 +17,11 @@ pipeline {
         // 프론트엔드용 환경 변수
         FRONTEND_DOCKER_IMAGE = "seajun/nextjs-app"
         FRONTEND_DOCKER_TAG = "${GIT_BRANCH.tokenize('/').last()}-${GIT_COMMIT.substring(0,7)}"
-        NGINX_IMAGE = "nginx:alpine"  // Nginx 이미지
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                // GitLab에서 저장소 복제
                 git credentialsId: "${GITLAB_CREDENTIALS_ID}", branch: "${BRANCH}", url: "${GITLAB_REPO}"
             }
         }
@@ -31,7 +29,7 @@ pipeline {
         // 백엔드 애플리케이션 빌드 및 배포
         stage('Backend - Add Env') {
             steps {
-                dir('backend') {  // backend 폴더 기준으로 작업
+                dir('backend') {
                     withCredentials([file(credentialsId: 'application', variable: 'application')]) {
                         sh '''
                             mkdir -p src/main/resources
@@ -72,20 +70,6 @@ pipeline {
         }
 
         // 프론트엔드 애플리케이션 빌드 및 배포
-
-        //  애플리케이션 빌드 및 배포
-        stage('Frontend - Add Env') {
-            steps {
-                dir('newfrontend') {  // backend 폴더 기준으로 작업
-                    withCredentials([file(credentialsId: 'env', variable: 'ENV_FILE')]) {
-                        sh '''
-                    cp $ENV_FILE .env
-                '''
-                    }
-                }
-            }
-        }
-
         stage('Frontend - Docker Build') {
             steps {
                 script {
@@ -106,7 +90,15 @@ pipeline {
                 }
             }
         }
-
+        stage('Prepare Nginx Config') {
+            steps {
+                script {
+                    // GitLab에서 가져온 nginx.conf 파일을 작업 공간에 복사
+                    sh 'cp newfrontend/nginx.conf nginx.conf'
+                    // 필요한 경우 여기서 nginx.conf 파일을 수정할 수 있습니다
+                }
+            }
+        }
         // 배포 단계 (백엔드 및 프론트엔드 모두)
         stage('Deploy') {
             steps {
@@ -117,13 +109,18 @@ pipeline {
                             docker pull ${BACKEND_DOCKER_IMAGE}:${BACKEND_DOCKER_TAG}
                             docker stop backend || true
                             docker rm backend || true
-                            docker run -d --name backend -p 8081:8080 ${BACKEND_DOCKER_IMAGE}:${BACKEND_DOCKER_TAG}
+                            docker run -d --name backend -p 8080:8080 ${BACKEND_DOCKER_IMAGE}:${BACKEND_DOCKER_TAG}
                             
-                            # 프론트엔드 배포 (Nginx 사용)
+                            # 프론트엔드 배포
                             docker pull ${FRONTEND_DOCKER_IMAGE}:${FRONTEND_DOCKER_TAG}
-                            docker stop nginx-container || true
-                            docker rm nginx-container || true
-                            docker run -d --name nginx-container -p 80:80 -v /path/to/your/nginx.conf:/etc/nginx/conf.d/default.conf:ro ${FRONTEND_DOCKER_IMAGE}:${FRONTEND_DOCKER_TAG}
+                            docker stop frontend || true
+                            docker rm frontend || true
+                            docker run -d --name frontend -p 3000:3000 ${FRONTEND_DOCKER_IMAGE}:${FRONTEND_DOCKER_TAG}
+                            
+                            # Nginx 설정 및 실행
+                            docker stop nginx || true
+                            docker rm nginx || true
+                            docker run -d --name nginx -p 80:80 -v /home/ubuntu/nginx.conf:/etc/nginx/conf.d/default.conf:ro nginx:alpine
                         '
                     """
                 }
