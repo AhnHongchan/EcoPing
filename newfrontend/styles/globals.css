@@ -33,7 +33,6 @@ body {
   }
 }
 
-<<<<<<< HEAD
 @layer components {
   .box-style {
     @apply p-5 mt-2 shadow-lg rounded-3xl;
@@ -45,7 +44,6 @@ body {
     @apply text-lg font-bold text-center;
   }
 }
-=======
 
 @keyframes slide-up {
   from {
@@ -95,4 +93,3 @@ body {
 .shake {
   animation: shake 0.3s ease-in-out;
 }
->>>>>>> frontend
