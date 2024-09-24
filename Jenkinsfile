@@ -72,6 +72,20 @@ pipeline {
         }
 
         // 프론트엔드 애플리케이션 빌드 및 배포
+
+        //  애플리케이션 빌드 및 배포
+        stage('Frontend - Add Env') {
+            steps {
+                dir('newfrontend') {  // backend 폴더 기준으로 작업
+                    withCredentials([file(credentialsId: 'env', variable: 'ENV_FILE')]) {
+                        sh '''
+                    cp $ENV_FILE .env
+                '''
+                    }
+                }
+            }
+        }
+
         stage('Frontend - Docker Build') {
             steps {
                 script {
