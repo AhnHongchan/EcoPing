@@ -7,9 +7,6 @@ import instance from "@/lib/axios";
 
 import Cookies from "js-cookie";
 
-
-import Cookies from "js-cookie";
-
 import "../../styles/globals.css";
 import { BiSolidLockAlt, BiSolidUser, BiSolidShow, BiSolidHide } from "react-icons/bi";
 

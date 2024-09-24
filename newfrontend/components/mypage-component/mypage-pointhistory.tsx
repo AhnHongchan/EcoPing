@@ -184,7 +184,7 @@ const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
                       {item.operation === 'EARN' ? '+' : '-'}
                       {item.amount} 포인트
                     </div>
-                    <div className="text-xs text-gray-600">{item.total} 포인트</div>
+                    {/* <div className="text-xs text-gray-600">{item.total} 포인트</div> */}
                   </div>
                 </div>
               </div>
