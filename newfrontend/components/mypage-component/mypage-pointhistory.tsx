@@ -79,7 +79,6 @@ const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
           userId: dummyUser,
         },
       });
-      console.log(response.data);
       setPointData(response.data.PointHistory);
       setPointData(dummyData); // 더미데이터 테스터용 나중에 지우기
     } catch (error) {
@@ -93,7 +92,6 @@ const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
 
   useEffect(() => {
     fetchPointHistory();
-    console.log(filter);
   }, []);
 
   const calculateTotals = (data: PointHistoryItem[]) => {

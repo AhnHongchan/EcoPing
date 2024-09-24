@@ -1,7 +1,7 @@
 import React from 'react';
 import PieChart from '../pie-chart';
 
-const WeeklyConsumption = () => {
+const WeeklyConsumption = (): JSX.Element => {
   const consumptions = [3000, 1800, 2400, 4000, 4500, 3100, 9000];
   const ecoConsumptions = [1000, 500, 700, 1200, 1500, 1800, 2000];
   const sumConsumptions = consumptions.reduce((acc, value) => acc + value, 0);

@@ -16,7 +16,14 @@ const menuItems = [
   { href: "/todayquiz", icon: BiSolidSchool, text: "오늘의 퀴즈" },
 ];
 
-const MenuItem: React.FC<{ href: string; icon: React.ElementType; text: string; onClick: () => void }> = ({ href, icon: Icon, text, onClick }) => {
+interface MenuItemProps {
+  href: string;
+  icon: React.ElementType;
+  text: string;
+  onClick: () => void;
+}
+
+const MenuItem = ({ href, icon: Icon, text, onClick }: MenuItemProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -33,7 +40,7 @@ const MenuItem: React.FC<{ href: string; icon: React.ElementType; text: string; 
   );
 };
 
-const Header: React.FC = () => {
+const Header = (): JSX.Element => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const router = useRouter(); // router 변수를 정의
 

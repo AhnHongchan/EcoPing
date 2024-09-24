@@ -14,7 +14,7 @@ interface NavItemProps {
   isActive: boolean;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ href, activeIcon, inactiveIcon, isActive }) => {
+const NavItem = ({ href, activeIcon, inactiveIcon, isActive }: NavItemProps) => {
   return (
     <Link href={href} className="p-2">
       {isActive ? activeIcon : inactiveIcon}
@@ -22,7 +22,7 @@ const NavItem: React.FC<NavItemProps> = ({ href, activeIcon, inactiveIcon, isAct
   );
 };
 
-const Navbar: React.FC = () => {
+const Navbar = (): JSX.Element => {
   const pathname = usePathname();
 
   const navItems = [
