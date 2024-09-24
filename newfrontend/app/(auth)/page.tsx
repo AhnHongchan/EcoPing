@@ -7,11 +7,14 @@ import instance from "@/lib/axios";
 
 import Cookies from "js-cookie";
 
+
+import Cookies from "js-cookie";
+
 import "../../styles/globals.css";
 import { BiSolidLockAlt, BiSolidUser, BiSolidShow, BiSolidHide } from "react-icons/bi";
 
 
-const Login = () => {
+const Login = (): JSX.Element => {
   const router = useRouter();
   const idRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);

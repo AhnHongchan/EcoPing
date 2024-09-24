@@ -9,12 +9,12 @@ const DailyWalking = (): JSX.Element => {
 
   return (
     <WalkingChart
-      labels={[today]}
-      walkData={walkData}
-      target={target}
-      barColor={[barColor]}
-      axis="y"
-      title="일간 걷기 데이터"
+      labels= {[today]} 
+      walkData = {walkData}
+      target = {target}
+      barColor = {[barColor]}
+      axis = "y"
+      title = "일간 걷기 데이터"
       showAnnotations = {true} // 목표 걸음 수 표시
       showEmoticons = {true}
     />

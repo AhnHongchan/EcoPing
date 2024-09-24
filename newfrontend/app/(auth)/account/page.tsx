@@ -47,9 +47,8 @@ const CreateAccount = () => {
     }
   
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const fullEmail = `${email}`;
   
-    if (!emailRegex.test(fullEmail)) {
+    if (!emailRegex.test(email)) {
       setEmailMessage("올바른 이메일 형식을 입력해주세요.");
       setEmailValid(false);
       setEmailLoading(false);
@@ -58,7 +57,7 @@ const CreateAccount = () => {
   
     try {
       const response = await instance.get("/users/emailExist", {
-        params: { email: fullEmail },
+        params: { email },
       });
   
       if (response.status === 200) {

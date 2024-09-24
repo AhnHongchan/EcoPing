@@ -16,7 +16,6 @@ const RootLayout = ({
 }>) => {
   return (
     <div className="min-h-screen flex flex-col items-center relative">
-      {/* Header */}
       <div className="w-full h-16 bg-mainGreen z-20 fixed top-0 left-0">
         <Header />
       </div>
@@ -26,7 +25,6 @@ const RootLayout = ({
         {children}
       </main>
 
-      {/* Navbar */}
       <div className="w-full bg-mainGreen fixed bottom-0 left-0 z-20">
         <Navbar />
       </div>
