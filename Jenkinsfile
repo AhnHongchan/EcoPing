@@ -7,7 +7,7 @@ pipeline {
         GITLAB_REPO = "https://lab.ssafy.com/s11-fintech-finance-sub1/S11P21A304.git"
         BRANCH = "develop"
         DOCKER_CREDENTIALS_ID = "docker-hub-haejun"
-        SSH_CREDENTIALS_ID = "ssafy-ec2-ssh"
+        SSH_CREDENTIALS_ID = "ssafy-ec2-user"
         SERVER_IP = "13.124.102.223"
         
         // 백엔드용 환경 변수
