@@ -1,35 +1,34 @@
 "use client";
 
 import { useRef, useState } from "react";
-import "../../../styles/account.css";
-import "../../../styles/globals.css";
-import instance from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import instance from "@/lib/axios";
+
+import { BiChevronLeft } from "react-icons/bi";
+import "../../../styles/account.css";
+import "../../../styles/globals.css";
+
+
 
 const CreateAccount = () => {
-  const smallTitle = "text-lg font-bold mt-5";
   const router = useRouter();
-
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
   const phoneNumberRef = useRef<HTMLInputElement>(null);
   const [emailValid, setEmailValid] = useState<boolean | null>(null);
-  const [emailMessage, setEmailMessage] = useState<string>(""); // 이메일 상태 메시지
+  const [emailMessage, setEmailMessage] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
   const [selectedMonth, setSelectedMonth] = useState<string>("1");
   const [selectedDay, setSelectedDay] = useState<string>("1");
   const [passwordValid, setPasswordValid] = useState<boolean>(true);
   const [passwordError, setPasswordError] = useState<JSX.Element | string>("");
-  const [selectedDomain, setSelectedDomain] = useState<string>("직접 입력");
-  const [customDomain, setCustomDomain] = useState<string>("");
   const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
-  const [emailLoading, setEmailLoading] = useState<boolean>(false); // 중복 확인 버튼 로딩 상태
+  const [emailLoading, setEmailLoading] = useState<boolean>(false); 
 
   const genderOptions = [
     { label: "남", value: "male" },
@@ -37,14 +36,9 @@ const CreateAccount = () => {
     { label: "비공개", value: "private" },
   ];
 
-  const domainOptions = ["직접 입력", "gmail.com", "naver.com", "kakao.com"];
-
-  const selectClasses = "form-select h-8 rounded-md bg-green-100 shadow-md focus:ring focus:ring-green-500 focus:ring-opacity-50";
-
   const checkEmailDuplication = async () => {
-    setEmailLoading(true); // 로딩 시작
+    setEmailLoading(true); 
     const email = emailRef.current?.value || "";
-    const domain = selectedDomain === "직접 입력" ? customDomain : selectedDomain;
   
     if (!email) {
       setEmailMessage("이메일을 입력해주세요.");
@@ -52,7 +46,6 @@ const CreateAccount = () => {
       return;
     }
   
-    // 이메일 정규 표현식 검사
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const fullEmail = `${email}`;
   
@@ -77,11 +70,10 @@ const CreateAccount = () => {
         setEmailValid(false);
         setEmailMessage("이미 사용 중인 이메일입니다. 다른 이메일을 사용해 주세요.");
       } else {
-        console.error("Error during email check:", error);
         setEmailMessage("서버 오류로 이메일 중복 확인에 실패했습니다.");
       }
     } finally {
-      setEmailLoading(false); // 로딩 종료
+      setEmailLoading(false); 
     }
   };
 
@@ -95,11 +87,11 @@ const CreateAccount = () => {
     const isValid = passwordRegex.test(password);
     setPasswordError(
       isValid ? "" : (
-        <>
+        <div>
           비밀번호는 8자에서 20자 사이로
           <br />
           영문, 숫자, 특수문자를 포함해야 합니다.
-        </>
+        </div>
       )
     );
     return isValid;
@@ -115,11 +107,10 @@ const CreateAccount = () => {
 
 
   const handleCreateAccount = async () => {
-    if (loading) return; // 이미 로딩 중인 경우 중복 요청 방지
+    if (loading) return;
   
     const name = nameRef.current?.value || "";
     const email = emailRef.current?.value || "";
-    const domain = selectedDomain === "직접 입력" ? customDomain : selectedDomain;
     const password = passwordRef.current?.value || "";
     const phoneNumber = phoneNumberRef.current?.value || "";
   
@@ -127,14 +118,14 @@ const CreateAccount = () => {
   
     const birthDate = `${selectedYear}-${selectedMonth.padStart(2, '0')}-${selectedDay.padStart(2, '0')}`;
   
-    setLoading(true); // 로딩 시작
+    setLoading(true);
   
     try {
       const response = await instance.post("/users/register", {
         name,
         gender,
         birthDate,
-        email: `${email}@${domain}`,
+        email,
         password,
         phoneNumber,
       });
@@ -146,17 +137,10 @@ const CreateAccount = () => {
         alert("회원 가입에 실패했습니다.");
       }
     } catch (error) {
-      console.error("Error during account creation:", error);
       alert("서버 오류로 회원 가입에 실패했습니다.");
     } finally {
-      setLoading(false); // 로딩 종료
+      setLoading(false); 
     }
-  };
-
-  const handleDomainChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelectedDomain(value);
-    setCustomDomain(value !== "직접 입력" ? value : "");
   };
 
   const handleGenderChange = (value: string) => {
@@ -177,7 +161,7 @@ const CreateAccount = () => {
     <div className="flex flex-col">
       <div className="flex items-center justify-center w-10 h-10 bg-loginLightGreen rounded-full ml-10 mt-10">
         <Link href="/">
-          <i className="bi bi-chevron-left text-loginDarkGreen"></i>
+          <BiChevronLeft className="text-loginDarkGreen" size={32}/>
         </Link>
       </div>
       <p className="text-2xl font-bold text-center text-loginDarkGreen mt-8">회원 가입</p>
@@ -190,7 +174,7 @@ const CreateAccount = () => {
         <div className="border-2 border-lime-800 w-10/12 rounded">
           <div className="relative">
             <input
-              type="email"
+              type="text"
               placeholder="example@email.com"
               className="p-3 w-full focus:outline-none rounded"
               ref={emailRef}
@@ -208,7 +192,7 @@ const CreateAccount = () => {
           type="button"
           className="bg-loginDarkGreen text-white rounded mt-4 w-10/12 p-3 shadow-md"
           onClick={checkEmailDuplication}
-          disabled={emailLoading} // 로딩 중일 때 버튼 비활성화
+          disabled={emailLoading} 
         >
           {emailLoading ? (
             <div className="p-2 flex flex-col items-center">
@@ -234,7 +218,7 @@ const CreateAccount = () => {
               <input
                 type="password"
                 placeholder="비밀번호를 적어주세요"
-                className={`p-3 p-3 w-full focus:outline-none rounded ${passwordValid ? "" : "border-red-500"}`}
+                className={`p-3 w-full focus:outline-none rounded ${passwordValid ? "" : "border-red-500"}`}
                 ref={passwordRef}
                 onChange={handlePasswordChange}
                 autoComplete="new-password"
@@ -248,31 +232,6 @@ const CreateAccount = () => {
           )}
         </div>
       </div>
-
-
-      {/* <div className="flex flex-col items-center">
-        <div className="w-10/12 z-10">
-          <p className="translate-y-3 translate-x-3 bg-white w-24 text-center">비밀 번호 확인</p>
-        </div>
-        <div className="border-2 border-lime-800 w-10/12 rounded">
-          <div className="relative">
-          <input
-    type="password"
-    placeholder="비밀번호를 다시 입력해주세요"
-    className={`p-3 w-full focus:outline-none rounded ${passwordMatch ? "" : "border-red-500"}`}
-    ref={confirmPasswordRef}
-    onChange={handlePasswordChange}
-  />
-          </div>
-        </div>
-        <div className="w-10/12">
-        {!confirmPasswordRef.current?.value && !passwordMatch && (
-    <p className="text-red-500 text-sm mt-1">비밀번호가 일치하지 않습니다.</p>
-  )}
-        </div>
-      </div> */}
-
-
 
       <div className="flex flex-col items-center">
         <div className="w-10/12 z-10">
@@ -299,7 +258,7 @@ const CreateAccount = () => {
             <div className="p-3">
               <div className="flex items-center place-content-around">
                 {genderOptions.map((option) => (
-                  <div key={option.value} className="container">
+                  <div key={option.value} className="flex items-center mr-2">
                     <input
                       type="checkbox"
                       id={`cbx-${option.value}`}
@@ -307,7 +266,7 @@ const CreateAccount = () => {
                       value={option.value}
                       checked={gender === option.value}
                       onChange={() => handleGenderChange(option.value)}
-                      style={{ display: 'none' }} // 체크박스는 숨깁니다.
+                      style={{ display: 'none' }} 
                     />
                     <label htmlFor={`cbx-${option.value}`} className="check">
                       <svg width="18px" height="18px" viewBox="0 0 18 18">
@@ -367,7 +326,7 @@ const CreateAccount = () => {
         <button
           className="bg-loginDarkGreen text-white rounded mt-12 w-10/12 p-3 shadow-md"
           onClick={handleCreateAccount}
-          disabled={loading} // 로딩 중일 때 버튼 비활성화
+          disabled={loading} 
           style={{ minHeight: "48px" }}
         >
           {loading ? (

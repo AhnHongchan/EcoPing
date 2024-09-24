@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
 import Modal from 'react-modal';
 
 interface Filter {
@@ -168,7 +169,6 @@ const MypageFilterPopup = ({ currentFilter, onApply, onClose, isOpen }: MypageFi
         <button
           className="bg-lightWalnutBrown text-white rounded-lg py-3 flex-1 text-sm"
           onClick={handleApply}
-         
         >
           적용
         </button>

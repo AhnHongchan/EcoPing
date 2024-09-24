@@ -24,7 +24,6 @@ const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
       });
       setPoints(response.data); 
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false); 
     }

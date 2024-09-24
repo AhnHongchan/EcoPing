@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import instance from "@/lib/axios";
+
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css'; 
 import 'slick-carousel/slick/slick-theme.css';
-import instance from "@/lib/axios";
 
 interface Campaign {
     campaignId: number;
@@ -45,9 +46,7 @@ const MypageSlide = () => {
     const fetchCampaigns = async () => {
       try {
         const response = await instance.get(`/campaignhistory/${userId}`);
-        console.log(response.data);
       } catch (error) {
-        console.error('Failed to fetch campaigns:', error);
       }
     };
 
@@ -73,7 +72,7 @@ const MypageSlide = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="mt-8 mb-20 relative w-11/12 overflow-hidden bg-gray-200 rounded-xl">
+      <div className="mt-8 relative w-11/12 overflow-hidden bg-gray-200 rounded-xl shadow-custom-lg">
         <div className="flex justify-between items-center mb-4">
           <p className="text-lg mt-8 ml-5">참여한 캠페인</p>
         </div>
