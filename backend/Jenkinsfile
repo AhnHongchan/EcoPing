@@ -36,8 +36,10 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'gradle build'
-            }
+                   dir('backend') {
+                       sh './gradlew clean build -Pprofile=prod'
+                   }
+               }
         }
 
         stage('Docker Build') {
