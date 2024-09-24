@@ -122,7 +122,7 @@ pipeline {
                             # Nginx 설정 및 실행
                             docker stop nginx || true
                             docker rm nginx || true
-                            docker run -d --name nginx -p 80:80 -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro nginx:alpine
+                            docker run -d --name nginx -p 80:80 -v \$(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro nginx:alpine
                         '
                     """
                 }
