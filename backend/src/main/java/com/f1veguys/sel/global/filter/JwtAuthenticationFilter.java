@@ -67,6 +67,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 request.setAttribute("email", userDetails.getUsername());
                 request.setAttribute("id", userDetails.getId());
+                System.out.println("username : " + userDetails.getUsername());
+                System.out.println("id : " + userDetails.getId());
+                System.out.println("email : "+ userEmail);
             }
         }
         // 다음 필터로 요청과 응답을 전달
