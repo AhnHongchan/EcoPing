@@ -100,13 +100,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .filter(u -> passwordEncoder.matches(loginRequest.getPassword(), u.getPassword())) // 비밀번호 비교
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
-        Cookie accessCookie = new Cookie("accessToken", jwtUtil.generateAccessToken(Integer.toString(user.getId())));
+        Cookie accessCookie = new Cookie("accessToken", jwtUtil.generateAccessToken(user.getEmail()));
         //accessCookie.setHttpOnly(true);
         //accessCookie.setSecure(true);
         accessCookie.setPath("/");
         accessCookie.setMaxAge(60*60*12);
 
-        Cookie refreshCookie = new Cookie("refreshToken", jwtUtil.generateRefreshToken(Integer.toString(user.getId())));
+        Cookie refreshCookie = new Cookie("refreshToken", jwtUtil.generateRefreshToken(user.getEmail()));
         //refreshCookie.setHttpOnly(true);
         //refreshCookie.setSecure(true);
         refreshCookie.setPath("/");
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
 
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
-        return user.getName();
+        return user.getEmail();
     }
 
     @Override
