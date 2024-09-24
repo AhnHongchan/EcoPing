@@ -21,27 +21,27 @@ public class JwtUtil {
     @Value("${jwt.refreshexpiration}")
     private int refreshExpirationMs;
 
-    // 주어진 사용자 이름으로 JWT 토큰을 생성
-    public String generateAccessToken(String username) {
-        System.out.println("util : " + username);
+    // 주어진 사용자 이메일로 JWT 토큰을 생성
+    public String generateAccessToken(String userEmail) {
+        System.out.println("util : " + userEmail);
         return Jwts.builder()
-                .setSubject(username) // 토큰의 주체 설정 (사용자 이름)
+                .setSubject(userEmail) // 토큰의 주체 설정 (사용자 이름)
                 .setIssuedAt(new Date()) // 토큰 발급 시간 설정
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)) // 토큰 만료 시간 설정
                 .signWith(SignatureAlgorithm.HS512, jwtSecret) // HS512 알고리즘과 시크릿 키를 사용하여 서명
                 .compact(); // JWT 토큰 생성
     }
 
-    public String generateRefreshToken(String username) {
+    public String generateRefreshToken(String userEmail) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userEmail)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + refreshExpirationMs))
                 .signWith(SignatureAlgorithm.HS512,jwtSecret)
                 .compact();
     }
 
-    // JWT 토큰에서 사용자 이름을 추출
+    // JWT 토큰에서 사용자 이메일을 추출
     public String getUsernameFromToken(String token) {
         // 서명 키를 사용하여 토큰을 파싱하고, 주체(subject)를 반환
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
