@@ -20,12 +20,12 @@ const RootLayout = ({
       <div className="w-full h-16 bg-mainGreen z-20 fixed top-0 left-0">
         <Header />
       </div>
-      
+
       {/* Main Content */}
-      <main className="px-4 pt-24 w-11/12 max-w-[400px] mx-auto relative z-10">
+      <main className="px-4 py-24 w-400px mx-auto relative z-10 overflow-x-auto">
         {children}
       </main>
-      
+
       {/* Navbar */}
       <div className="w-full bg-mainGreen fixed bottom-0 left-0 z-20">
         <Navbar />
@@ -35,4 +35,3 @@ const RootLayout = ({
 };
 
 export default RootLayout;
-
