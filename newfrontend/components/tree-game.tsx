@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-const TreeGame: React.FC = () => (
+const TreeGame = ():JSX.Element => (
   <div>
     <div className="mb-4">
       <p className="text-black pl-1 pb-4 font-bold text-3xl">포인트 사용</p>

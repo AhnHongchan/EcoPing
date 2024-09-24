@@ -11,13 +11,13 @@ const MonthlyWalking = (): JSX.Element => {
   
   return (
     <WalkingChart
-      labels={weekLabels}
-      walkData={monthlyData}
-      target={target}
-      average={average}
-      barColor={barColor}
-      axis="x"
-      title="월간 걷기 데이터"
+      labels = {weekLabels}
+      walkData = {monthlyData}
+      target = {target}
+      average = {average}
+      barColor = {barColor}
+      axis = "x"
+      title = "월간 걷기 데이터"
       showAnnotations = {true}
       showEmoticons = {false}
     />

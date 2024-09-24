@@ -4,11 +4,13 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import instance from "@/lib/axios";
-import "../../styles/globals.css";
+
 import Cookies from "js-cookie";
+
+import "../../styles/globals.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const Login = () => {
+const Login = (): JSX.Element => {
   const router = useRouter();
   const idRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -24,14 +26,11 @@ const Login = () => {
         password: password,
       });
 
-      console.log(response.data);
-
       if (
         response.status === 200 &&
         Cookies.get("accessToken") &&
         Cookies.get("refreshToken")
       ) {
-        console.log("Login successful:", response.data);
         router.push("/dashboard");
       } else {
         console.error("Login failed:", response.data);
@@ -51,10 +50,6 @@ const Login = () => {
         <img className="image1" src="/assets/plant.jpg" alt="Plant" />
         <img className="image2" src="/assets/wave-mask.svg" alt="Plant" />
       </div>
-{/* 
-     <div className="image-container">
-  <img className="image3" src="/assets/plant.jpg" alt="Plant" />
-</div> */}
       <h2 className="text-2xl font-bold text-center text-loginDarkGreen mt-4">
         환영합니다
       </h2>

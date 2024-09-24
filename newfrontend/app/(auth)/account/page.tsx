@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import axios from 'axios';
 import "../../../styles/account.css";
 import "../../../styles/globals.css";
 import instance from "@/lib/axios";
@@ -54,9 +55,8 @@ const CreateAccount = () => {
   
     // 이메일 정규 표현식 검사
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const fullEmail = `${email}`;
   
-    if (!emailRegex.test(fullEmail)) {
+    if (!emailRegex.test(email)) {
       setEmailMessage("올바른 이메일 형식을 입력해주세요.");
       setEmailValid(false);
       setEmailLoading(false);
@@ -65,7 +65,7 @@ const CreateAccount = () => {
   
     try {
       const response = await instance.get("/users/emailExist", {
-        params: { email: fullEmail },
+        params: { email },
       });
   
       if (response.status === 200) {
@@ -77,7 +77,6 @@ const CreateAccount = () => {
         setEmailValid(false);
         setEmailMessage("이미 사용 중인 이메일입니다. 다른 이메일을 사용해 주세요.");
       } else {
-        console.error("Error during email check:", error);
         setEmailMessage("서버 오류로 이메일 중복 확인에 실패했습니다.");
       }
     } finally {
@@ -119,7 +118,6 @@ const CreateAccount = () => {
   
     const name = nameRef.current?.value || "";
     const email = emailRef.current?.value || "";
-    const domain = selectedDomain === "직접 입력" ? customDomain : selectedDomain;
     const password = passwordRef.current?.value || "";
     const phoneNumber = phoneNumberRef.current?.value || "";
   
@@ -134,7 +132,7 @@ const CreateAccount = () => {
         name,
         gender,
         birthDate,
-        email: `${email}@${domain}`,
+        email,
         password,
         phoneNumber,
       });
@@ -146,7 +144,7 @@ const CreateAccount = () => {
         alert("회원 가입에 실패했습니다.");
       }
     } catch (error) {
-      console.error("Error during account creation:", error);
+      console.error(error);
       alert("서버 오류로 회원 가입에 실패했습니다.");
     } finally {
       setLoading(false); // 로딩 종료
@@ -248,32 +246,6 @@ const CreateAccount = () => {
           )}
         </div>
       </div>
-
-
-      {/* <div className="flex flex-col items-center">
-        <div className="w-10/12 z-10">
-          <p className="translate-y-3 translate-x-3 bg-white w-24 text-center">비밀 번호 확인</p>
-        </div>
-        <div className="border-2 border-lime-800 w-10/12 rounded">
-          <div className="relative">
-          <input
-    type="password"
-    placeholder="비밀번호를 다시 입력해주세요"
-    className={`p-3 w-full focus:outline-none rounded ${passwordMatch ? "" : "border-red-500"}`}
-    ref={confirmPasswordRef}
-    onChange={handlePasswordChange}
-  />
-          </div>
-        </div>
-        <div className="w-10/12">
-        {!confirmPasswordRef.current?.value && !passwordMatch && (
-    <p className="text-red-500 text-sm mt-1">비밀번호가 일치하지 않습니다.</p>
-  )}
-        </div>
-      </div> */}
-
-
-
       <div className="flex flex-col items-center">
         <div className="w-10/12 z-10">
           <p className="translate-y-3 translate-x-3 bg-white w-10 text-center">이름</p>

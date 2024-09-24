@@ -15,10 +15,11 @@ const instance = axios.create({
 // 요청 인터셉터 설정
 instance.interceptors.request.use(
   (config) => {
-    const accessToken = Cookies.get('access-token');
+    const accessToken = Cookies.get('accessToken');
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
+    config.headers['userID'] = 2;
     return config;
   },
   (error) => Promise.reject(error)

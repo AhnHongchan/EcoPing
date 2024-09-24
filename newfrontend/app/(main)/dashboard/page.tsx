@@ -2,9 +2,6 @@
 
 import { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
-import Link from "next/link";
-import moment from "moment";
-import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // Carousel 스타일
 import ProgressLine from "../../../components/progress-line"; // ProgressLine 컴포넌트 임포트
 import Campaign from "../../types/campaign";

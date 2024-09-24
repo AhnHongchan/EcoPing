@@ -6,8 +6,20 @@ import { BiRun, BiHappy } from "react-icons/bi";
 
 import commonAxisOptions from "./chart-options";
 
-// Chart.js에 annotation 플러그인 등록
 Chart.register(annotationPlugin, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+interface WalkingChartProps {
+  labels: string[];
+  walkData: number[];
+  target: number;
+  average?: number;
+  barColor: string[];
+  axis?: 'x' | 'y';
+  title: string;
+  showAnnotations?: boolean;
+  showEmoticons?: boolean;
+  stepSize?: number;
+}
 
 const WalkingChart = ({
   labels,
@@ -19,18 +31,7 @@ const WalkingChart = ({
   title,
   showAnnotations = true,
   showEmoticons = false, // 이모티콘 표시 여부 추가
-}: {
-  labels: string[];
-  walkData: number[];
-  target: number;
-  average?: number;
-  barColor: string[];
-  axis?: 'x' | 'y';
-  title: string;
-  showAnnotations?: boolean;
-  showEmoticons?: boolean; // 이모티콘 표시 여부 추가
-  stepSize?: number;
-}) => {
+}: WalkingChartProps) => {
 
   const data = {
     labels,
@@ -85,16 +86,9 @@ const WalkingChart = ({
               type: 'line',
               yMin: target,
               yMax: target,
-              borderColor: '#e57373',
+              borderColor: 'red',
               borderWidth: 2,
               borderDash: [5, 5],
-              label: {
-                display: true,
-                position: 'end',
-                backgroundColor: '#e57373',
-                color: 'white',
-                padding: 6,
-              },
             },
             ...(average && {
               averageLine: {
@@ -104,13 +98,6 @@ const WalkingChart = ({
                 borderColor: 'green',
                 borderWidth: 2,
                 borderDash: [5, 5],
-                label: {
-                  display: true,
-                  position: 'end',
-                  backgroundColor: '#bcebc4',
-                  color: 'black',
-                  padding: 6,
-                },
               },
             }),
           },
@@ -119,6 +106,8 @@ const WalkingChart = ({
     },
   };
 
+  
+  
   return (
     <div className="box-style">
       <div>
@@ -128,7 +117,7 @@ const WalkingChart = ({
         <div className={`h-[${axis === 'y' ? 130 : 60}px] w-80`}>
           <Bar data={data} options={options} />
         </div>
-        {showEmoticons && ( // showEmoticons가 true일 때만 이모티콘 표시
+        {showEmoticons && (
           <div className="pb-4">
             {walkData[0] < target ? (
               <BiRun className="text-coralRed text-3xl" />
