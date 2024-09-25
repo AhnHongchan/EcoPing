@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import instance from "@/lib/axios";
+
 import dayjs from 'dayjs';
 
 interface PointHistoryItem {
@@ -30,9 +31,15 @@ interface MypagePointHistoryProps {
 
 const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
   const dummyUser = 1;
-  const searchParams = useSearchParams();
-  const finalTotalFromParams = searchParams.get('total');
+  
+  const SuspendedSearchParamsComponent = () => {
+    const searchParams = useSearchParams();
+    return { finalTotalFromParams: searchParams.get('total') };
+  };
+
+  const { finalTotalFromParams } = SuspendedSearchParamsComponent();
   const initialTotal = finalTotalFromParams ? parseInt(finalTotalFromParams, 10) : 0;
+
   const [pointData, setPointData] = useState<PointHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -157,7 +164,7 @@ const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
 
   return (
     <div className="flex justify-center">
-      <div className="w-[calc(98%-20px)] bg-white rounded-lg p-1 mb-[30%] m-[1%]">
+      <div className="w-[calc(98%-20px)] bg-white rounded-lg p-1 m-[1%]">
         {dates.map((date, dateIndex) => (
           <div key={date} className="mb-5">
             <div className="text-lg font-bold mb-2 border-b-2 border-gray-800 pb-1 text-gray-800">
@@ -184,7 +191,7 @@ const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
                       {item.operation === 'EARN' ? '+' : '-'}
                       {item.amount} 포인트
                     </div>
-                    <div className="text-xs text-gray-600">{item.total} 포인트</div>
+                    {/* <div className="text-xs text-gray-600">{item.total} 포인트</div> */}
                   </div>
                 </div>
               </div>

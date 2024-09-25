@@ -1,69 +1,114 @@
-/* styles/account.css */
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* DatePicker 스타일 변경 */
-.react-datepicker {
-  @apply bg-white border border-gray-300 rounded-lg shadow-md;
+.check {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  transform: translate3d(0, 0, 0);
 }
 
-.react-datepicker__header {
-  @apply bg-green-400 text-black border-b border-green-400 font-bold;
+.check:before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  border-radius: 50%;
+  background: rgba(34, 50, 84, 0.03);
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
-.react-datepicker__current-month,
-.react-datepicker__day-name {
-  @apply text-black;
+.check svg {
+  position: relative;
+  z-index: 1;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: #c8ccd4;
+  stroke-width: 1.5;
+  transform: translate3d(0, 0, 0);
+  transition: all 0.2s ease;
 }
 
-.react-datepicker__day {
-  @apply text-gray-800;
+.check svg path {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 0;
 }
 
-.react-datepicker__day--selected,
-.react-datepicker__day--keyboard-selected {
-  @apply bg-green-500 text-white font-bold;
+.check svg polyline {
+  stroke-dasharray: 22;
+  stroke-dashoffset: 66;
 }
 
-.react-datepicker__day:hover {
-  @apply bg-green-300;
+.check:hover:before {
+  opacity: 1;
 }
 
-.react-datepicker__day--outside-month {
-  @apply text-gray-400;
+.check:hover svg {
+  stroke: var(--accent-color, rgb(63, 98, 18));
 }
 
-.react-datepicker__day--disabled {
-  @apply text-gray-400;
+input[type="checkbox"]:checked + .check svg {
+  stroke: var(--accent-color, rgb(63, 98, 18));
 }
 
-/* 커스텀 화살표 및 드롭다운 스타일 */
-.react-datepicker__navigation {
-  @apply text-green-500 hover:text-green-700; /* 좌우 화살표 색상 */
+input[type="checkbox"]:checked + .check svg path {
+  stroke-dashoffset: 60;
+  transition: all 0.3s linear;
 }
 
-.react-datepicker__navigation--previous,
-.react-datepicker__navigation--next {
-  @apply bg-white; /* 화살표 배경색 */
+input[type="checkbox"]:checked + .check svg polyline {
+  stroke-dashoffset: 42;
+  transition: all 0.2s linear;
+  transition-delay: 0.15s;
 }
 
-.react-datepicker__navigation-icon::before {
-  @apply text-green-500; /* 화살표 아이콘 색상 */
+
+.loader {
+  width: 60px;
+  display: flex;
+  justify-content: space-evenly;
 }
 
-.react-datepicker__year-dropdown,
-.react-datepicker__month-dropdown {
-  @apply bg-white border border-gray-300 rounded-md; /* 드롭다운 스타일 */
+.ball {
+  list-style: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #fff;
 }
 
-.react-datepicker__year-dropdown-container--select,
-.react-datepicker__month-dropdown-container--select {
-  @apply text-green-500; /* 드롭다운 텍스트 색상 */
+.ball:nth-child(1) {
+  animation: bounce-1 2.1s ease-in-out infinite;
 }
 
-.react-datepicker__year-option,
-.react-datepicker__month-option {
-  @apply bg-white text-green-500 hover:bg-green-100; /* 옵션 색상 */
+@keyframes bounce-1 {
+  50% {
+    transform: translateY(-5px);
+    background-color: #bcebc4;
+  }
+}
+
+.ball:nth-child(2) {
+  animation: bounce-3 2.1s ease-in-out 0.3s infinite;
+}
+
+@keyframes bounce-2 {
+  50% {
+    transform: translateY(-5px);
+    background-color: #bcebc4;
+  }
+}
+
+.ball:nth-child(3) {
+  animation: bounce-3 2.1s ease-in-out 0.6s infinite;
+}
+
+@keyframes bounce-3 {
+  50% {
+    transform: translateY(-5px);
+    background-color: #bcebc4;
+  }
 }

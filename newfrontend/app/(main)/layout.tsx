@@ -20,7 +20,8 @@ const RootLayout = ({
         <Header />
       </div>
 
-      <main className="px-4 py-24 w-400px mx-auto relative z-10 overflow-x-auto">
+      {/* Main Content */}
+      <main className="px-4 py-24 w-full max-w-[400px] mx-auto relative z-10 overflow-x-auto">
         {children}
       </main>
 
