@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         // 로그인과 회원가입을 제외한 모든 경로에 대해 필터 적용
-        return path.startsWith("/api/users")
+        return path.startsWith("/api/users") || path.startsWith("/api/deposit")
                 ;
     }
 
@@ -65,11 +65,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 // 보안 컨텍스트에 인증 정보 설정
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                request.setAttribute("email", userDetails.getUsername());
-                request.setAttribute("id", userDetails.getId());
-                System.out.println("username : " + userDetails.getUsername());
-                System.out.println("id : " + userDetails.getId());
-                System.out.println("email : "+ userEmail);
             }
         }
         // 다음 필터로 요청과 응답을 전달

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 public class MonthlySpendingDto {
     private int year;
     private int month;
-    private int totalSpending;
-    private int ecoSpending;
+    private long totalSpending;
+    private long ecoSpending;
 
 
 }

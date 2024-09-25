@@ -102,7 +102,14 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
     public List<PeriodStatisticsResponse> getYearlySpendingSummary(int userId) {
         LocalDateTime endDate = LocalDateTime.now().withDayOfMonth(1);
         LocalDateTime startDate = endDate.minusYears(1);
-        return spendingHistoryRepository.getMonthlySpendingData(userId, startDate, endDate);
+        List<MonthlySpendingDto> list = spendingHistoryRepository.getMonthlySpendingData(userId, startDate, endDate);
+        List<PeriodStatisticsResponse> responses = new ArrayList<>();
+        for(MonthlySpendingDto monthlySpendingDto : list){
+            PeriodStatisticsResponse monthly = new PeriodStatisticsResponse((int)monthlySpendingDto.getTotalSpending(),
+                    (int)monthlySpendingDto.getEcoSpending());
+            responses.add(monthly);
+        }
+        return responses;
     }
 
     @Override
