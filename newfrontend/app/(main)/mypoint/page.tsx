@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 
 import MypageFilterPopup from "@/components/mypage-component/mypage-filterpopup";
 import PointHistory from "@/components/mypage-component/mypage-pointhistory";
@@ -56,9 +56,11 @@ const MyPoint = () => {
             <p className="w-[calc(98%-20px)]  mt-3 text-sm pb-2 border-b border-gray-300">{`${pastDate} ~ ${formattedCurrentDate}`}</p> 
           </div>
 
+          <Suspense fallback={<div>Loading...</div>}>
           <div className="mt-2">
             <PointHistory filter={filter} />
           </div>
+          </Suspense>
 
           <MypageFilterPopup
             isOpen={showFilterPopup}
