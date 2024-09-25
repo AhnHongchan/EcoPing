@@ -20,8 +20,16 @@ const config: Config = {
       boxShadow: {
         'custom-lg': '0px 4px 10px 2px rgba(0, 0, 0, 0.1)',
       },
+      height: {
+        '82': '20.5rem',
+      },
+      margin: {
+        '1/24': '4.166%'
+      }
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar-hide'),
+  ],
 };
 export default config;
