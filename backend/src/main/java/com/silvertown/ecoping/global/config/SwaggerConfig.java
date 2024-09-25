@@ -18,8 +18,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("F1veGuys SEL API")
-                .description("Swagger")
+                .title("SILVERTOWN ECOPING API")
+                .description("Swagger API")
                 .version("1.0.0");
     }
 }
