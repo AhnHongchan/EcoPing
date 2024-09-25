@@ -4,7 +4,7 @@ import styles from './UserInfoSection.module.css';
 const UserInfoSection = () => {
   return (
     <div className={styles.userInfoSection}>
-      
+        
       <div className={styles.buttonGroup}>
         <button className={styles.infoButton}>
           <i className={`bi bi-person ${styles.icon}`}></i>

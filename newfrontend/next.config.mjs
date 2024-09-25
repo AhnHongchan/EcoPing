@@ -8,11 +8,12 @@ const pwaConfig = withPWA({
 
 const nextConfig = {
   compiler: {
-    removeConsole: true, // 모든 console 메시지를 제거
+    removeConsole: false, // 모든 console 메시지를 제거
   },
 };
 
 export default {
   ...pwaConfig,
   ...nextConfig,
+  reactStrictMode: false,
 };
