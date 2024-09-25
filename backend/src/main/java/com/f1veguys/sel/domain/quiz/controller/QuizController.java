@@ -1,6 +1,7 @@
 package com.f1veguys.sel.domain.quiz.controller;
 
 
+import com.f1veguys.sel.domain.customuser.CustomUserDetails;
 import com.f1veguys.sel.domain.points.service.PointsService;
 import com.f1veguys.sel.domain.pointshistory.service.PointsHistoryService;
 import com.f1veguys.sel.domain.quiz.domain.Quiz;
@@ -10,6 +11,7 @@ import com.f1veguys.sel.dto.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,7 +23,6 @@ import java.util.Map;
 public class QuizController {
     private final QuizService quizService;
     private final PointsService pointsService;
-    private final PointsHistoryService pointsHistoryService;
 
     @GetMapping("/start")
     public ResponseEntity<?> startQuiz() {
@@ -33,9 +34,9 @@ public class QuizController {
     }
 
     @PostMapping("/continue")
-    public ResponseEntity<?> continueQuiz(HttpServletRequest request,
+    public ResponseEntity<?> continueQuiz(@AuthenticationPrincipal CustomUserDetails userDetails,
                                           @RequestBody QuizDto quizDto) {
-        int userId = request.getIntHeader("userId");
+        int userId = userDetails.getId();
         int quizId = quizDto.getQuizId();
         boolean quizAnswer = quizDto.isAnswer();
         Map<String, Object> response = new HashMap<>();
