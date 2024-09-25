@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import instance from "@/lib/axios";
+
 import dayjs from 'dayjs';
 
 interface PointHistoryItem {
@@ -30,9 +31,15 @@ interface MypagePointHistoryProps {
 
 const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
   const dummyUser = 1;
-  const searchParams = useSearchParams();
-  const finalTotalFromParams = searchParams.get('total');
+  
+  const SuspendedSearchParamsComponent = () => {
+    const searchParams = useSearchParams();
+    return { finalTotalFromParams: searchParams.get('total') };
+  };
+
+  const { finalTotalFromParams } = SuspendedSearchParamsComponent();
   const initialTotal = finalTotalFromParams ? parseInt(finalTotalFromParams, 10) : 0;
+
   const [pointData, setPointData] = useState<PointHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
