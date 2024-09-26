@@ -31,7 +31,7 @@ interface LineChartProps {
 const LineChart = ({ totalSpendData, ecoSpendData }: LineChartProps) => {
   const [showRatio, setShowRatio] = useState(false);
   const mainGreen = "#9bc2a0";
-  const lightWalnutBrown = "#A68A6D";
+  const lightWalnutBrown = "#9C8772";
   const coralRed = "#e57373";
 
   // 에코 소비 비율 계산
@@ -167,7 +167,7 @@ const LineChart = ({ totalSpendData, ecoSpendData }: LineChartProps) => {
             className={`px-4 py-2 rounded shadow-md ${
               isActive
                 ? "bg-lightWalnutBrown text-white font-bold"
-                : "bg-mainGreen text-black font-extrabold"
+                : "bg-loginLightGreen text-mainDarkGreen font-extrabold"
             }`}
           >
             {label}

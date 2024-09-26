@@ -61,20 +61,22 @@ const Analysis = (): JSX.Element => {
 
   return (
     <div className="">
-      <div className="my-6 pb-8 border-b-4 m-auto border-mainGreen">
-        <div className="text-2xl font-bold text-black text-center shadow-sm pb-3 mb-5 border-b-4 m-auto border-mainGreen">
+      <div className="my-6 pb-8 border-b-4 m-auto border-loginLightGreen">
+        <div className="text-2xl font-bold text-mainDarkGreen text-center shadow-sm pb-3 mb-5 border-b-4 m-auto border-loginLightGreen">
           내 소비 보기
         </div>
         <LineChart totalSpendData={totalSpendData} ecoSpendData={ecoSpendData}/>
       </div>
-
+      <div className="my-2 pb-6 border-b-4 m-auto border-loginLightGreen">
+        <p className="text-center font-bold text-mainDarkGreen">20대 남성 중 회원님은 상위 5%입니다</p>
+      </div>
       <div className="mt-6">
         <div className="flex justify-around mb-5">
           {["일간", "주간", "월간"].map((button) => (
             <button
               key={button}
               className={`px-5 py-2 rounded-lg shadow-md font-bold mx-1 ${
-                selectedButton === button ? "bg-lightWalnutBrown text-white" : "bg-mainGreen text-black"
+                selectedButton === button ? "bg-lightWalnutBrown text-white" : "bg-loginLightGreen text-mainDarkGreen"
               }`}
               onClick={() => handleButtonClick(button)}
             >
