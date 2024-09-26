@@ -8,12 +8,12 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import CampaignCarouselProps from "@/app/types/campaign-carousel-props";
 
-const CampaignCarousel: React.FC<CampaignCarouselProps> = ({
+const CampaignCarousel = ({
   campaigns,
   currentSlide,
   setCurrentSlide,
   imagesLoaded,
-}) => {
+}: CampaignCarouselProps) => {
   return (
     <div className="mx-auto max-w-screen-lg py-8">
       <p className="text-2xl font-semibold mb-4">캠페인 모아보기</p>

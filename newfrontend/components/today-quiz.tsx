@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-const TodayQuiz: React.FC = () => (
+const TodayQuiz = (): JSX.Element => (
   <div className="my-8">
     <p className="">오늘의 환경퀴즈</p>
     <Link href="/todayquiz">

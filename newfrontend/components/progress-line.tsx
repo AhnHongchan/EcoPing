@@ -12,10 +12,10 @@ interface ProgressLineProps {
 }
 
 // TypeScript로 ProgressLine 컴포넌트 정의
-const ProgressLine: React.FC<ProgressLineProps> = ({
+const ProgressLine = ({
   backgroundColor = '#e5e5e5',
   visualParts = [{ percentage: '0%', color: 'white' }],
-}) => {
+}: ProgressLineProps) => {
   const [widths, setWidths] = useState<string[]>(
     visualParts.map(() => {
       return '0%';
