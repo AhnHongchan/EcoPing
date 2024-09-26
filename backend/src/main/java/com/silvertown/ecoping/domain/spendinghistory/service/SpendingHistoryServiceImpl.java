@@ -22,13 +22,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class SpendingHistoryServiceImpl implements SpendingHistoryService{
+public class SpendingHistoryServiceImpl implements SpendingHistoryService {
     private final SpendingHistoryRepository spendingHistoryRepository;
     private final EcoCompanyRepository ecoCompanyRepository;
     private final PointsService pointsService;
     private final PointsHistoryService pointsHistoryService;
     private final EcoRatioRepository ecoRatioRepository;
     private final UserRepository userRepository;
+
     @Override
     public StatisticsResponse getStatistics(int userId) {
         int period = 30;
@@ -40,23 +41,23 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
         LocalDateTime oneMonthAgo = yesterday.minusMonths(1);
         LocalDateTime twoMonthsAgo = yesterday.minusMonths(2);
         PreviousMonthSummaryDto summaryDto = spendingHistoryRepository.getSpendingSummary(userId, oneMonthAgo, twoMonthsAgo);
-        double previousMonth ;
-        if(summaryDto.getTotalPreviousMonth()!=0) {
+        double previousMonth;
+        if (summaryDto.getTotalPreviousMonth() != 0) {
             previousMonth = (double) summaryDto.getEcoPreviousMonth() / summaryDto.getTotalPreviousMonth();
-        }else{
+        } else {
             previousMonth = 0;
         }
         Optional<EcoRatio> ratio = ecoRatioRepository.findMostRecent();
         double eco;
-        if(ratio.isPresent()) {
+        if (ratio.isPresent()) {
             EcoRatio ecoRatio = ratio.get();
             eco = ecoRatio.getAverageRatio();
-        }else{
+        } else {
             eco = 0;
         }
         double lastMonth = (double) ecoAmount / totalAmount;
-        return new StatisticsResponse(totalAmount, ecoAmount, (lastMonth-previousMonth)*100,
-                (lastMonth-eco)*100, userRepository.findCampaignPointById(userId));
+        return new StatisticsResponse(totalAmount, ecoAmount, (lastMonth - previousMonth) * 100,
+                (lastMonth - eco) * 100, userRepository.findCampaignPointById(userId));
     }
 
     @Override
@@ -72,10 +73,10 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
     @Override
     public void saveSpendingHistory(int userId, int amount, String description) {
         SpendingHistory spendingHistory = new SpendingHistory(userId, amount, description);
-        if(ecoCompanyRepository.existsByName(description)){
+        if (ecoCompanyRepository.existsByName(description)) {
             spendingHistory.setIsEco(true);
-            pointsService.addPoints(userId, (int)(amount*0.005d));
-            pointsHistoryService.savePointsHistory(userId, Operation.EARN, (int)(amount*0.005d), "친환경 소비 : "+description);
+            pointsService.addPoints(userId, (int) (amount * 0.005d));
+            pointsHistoryService.savePointsHistory(userId, Operation.EARN, (int) (amount * 0.005d), "친환경 소비 : " + description);
         }
         spendingHistoryRepository.save(spendingHistory);
     }
@@ -88,9 +89,9 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
         PreviousMonthSummaryDto summaryDto = spendingHistoryRepository.getSpendingSummary
                 (userId, oneMonthAgo, twoMonthsAgo);
         double previousMonth;
-        if(summaryDto.getTotalPreviousMonth()==0){
+        if (summaryDto.getTotalPreviousMonth() == 0) {
             previousMonth = 0;
-        }else {
+        } else {
             previousMonth = (double) summaryDto.getEcoPreviousMonth() / summaryDto.getTotalPreviousMonth();
         }
         return previousMonth;
