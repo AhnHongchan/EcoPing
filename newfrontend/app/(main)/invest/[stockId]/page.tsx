@@ -70,7 +70,7 @@ const StockDetail = (): JSX.Element => {
           <span className={isInterestedColor()}>{stockData.stockName}</span>
         </p>
         <br />
-        <p>현재가: {stockData.currentPrice}</p>
+        <p>현재가: {stockData.currentPrice.toLocaleString()}</p>
         <p>52주 최저가: {stockData.min52.toLocaleString()}원</p>
         <p>52주 최고가: {stockData.max52.toLocaleString()}원</p>
       </div>

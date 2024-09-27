@@ -40,7 +40,7 @@ const Investment = (): JSX.Element => {
   return (
     <div>
       <div>
-        <p className='text-center text-2xl'>모의 주식</p>
+        <p className='text-center text-2xl'>모의 투자</p>
       </div>
       <br />
       <div>
