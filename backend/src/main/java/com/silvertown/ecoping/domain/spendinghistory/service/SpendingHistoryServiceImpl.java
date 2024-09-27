@@ -23,6 +23,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class SpendingHistoryServiceImpl implements SpendingHistoryService {
+
     private final SpendingHistoryRepository spendingHistoryRepository;
     private final EcoCompanyRepository ecoCompanyRepository;
     private final PointsService pointsService;
@@ -40,6 +41,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService {
         LocalDateTime yesterday = LocalDate.now().minusDays(1).atTime(LocalTime.MAX);
         LocalDateTime oneMonthAgo = yesterday.minusMonths(1);
         LocalDateTime twoMonthsAgo = yesterday.minusMonths(2);
+
         PreviousMonthSummaryDto summaryDto = spendingHistoryRepository.getSpendingSummary(userId, oneMonthAgo, twoMonthsAgo);
         double previousMonth;
         if (summaryDto.getTotalPreviousMonth() != 0) {
@@ -47,6 +49,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService {
         } else {
             previousMonth = 0;
         }
+
         Optional<EcoRatio> ratio = ecoRatioRepository.findMostRecent();
         double eco;
         if (ratio.isPresent()) {
@@ -56,6 +59,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService {
             eco = 0;
         }
         double lastMonth = (double) ecoAmount / totalAmount;
+
         return new StatisticsResponse(totalAmount, ecoAmount, (lastMonth - previousMonth) * 100,
                 (lastMonth - eco) * 100, userRepository.findCampaignPointById(userId));
     }
@@ -66,8 +70,8 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService {
         LocalDateTime startDate = endDate.minusDays(period);
         int totalAmount = spendingHistoryRepository.getTotalAmount(userId, startDate, endDate);
         int ecoAmount = spendingHistoryRepository.getEcoAmount(userId, startDate, endDate);
-        return new PeriodStatisticsResponse(totalAmount, ecoAmount);
 
+        return new PeriodStatisticsResponse(totalAmount, ecoAmount);
     }
 
     @Override
@@ -78,6 +82,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService {
             pointsService.addPoints(userId, (int) (amount * 0.005d));
             pointsHistoryService.savePointsHistory(userId, Operation.EARN, (int) (amount * 0.005d), "친환경 소비 : " + description);
         }
+
         spendingHistoryRepository.save(spendingHistory);
     }
 
@@ -86,6 +91,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService {
         LocalDateTime yesterday = LocalDate.now().minusDays(1).atTime(LocalTime.MAX);
         LocalDateTime oneMonthAgo = yesterday.minusMonths(1);
         LocalDateTime twoMonthsAgo = yesterday.minusMonths(2);
+
         PreviousMonthSummaryDto summaryDto = spendingHistoryRepository.getSpendingSummary
                 (userId, oneMonthAgo, twoMonthsAgo);
         double previousMonth;
@@ -94,6 +100,8 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService {
         } else {
             previousMonth = (double) summaryDto.getEcoPreviousMonth() / summaryDto.getTotalPreviousMonth();
         }
+
         return previousMonth;
     }
+
 }
