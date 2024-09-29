@@ -1,6 +1,7 @@
 package com.f1veguys.sel.domain.stock.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public interface StockService {
-    // 주식 데이터를 가져오는 메서드
-    String getRealTimeStockData();
+    JsonNode getRealTimeStockData(String stockCode);
 }

@@ -11,9 +11,12 @@ public class KisConfig {
     @Value("${kis.api.appkey}")
     private String appKey;
 
-    @Value("${kis.api.secretkey}")
+    @Value("${kis.api.appsecret}")
     private String appSecret;
 
-    @Value("${kis.api.url}")  // KIS API의 baseUrl을 주입받는 부분
+    @Value("${kis.api.api-url}")
     private String apiUrl;
+
+    @Value("${kis.api.websocket-url}")
+    private String websocketUrl;
 }
