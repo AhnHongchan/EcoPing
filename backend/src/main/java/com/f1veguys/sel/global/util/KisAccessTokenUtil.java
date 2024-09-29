@@ -5,8 +5,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.f1veguys.sel.global.config.KisConfig;
-import jakarta.annotation.PostConstruct;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,13 +23,7 @@ public class KisAccessTokenUtil {
                 .build();
     }
 
-    @PostConstruct
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul") // 매일 자정에 토큰을 갱신
-    public void initializeToken() {
-        getNewAccessToken();  // 토큰 초기화 및 갱신
-    }
-
-    // 새로운 Access Token을 발급받는 메소드
+    // Access Token을 발급받는 메소드
     public void getNewAccessToken() {
         String url = "/oauth2/tokenP";
         try {
@@ -62,6 +54,7 @@ public class KisAccessTokenUtil {
     // 필요 시 accessToken을 반환하는 메소드
     public String getAccessToken() {
         if (accessToken == null) {
+            log.info("토큰이 없으므로 새로 발급받습니다.");
             getNewAccessToken();  // 만약 accessToken이 null이라면 새로운 토큰 발급
         }
         return accessToken;
