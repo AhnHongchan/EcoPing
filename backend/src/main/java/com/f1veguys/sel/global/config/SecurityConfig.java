@@ -56,6 +56,7 @@ public class SecurityConfig {
                 .csrf(csrf ->csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/users/**","/**").permitAll()
                         .anyRequest().authenticated())
                 .cors(cors->cors
