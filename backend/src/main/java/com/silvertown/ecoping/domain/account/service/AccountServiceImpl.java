@@ -42,7 +42,6 @@ public class AccountServiceImpl implements AccountService {
         String apiName = "updateDemandDepositAccountDeposit";
         Map<String, String> headerInfo = headerUtil.createHeaderUser(apiName, apiName, userKey);
         Map<String, Object> requestBody = new HashMap<>();
-        System.out.println(accountNo);
         requestBody.put("Header", headerInfo);
         requestBody.put("accountNo", accountNo);
         requestBody.put("transactionBalance", (long)amount);
