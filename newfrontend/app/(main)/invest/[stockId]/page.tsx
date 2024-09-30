@@ -2,6 +2,7 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BiSolidHeart } from "react-icons/bi";
 
 interface StockDetailData {
   stockId: string;
@@ -52,9 +53,9 @@ const StockDetail = (): JSX.Element => {
 
   const isInterestedColor = () => {
     if (stockData?.Isinterested) {
-      return "text-green-700";
+      return "text-green-500";
     } else {
-      return "text-red-700";
+      return "text-black";
     }
   };
 
@@ -64,24 +65,28 @@ const StockDetail = (): JSX.Element => {
 
   return (
     <div>
-      <div>
-        <p className="small-title">
-          Stock Detail for{" "}
-          <span className={isInterestedColor()}>{stockData.stockName}</span>
+      <div className="flex items-center justify-center text-center">
+        <BiSolidHeart className={`${stockData.Isinterested ? '' : 'opacity-0'} text-md text-red-500`}/>
+        <p className='small-title ml-2'>
+          {stockData.stockName}
         </p>
-        <br />
+      </div>
+      <br />
+      <div className="box-style bg-loginLightGreen">
         <p>현재가: {stockData.currentPrice.toLocaleString()}</p>
         <p>52주 최저가: {stockData.min52.toLocaleString()}원</p>
         <p>52주 최고가: {stockData.max52.toLocaleString()}원</p>
       </div>
       <br />
-      <div>
+      <div className="box-style bg-loginLightGreen">
         <p>친환경 지수: {stockData.envPoint}</p>
         <p>추천 순위: {stockData.recommendRank}위</p>
       </div>
       <br />
-      <div className="cursor-pointer" onClick={handleClick}>
-        추가 주식 정보 확인하기
+      <div className="text-center">
+        <p>보다 많은 주식 정보는?
+          <span className="cursor-pointer text-red-500 ml-3" onClick={handleClick}>여기!</span>
+        </p>
       </div>
     </div>
   );
