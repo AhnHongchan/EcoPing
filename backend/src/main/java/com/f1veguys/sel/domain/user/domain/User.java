@@ -3,6 +3,8 @@ package com.f1veguys.sel.domain.user.domain;
 import com.f1veguys.sel.domain.badge.domain.Badge;
 import com.f1veguys.sel.domain.campaignhistory.domain.CampaignHistory;
 import com.f1veguys.sel.domain.tree.domain.Tree;
+import com.f1veguys.sel.dto.AgeGroup;
+import com.f1veguys.sel.dto.Gender;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -45,8 +47,9 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    private String gender;
+    private Gender gender;
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
@@ -60,6 +63,10 @@ public class User {
 
     @Column(name = "campaign_point", nullable = false)
     private int campaignPoint = 0;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "age_group", nullable = false)
+    private AgeGroup ageGroup;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "user-campaign-history")

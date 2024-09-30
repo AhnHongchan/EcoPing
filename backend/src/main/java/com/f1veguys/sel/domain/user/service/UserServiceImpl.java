@@ -2,6 +2,7 @@ package com.f1veguys.sel.domain.user.service;
 import com.f1veguys.sel.domain.points.domain.Points;
 import com.f1veguys.sel.domain.points.repository.PointsRepository;
 import com.f1veguys.sel.domain.user.domain.User;
+import com.f1veguys.sel.dto.AgeGroup;
 import com.f1veguys.sel.global.util.HeaderUtil;
 import com.f1veguys.sel.global.util.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -90,6 +91,8 @@ public class UserServiceImpl implements UserService {
         String accountNo = (String) rec.get("accountNo");
         System.out.println(accountNo);
         user.setAccountNum(accountNo);
+        int age = LocalDateTime.now().getYear()-user.getBirthDate().getYear();
+        user.setAgeGroup(determineAgeGroup(age));
         // 회원 정보 저장
         return userRepository.save(user);
     }
@@ -120,5 +123,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean emailExist(String email) {
         return userRepository.findByEmail(email).isPresent(); //있으면 true, 없으면 false
+    }
+
+    @Override
+    public AgeGroup determineAgeGroup(int age) {
+        if (age < 20) {
+            return AgeGroup.UNDER_20;
+        } else if (age < 30) {
+            return AgeGroup.TWENTIES;
+        } else if (age < 40) {
+            return AgeGroup.THIRTIES;
+        } else if (age < 50) {
+            return AgeGroup.FORTIES;
+        } else if (age < 60) {
+            return AgeGroup.FIFTIES;
+        } else if (age < 70) {
+            return AgeGroup.SIXTIES;
+        } else if (age < 80) {
+            return AgeGroup.SEVENTIES;
+        } else {
+            return AgeGroup.OVER_80;
+        }
     }
 }

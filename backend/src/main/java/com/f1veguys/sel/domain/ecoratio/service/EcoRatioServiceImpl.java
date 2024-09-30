@@ -1,9 +1,11 @@
 package com.f1veguys.sel.domain.ecoratio.service;
 
+import com.f1veguys.sel.domain.ecogroupratio.repository.EcoGroupRatioRepository;
 import com.f1veguys.sel.domain.ecoratio.domain.EcoRatio;
-import com.f1veguys.sel.domain.ecocompany.repository.EcoCompanyRepository;
 import com.f1veguys.sel.domain.ecoratio.repository.EcoRatioRepository;
 import com.f1veguys.sel.domain.spendinghistory.repository.SpendingHistoryRepository;
+import com.f1veguys.sel.dto.AgeGroup;
+import com.f1veguys.sel.dto.Gender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class EcoRatioServiceImpl implements EcoRatioService {
-    public final EcoRatioRepository ecoRatioRepository;
-    public final SpendingHistoryRepository spendingHistoryRepository;
+    private final EcoRatioRepository ecoRatioRepository;
+    private final SpendingHistoryRepository spendingHistoryRepository;
+    private final EcoGroupRatioRepository ecoGroupRatioRepository;
 
     @Override
     @Scheduled(cron = "0 0 9 * * ?")
