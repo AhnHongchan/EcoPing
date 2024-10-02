@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -25,23 +26,16 @@ public class SecurityConfig {
     public static CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        //리소스를 허용할 URL 지정
-        ArrayList<String> allowedOriginPatterns = new ArrayList<>();
-        allowedOriginPatterns.add("http://localhost:3000");
-        configuration.setAllowedOrigins(allowedOriginPatterns);
+        // 모든 출처 허용
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
 
-        //허용하는 HTTP METHOD 지정
-        ArrayList<String> allowedHttpMethods = new ArrayList<>();
-        allowedHttpMethods.add("GET");
-        allowedHttpMethods.add("POST");
-        allowedHttpMethods.add("PUT");
-        allowedHttpMethods.add("DELETE");
-        configuration.setAllowedMethods(allowedHttpMethods);
+        // 모든 HTTP 메서드 허용
+        configuration.setAllowedMethods(Arrays.asList("*"));
 
+        // 모든 헤더 허용
         configuration.setAllowedHeaders(Collections.singletonList("*"));
-//        configuration.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
 
-        //인증, 인가를 위한 credentials 를 TRUE로 설정
+        // 인증 정보 허용
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -53,18 +47,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf ->csrf.disable())
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/users/**","/**","/swagger-ui/**", "/v3/api-docs/**","/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/users/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
-                .cors(cors->cors
-                        .configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -76,3 +67,4 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter();
     }
 }
+
