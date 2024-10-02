@@ -68,6 +68,18 @@ pipeline {
                 }
             }
         }
+        stage('Frontend - Add Env') {
+            steps {
+                dir('newfrontend') {
+            withCredentials([file(credentialsId: 'env', variable: 'frontendEnv')]) {
+                sh '''
+                    cp ${frontendEnv} .env
+                    chmod 644 .env
+                '''
+            }
+        }
+    }
+}
 
         // 프론트엔드 애플리케이션 빌드 및 배포
         stage('Frontend - Docker Build') {
