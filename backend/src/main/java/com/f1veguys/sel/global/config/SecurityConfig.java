@@ -50,8 +50,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/users/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .anyRequest().authenticated())
+                        .authorizeRequests(auth -> auth
+                        .anyRequest().permitAll())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
