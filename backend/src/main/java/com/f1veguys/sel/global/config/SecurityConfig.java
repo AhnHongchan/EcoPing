@@ -50,10 +50,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
-                        .authorizeRequests(auth -> auth
-                        .anyRequest().permitAll())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().permitAll()) // 모든 요청 허용
+                        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                        .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
