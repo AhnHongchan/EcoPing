@@ -1,67 +1,302 @@
 'use client';
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Tree.css";
 import Scene from "scenejs"; 
 
+import instance from "@/lib/axios";
+
 const Tree = () => {
+  const [level, setLevel] = useState(0); 
+  const [waterPoint, setWaterPoint] = useState(0);
+  
+
+  useEffect(() => {
+    const fetchWaterPoint = async () => {
+      try {
+        const response = await instance.get(`/tree/1`); // 나중에 userId로 수정하기
+        setWaterPoint(response.data.count / 500); 
+        // setWaterPoint(6);
+      } catch (error) {
+        console.error("Failed to fetch water point data:", error);
+      }
+    };
+
+    fetchWaterPoint(); 
+  }, []); 
+
+  // useEffect(() => {
+  //   const sceneTree = new Scene({
+  //     ".tree": {
+  //       0: { transform: "scale(0)" },
+  //       1.5: { transform: "scale(1)" }
+  //     },
+  //     ".background>.flower": function (i: any) {
+  //       return {
+  //         0: { opacity: 0, transform: "translateY(0px) rotate(0deg)" },
+  //         1: { opacity: 1 },
+  //         4: { opacity: 1 },
+  //         5: { opacity: 0, transform: "translateY(300px) rotate(360deg)" },
+  //         options: {
+  //           delay: 7 + i,
+  //           iterationCount: "infinite"
+  //         },
+  //       };
+  //     },
+  //   }, {
+  //     selector: true
+  //   });
+
+  //   const branchs = document.querySelectorAll(".tree .branch, .tree .leaf, .tree .flower1");
+  //   let depths = [0, 0, 0];
+
+  //   for (let i = 0; i < branchs.length; ++i) {
+  //     const sceneItem = sceneTree.newItem("item" + i);
+  //     const className = branchs[i].className;
+
+  //     if (className.includes("branch-inner")) {
+  //       ++depths[1];
+  //       depths[2] = 0;
+  //     } else if (className.includes("branch")) {
+  //       ++depths[0];
+  //       depths[1] = 0;
+  //       depths[2] = 0;
+  //     } else if (className.includes("leaf") || className.includes("flower1")) {
+  //       ++depths[2];
+  //     }
+      
+  //     sceneItem.setElement(branchs[i]);
+  //     sceneItem.setCSS(0, ["transform"]);
+
+  //     const time = 1 + depths[0] * 0.5 + depths[1] * 0.5 + depths[2] * 0.5;
+  //     sceneItem.set(time, "transform", "scale", 0);
+  //     sceneItem.set(time + 1, "transform", "scale", 1);
+  //   }
+
+  //   sceneTree.playCSS();
+  // }, []);
+
+
+  useEffect(() => {
+    if (level < waterPoint) {
+      if(level === 0){
+        const timer = setTimeout(() => {
+          setLevel((prevLevel) => prevLevel + 1);
+        }, 0); 
+        return () => clearTimeout(timer); 
+      }else{
+        const timer = setTimeout(() => {
+          setLevel((prevLevel) => prevLevel + 1);
+        }, 1000);
+        return () => clearTimeout(timer); 
+      }
+
+    }
+  }, [level, waterPoint]);
+
+  
+ 
+  useEffect(() => {
+    if (level === 1) {
+      const sceneTree = new Scene(
+        {
+          ".tree": {
+            0: { transform: "scale(0)" },
+            1: { transform: "scale(1)" },
+          },
+        },
+        {
+          selector: true,
+        }
+      );
+
+      sceneTree.playCSS();
+    }
+  }, [level]); 
+
+  useEffect(() => {
+    if (level === 2) {
+      const sceneTree = new Scene({}, { selector: true });
+      const branchs = document.querySelectorAll(".branch1, .branch1 .branch-inner, .branch1 .leaf, .branch1 .flower1");
+  
+      const depths = [0, 0, 0];
+  
+      for (let i = 0; i < branchs.length; ++i) {
+        const sceneItem = sceneTree.newItem("item2-" + i); 
+        const className = branchs[i].className;
+  
+        if (className.includes("branch-inner")) {
+          ++depths[1];
+          depths[2] = 0;
+        } else if (className.includes("branch")) {
+          ++depths[0];
+          depths[1] = 0;
+          depths[2] = 0;
+        } else if (className.includes("leaf") || className.includes("flower1")) {
+          ++depths[2];
+        }
+        sceneItem.setElement(branchs[i]);
+        sceneItem.setCSS(0, ["transform"]);
+  
+        const time = depths[0] * 0.5 + depths[1] * 0.5 + depths[2] * 0.5;
+        sceneItem.set(time, "transform", "scale", 0);
+        sceneItem.set(time + 1, "transform", "scale", 1);
+      }
+  
+      sceneTree.playCSS(); 
+    }
+  }, [level]);
   
   useEffect(() => {
-    const sceneTree = new Scene({
-      ".tree": {
-        0: { transform: "scale(0)" },
-        1.5: { transform: "scale(1)" }
-      },
-      ".background>.flower": function (i: any) {
-        return {
-          0: { opacity: 0, transform: "translateY(0px) rotate(0deg)" },
-          1: { opacity: 1 },
-          4: { opacity: 1 },
-          5: { opacity: 0, transform: "translateY(300px) rotate(360deg)" },
-          options: {
-            delay: 7 + i,
-            iterationCount: "infinite"
-          },
-        };
-      },
-    }, {
-      selector: true
-    });
-
-    const branchs = document.querySelectorAll(".tree .branch, .tree .leaf, .tree .flower1");
-    let depths = [0, 0, 0];
-
-    for (let i = 0; i < branchs.length; ++i) {
-      const sceneItem = sceneTree.newItem("item" + i);
-      const className = branchs[i].className;
-
-      if (className.includes("branch-inner")) {
-        ++depths[1];
-        depths[2] = 0;
-      } else if (className.includes("branch")) {
-        ++depths[0];
-        depths[1] = 0;
-        depths[2] = 0;
-      } else if (className.includes("leaf") || className.includes("flower1")) {
-        ++depths[2];
+    if (level === 3) {
+      const sceneTree = new Scene({}, { selector: true });
+      const branchs = document.querySelectorAll(".branch2, .branch2 .branch-inner, .branch2 .leaf, .branch2 .flower1");
+  
+      const depths = [0, 0, 0];
+  
+      for (let i = 0; i < branchs.length; ++i) {
+        const sceneItem = sceneTree.newItem("item3-" + i); 
+        const className = branchs[i].className;
+  
+        if (className.includes("branch-inner")) {
+          ++depths[1];
+          depths[2] = 0;
+        } else if (className.includes("branch")) {
+          ++depths[0];
+          depths[1] = 0;
+          depths[2] = 0;
+        } else if (className.includes("leaf") || className.includes("flower1")) {
+          ++depths[2];
+        }
+        sceneItem.setElement(branchs[i]);
+        sceneItem.setCSS(0, ["transform"]);
+  
+        const time = depths[0] * 0.5 + depths[1] * 0.5 + depths[2] * 0.5;
+        sceneItem.set(time, "transform", "scale", 0);
+        sceneItem.set(time + 1, "transform", "scale", 1);
       }
-      
-      sceneItem.setElement(branchs[i]);
-      sceneItem.setCSS(0, ["transform"]);
-
-      const time = 1 + depths[0] * 0.5 + depths[1] * 0.5 + depths[2] * 0.5;
-      sceneItem.set(time, "transform", "scale", 0);
-      sceneItem.set(time + 1, "transform", "scale", 1);
+  
+      sceneTree.playCSS(); 
     }
+  }, [level]);
+  
+  useEffect(() => {
+    if (level === 4) {
+      const sceneTree = new Scene({}, { selector: true });
+      const branchs = document.querySelectorAll(".branch3, .branch3 .branch-inner, .branch3 .leaf, .branch3 .flower1");
+  
+      const depths = [0, 0, 0];
+  
+      for (let i = 0; i < branchs.length; ++i) {
+        const sceneItem = sceneTree.newItem("item4-" + i); 
+        const className = branchs[i].className;
+  
+        if (className.includes("branch-inner")) {
+          ++depths[1];
+          depths[2] = 0;
+        } else if (className.includes("branch")) {
+          ++depths[0];
+          depths[1] = 0;
+          depths[2] = 0;
+        } else if (className.includes("leaf") || className.includes("flower1")) {
+          ++depths[2];
+        }
+        sceneItem.setElement(branchs[i]);
+        sceneItem.setCSS(0, ["transform"]);
+  
+        const time = depths[0] * 0.5 + depths[1] * 0.5 + depths[2] * 0.5;
+        sceneItem.set(time, "transform", "scale", 0);
+        sceneItem.set(time + 1, "transform", "scale", 1);
+      }
+  
+      sceneTree.playCSS(); 
+    }
+  }, [level]);
+  
+  useEffect(() => {
+    if (level === 5) {
+      const sceneTree = new Scene({}, { selector: true });
+      const branchs = document.querySelectorAll(".branch4, .branch4 .branch-inner, .branch4 .leaf, .branch4 .flower1");
+  
+      const depths = [0, 0, 0];
+  
+      for (let i = 0; i < branchs.length; ++i) {
+        const sceneItem = sceneTree.newItem("item5-" + i); 
+        const className = branchs[i].className;
+  
+        if (className.includes("branch-inner")) {
+          ++depths[1];
+          depths[2] = 0;
+        } else if (className.includes("branch")) {
+          ++depths[0];
+          depths[1] = 0;
+          depths[2] = 0;
+        } else if (className.includes("leaf") || className.includes("flower1")) {
+          ++depths[2];
+        }
+        sceneItem.setElement(branchs[i]);
+        sceneItem.setCSS(0, ["transform"]);
+  
+        const time = depths[0] * 0.5 + depths[1] * 0.5 + depths[2] * 0.5;
+        sceneItem.set(time, "transform", "scale", 0);
+        sceneItem.set(time + 1, "transform", "scale", 1);
+      }
+  
+      sceneTree.playCSS(); 
+    }
+  }, [level]);
+  
+  useEffect(() => {
+    if (level === 6) {
+      const sceneTree = new Scene({}, { selector: true });
+      const branchs = document.querySelectorAll(".branch5, .branch5 .branch-inner, .branch5 .leaf, .branch5 .flower1");
+  
+      const depths = [0, 0, 0];
+  
+      for (let i = 0; i < branchs.length; ++i) {
+        const sceneItem = sceneTree.newItem("item6-" + i); 
+        const className = branchs[i].className;
+  
+        if (className.includes("branch-inner")) {
+          ++depths[1];
+          depths[2] = 0;
+        } else if (className.includes("branch")) {
+          ++depths[0];
+          depths[1] = 0;
+          depths[2] = 0;
+        } else if (className.includes("leaf") || className.includes("flower1")) {
+          ++depths[2];
+        }
+        sceneItem.setElement(branchs[i]);
+        sceneItem.setCSS(0, ["transform"]);
+  
+        const time = depths[0] * 0.5 + depths[1] * 0.5 + depths[2] * 0.5;
+        sceneItem.set(time, "transform", "scale", 0);
+        sceneItem.set(time + 1, "transform", "scale", 1);
+      }
+  
+      sceneTree.playCSS(); 
+    }
+  }, [level]);
 
-    sceneTree.playCSS();
-  }, []);
-
+  const handleButtonClick = async () => {
+    try {
+      const response = await instance.put(`/tree/1/water`);
+  
+      console.log("Watering successful:", response.data);
+      const newLevel = response.data.count / 500;
+      setLevel(newLevel); 
+    } catch (error) {
+        console.error("Failed to send watering request:", error);
+    }
+  };
 
   return (
     
-      <div className="mt-96">
-        <div className="background">
+      <div className="mt-96 ">
+        <div className="background overflow-hidden">
+        {level >= 6 && (
+      <div className="background">
   <div className="flower roundpetal petal5 flower1">
     <div className="petal">
       <div className="petal">
@@ -94,180 +329,196 @@ const Tree = () => {
       </div>
     </div>
   </div>
+        </div>    
+        )}
   <div className="slope"></div>
-  <div className="tree">
-    <div className="leaf leaf1"></div>
-    <div className="leaf leaf2"></div>
+  
+ 
+ 
+  {level >= 1 && (
+            <div className="tree">
+              {level >= 2 && (
+                <>
+                  <div className="branch left branch1">
+                    <div className="branch left branch-inner1">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="heart flower1 blueflower"></div>
+                    </div>
+                    <div className="branch left branch-inner2">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="tulip flower1 redflower">
+                        <div className="peak"></div>
+                      </div>
+                    </div>
+                    <div className="branch left branch-inner3">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                    </div>
+                    <div className="flower petal5 flower1 redflower">
+                      <div className="petal">
+                        <div className="petal">
+                          <div className="petal"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+              {level >= 3 && (
+                <>
+                  <div className="branch right branch2">
+                    <div className="branch left branch-inner1">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="flower petal5 flower1 blueflower">
+                        <div className="petal">
+                          <div className="petal">
+                            <div className="petal"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="branch right branch-inner2">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="tulip flower1 greenflower">
+                        <div className="peak"></div>
+                      </div>
+                    </div>
+                    <div className="branch right branch-inner3">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="branch left branch-inner4">
+                        <div className="leaf leaf1"></div>
+                        <div className="flower petal5 flower1 yellowflower">
+                          <div className="petal">
+                            <div className="petal">
+                              <div className="petal"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="tulip flower1 purpleflower">
+                        <div className="peak"></div>
+                      </div>
+                    </div>
+                    <div className="flower petal5 roundpetal flower1">
+                      <div className="petal">
+                        <div className="petal">
+                          <div className="petal">
+                            <div className="petal"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+              {level >= 4 && (
+                <>
+                  <div className="branch left branch3">
+                    <div className="branch right branch-inner1">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="heart flower1"></div>
+                    </div>
+                    <div className="branch left branch-inner2">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="tulip flower1">
+                        <div className="peak"></div>
+                      </div>
+                    </div>
+                    <div className="leaf leaf1"></div>
+                    <div className="leaf leaf2"></div>
+                    <div className="flower roundpetal petal5 flower1 purpleflower">
+                      <div className="petal">
+                        <div className="petal">
+                          <div className="petal"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+              {level >= 5 && (
+                <>
+                  <div className="branch right branch4">
+                    <div className="branch left branch-inner1">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="flower petal5 flower1 yellowflower">
+                        <div className="petal">
+                          <div className="petal">
+                            <div className="petal"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="branch right branch-inner2">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="tulip tulip1 flower1 purpleflower">
+                        <div className="peak"></div>
+                      </div>
+                    </div>
+                    <div className="flower petal5 roundpetal flower1">
+                      <div className="petal">
+                        <div className="petal">
+                          <div className="petal">
+                            <div className="petal"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+              {level >= 6 && (
+                <>
+                  <div className="branch left branch5">
+                    <div className="branch right branch-inner1">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="heart flower1"></div>
+                    </div>
+                    <div className="branch left branch-inner2">
+                      <div className="leaf leaf1"></div>
+                      <div className="leaf leaf2"></div>
+                      <div className="leaf leaf3"></div>
+                      <div className="tulip flower1 greenflower">
+                        <div className="peak"></div>
+                      </div>
+                    </div>
+                    <div className="flower roundpetal petal5 flower1 blueflower">
+                      <div className="petal">
+                        <div className="petal">
+                          <div className="petal"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
-
-    <div className="branch left branch1">
-      <div className="branch left branch-inner1">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>                
-        <div className="leaf leaf3"></div>
-        <div className="heart flower1 blueflower">
-        </div>
-      </div>
-      <div className="branch left branch-inner2">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>                
-        <div className="leaf leaf3"></div>
-        <div className="tulip flower1 redflower">
-          <div className="peak"></div>
-        </div>
-      </div>
-      <div className="branch left branch-inner3">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>
-      </div>
-      <div className="flower petal5 flower1 redflower">
-        <div className="petal">
-          <div className="petal">
-            <div className="petal">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="branch right branch2">
-      <div className="branch left branch-inner1">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>        
-        <div className="leaf leaf3"></div>
-        <div className="flower petal5 flower1 blueflower">
-          <div className="petal">
-            <div className="petal">
-              <div className="petal">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="branch right branch-inner2">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>                
-        <div className="leaf leaf3"></div>
-        <div className="tulip flower1 greenflower">
-          <div className="peak"></div>
-        </div>
-      </div>
-      <div className="branch right branch-inner3">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>
-        <div className="leaf leaf3"></div>
-        <div className="branch left branch-inner4">
-          <div className="leaf leaf1"></div>
-          <div className="flower petal5 flower1 yellowflower">
-            <div className="petal">
-              <div className="petal">
-                <div className="petal">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="tulip flower1 purpleflower">
-          <div className="peak"></div>
-        </div>
-      </div>
-      <div className="flower petal5 roundpetal flower1">
-        <div className="petal">
-          <div className="petal">
-            <div className="petal">
-              <div className="petal">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="branch left branch3">
-      <div className="branch right branch-inner1">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>                
-        <div className="leaf leaf3"></div>
-        <div className="heart flower1">
-        </div>
-      </div>
-      <div className="branch left branch-inner2">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>                
-        <div className="leaf leaf3"></div>
-        <div className="tulip flower1">
-          <div className="peak"></div>
-        </div>
-      </div>
-      <div className="leaf leaf1"></div>
-      <div className="leaf leaf2"></div>
-      <div className="flower roundpetal petal5 flower1 purpleflower">
-        <div className="petal">
-          <div className="petal">
-            <div className="petal">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="branch right branch4">
-      <div className="branch left branch-inner1">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>        
-        <div className="leaf leaf3"></div>
-        <div className="flower petal5 flower1 yellowflower">
-          <div className="petal">
-            <div className="petal">
-              <div className="petal">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="branch right branch-inner2">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>                
-        <div className="leaf leaf3"></div>
-        <div className="tulip tulip1 flower1 purpleflower">
-          <div className="peak"></div>
-        </div>
-      </div>
-      <div className="flower petal5 roundpetal flower1">
-        <div className="petal">
-          <div className="petal">
-            <div className="petal">
-              <div className="petal">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="branch left branch5">
-      <div className="branch right branch-inner1">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>                
-        <div className="leaf leaf3"></div>
-        <div className="heart flower1">
-        </div>
-      </div>
-      <div className="branch left branch-inner2">
-        <div className="leaf leaf1"></div>
-        <div className="leaf leaf2"></div>                
-        <div className="leaf leaf3"></div>
-        <div className="tulip flower1 greenflower">
-          <div className="peak"></div>
-        </div>
-      </div>
-      <div className="flower roundpetal petal5 flower1 blueflower">
-        <div className="petal">
-          <div className="petal">
-            <div className="petal">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
+<button className="pouring-button" onClick={handleButtonClick}>
+            물주기
+            </button>
 
       </div>
   );

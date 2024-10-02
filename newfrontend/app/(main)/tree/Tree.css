@@ -1,6 +1,3 @@
-body {
-	background : #FEFDE3;
-}        
 .slope {
 	background: #CADC88;
 	width: 100%;
@@ -63,11 +60,11 @@ body {
 }
 .tree {
 /* 			background: ; */
-    width:2px;
+    width:2px ;
 /* 			height: 200px; */
-    border-right: 8px solid transparent;
-    border-left: 8px solid transparent;
-    border-bottom: 300px solid #816954;
+    border-right: 8px solid transparent !important;
+    border-left: 8px solid transparent !important;
+    border-bottom: 300px solid #816954 !important; 
     position: absolute;
     left: 50%;
     
@@ -80,8 +77,8 @@ body {
 .branch {
     position: absolute;
     width: 150px;
-    height: 40px;
-    border-bottom: 5px solid #816954;			
+    height: 40px; 
+    border-bottom: 5px solid #816954 !important; 		
 }
 .branch:before, .branch:after {
     content: "";
@@ -202,7 +199,6 @@ body {
     width: 56%;
     height: 56%;
 }
-
 
 .flower.roundpetal .petal:before, .flower.roundpetal .petal:after{
     width: 30%;
@@ -852,7 +848,8 @@ width: 15px;
     
 
 
-*, ::before, ::after {
+.background *, ::before, ::after {
     box-sizing: content-box;
     border-style: none;
 }
+

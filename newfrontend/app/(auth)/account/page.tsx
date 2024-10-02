@@ -33,7 +33,7 @@ const CreateAccount = () => {
   const genderOptions = [
     { label: "남", value: "male" },
     { label: "여", value: "female" },
-    { label: "비공개", value: "private" },
+    { label: "비공개", value: "unknown" },
   ];
 
   const checkEmailDuplication = async () => {
