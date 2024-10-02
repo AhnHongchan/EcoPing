@@ -16,7 +16,7 @@ const Tree = () => {
       try {
         const response = await instance.get(`/tree/1`); // 나중에 userId로 수정하기
         setWaterPoint(response.data.count / 500); 
-        // setWaterPoint(6);
+        // setWaterPoint(2);
       } catch (error) {
         console.error("Failed to fetch water point data:", error);
       }
@@ -86,6 +86,7 @@ const Tree = () => {
         return () => clearTimeout(timer); 
       }else{
         const timer = setTimeout(() => {
+
           setLevel((prevLevel) => prevLevel + 1);
         }, 1000);
         return () => clearTimeout(timer); 
@@ -94,6 +95,47 @@ const Tree = () => {
     }
   }, [level, waterPoint]);
 
+  useEffect(() => {
+    const flowers = document.querySelectorAll(".background > .flower");
+  
+    // Check if flowers exist in the DOM before creating the Scene
+    if (flowers.length > 0 && level >= 6) {
+      const sceneTree = new Scene(
+        {
+          ".background>.flower": function (i) {
+            return {
+              0: {opacity: 0, transform: "translateY(0px) rotate(0deg)"},
+              1: {opacity: 1},
+              4: {opacity: 1},
+              5: {opacity: 0, transform: "translateY(300px) rotate(360deg)"},
+              options: {
+                delay: 2 + i,
+                iterationCount: "infinite"
+              },
+            };
+          },
+        },
+        {
+          selector: true,
+        }
+      );
+      sceneTree.playCSS();
+    } else if (flowers.length > 0) {
+      const sceneTree = new Scene(
+        {
+          ".background>.flower": function (i) {
+            return {
+              0: {opacity: 0, transform: "translateY(0px) rotate(0deg)"}
+            };
+          },
+        },
+        {
+          selector: true,
+        }
+      );
+      sceneTree.playCSS();
+    }
+  }, [level]);
   
  
   useEffect(() => {
@@ -117,13 +159,17 @@ const Tree = () => {
   useEffect(() => {
     if (level === 2) {
       const sceneTree = new Scene({}, { selector: true });
-      const branchs = document.querySelectorAll(".branch1, .branch1 .branch-inner, .branch1 .leaf, .branch1 .flower1");
+      const branchs = document.querySelectorAll(
+        ".branch1, .branch1 .branch-inner, .branch1 .leaf, .branch1 .flower1, .branch1 .branch-inner1, .branch1 .branch-inner2, .branch1 .branch-inner3"
+      );
+      console.log(branchs); 
   
       const depths = [0, 0, 0];
   
       for (let i = 0; i < branchs.length; ++i) {
-        const sceneItem = sceneTree.newItem("item2-" + i); 
+        const sceneItem = sceneTree.newItem("item2" + i); 
         const className = branchs[i].className;
+        console.log(className);
   
         if (className.includes("branch-inner")) {
           ++depths[1];
@@ -150,8 +196,10 @@ const Tree = () => {
   useEffect(() => {
     if (level === 3) {
       const sceneTree = new Scene({}, { selector: true });
-      const branchs = document.querySelectorAll(".branch2, .branch2 .branch-inner, .branch2 .leaf, .branch2 .flower1");
-  
+      const branchs = document.querySelectorAll(
+        ".branch2, .branch2 .branch-inner, .branch2 .leaf, .branch2 .flower1, .branch2 .branch-inner1, .branch2 .branch-inner2, .branch2 .branch-inner3, .branch2 .branch-inner4"
+      );
+            console.log(branchs);
       const depths = [0, 0, 0];
   
       for (let i = 0; i < branchs.length; ++i) {
@@ -183,12 +231,12 @@ const Tree = () => {
   useEffect(() => {
     if (level === 4) {
       const sceneTree = new Scene({}, { selector: true });
-      const branchs = document.querySelectorAll(".branch3, .branch3 .branch-inner, .branch3 .leaf, .branch3 .flower1");
-  
+      const branchs = document.querySelectorAll(".branch3, .branch3 .branch-inner, .branch3 .leaf, .branch3 .flower1, .branch3 .branch-inner1, .branch3 .branch-inner2");
+      console.log(branchs)
       const depths = [0, 0, 0];
   
-      for (let i = 0; i < branchs.length; ++i) {
-        const sceneItem = sceneTree.newItem("item4-" + i); 
+      for (let i = 0; i < branchs.length; ++i) { 
+        const sceneItem = sceneTree.newItem("item4-" + i);
         const className = branchs[i].className;
   
         if (className.includes("branch-inner")) {
@@ -216,7 +264,7 @@ const Tree = () => {
   useEffect(() => {
     if (level === 5) {
       const sceneTree = new Scene({}, { selector: true });
-      const branchs = document.querySelectorAll(".branch4, .branch4 .branch-inner, .branch4 .leaf, .branch4 .flower1");
+      const branchs = document.querySelectorAll(".branch4, .branch4 .branch-inner, .branch4 .leaf, .branch4 .flower1, .branch4 .branch-inner1, .branch4 .branch-inner2");
   
       const depths = [0, 0, 0];
   
@@ -249,7 +297,7 @@ const Tree = () => {
   useEffect(() => {
     if (level === 6) {
       const sceneTree = new Scene({}, { selector: true });
-      const branchs = document.querySelectorAll(".branch5, .branch5 .branch-inner, .branch5 .leaf, .branch5 .flower1");
+      const branchs = document.querySelectorAll(".branch5, .branch5 .branch-inner, .branch5 .leaf, .branch5 .flower1, .branch5 .branch-inner1, .branch5 .branch-inner2");
   
       const depths = [0, 0, 0];
   
@@ -292,8 +340,7 @@ const Tree = () => {
   };
 
   return (
-    
-      <div className="mt-96 ">
+      <div className="mt-96">
         <div className="background overflow-hidden">
         {level >= 6 && (
       <div className="background">
