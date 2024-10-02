@@ -36,10 +36,10 @@ ChartJS.register(
 
 
 const Analysis = (): JSX.Element => {
-  const [statistics, setStatistics] = useState([]);
+  const [statistics, setStatistics] = useState<{ totalSpend: number; ecoSpend: number }[]>([]);
   const [selectedButton, setSelectedButton] = useState<string>("일간");
-  const totalSpendData: number[] = [1200, 1500, 1800, 1400, 1600, 1700, 1900, 2100, 2000, 2300, 2200, 2400];
-  const ecoSpendData: number[] = [200, 300, 250, 220, 350, 280, 400, 450, 680, 500, 620, 860];
+  const totalSpendData = statistics.map((stat) => stat.totalSpend);
+  const ecoSpendData = statistics.map((stat) => stat.ecoSpend);
 
   const handleButtonClick = (button: string) => {
     setSelectedButton(button);

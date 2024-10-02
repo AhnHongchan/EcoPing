@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import instance from "@/lib/axios";
 
 import Cookies from "js-cookie";
+import { useAuthStore } from "../store/useAuthStore";
 
 import "../../styles/globals.css";
 import { BiSolidLockAlt, BiSolidUser, BiSolidShow, BiSolidHide } from "react-icons/bi";
@@ -15,7 +16,9 @@ const Login = (): JSX.Element => {
   const router = useRouter();
   const idRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const setUserId = useAuthStore((state) => state.setUserId);
 
   const handleLogin = async () => {
     const id = idRef.current?.value || "";
@@ -33,6 +36,7 @@ const Login = (): JSX.Element => {
         Cookies.get("accessToken") &&
         Cookies.get("refreshToken")
       ) {
+        setUserId(response.data);
         router.push("/dashboard");
       } else {
       }

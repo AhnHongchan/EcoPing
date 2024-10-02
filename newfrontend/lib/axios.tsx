@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { handleLogout, refreshTokenIfNeeded } from '../services/auth-service';
+import { useAuthStore } from '@/app/store/useAuthStore';
 
 // axios 인스턴스 생성
 const instance = axios.create({
@@ -16,10 +17,17 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const accessToken = Cookies.get('accessToken');
+    // const userId = useAuthStore.getState().userId;
+
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
-    config.headers['userID'] = 2;
+
+    config.headers['userID'] = 1;
+    // if (userId) {
+    //   config.headers['userID'] = 1;
+    // }
+
     return config;
   },
   (error) => Promise.reject(error)
