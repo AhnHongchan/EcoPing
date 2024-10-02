@@ -27,7 +27,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // 모든 출처 허용
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080/", "http://localhost:3000/","https://j11a304.p.ssafy.io/"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000","https://j11a304.p.ssafy.io"));
 
         // 모든 HTTP 메서드 허용
         configuration.setAllowedMethods(Arrays.asList("*"));
