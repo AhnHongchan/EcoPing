@@ -340,8 +340,12 @@ const Tree = () => {
   };
 
   return (
-      <div className="mt-96">
-        <div className="background overflow-hidden">
+<div className="mt-[calc(100vh-16rem)]">
+  <div className="scene">
+      <div className="sun"></div>
+      <div className="bg"></div>
+  </div>
+<div className="background overflow-hidden">
         {level >= 6 && (
       <div className="background">
   <div className="flower roundpetal petal5 flower1">
