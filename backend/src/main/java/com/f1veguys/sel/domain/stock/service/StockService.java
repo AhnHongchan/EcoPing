@@ -1,10 +1,12 @@
 package com.f1veguys.sel.domain.stock.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
+import java.util.List;
 import java.util.Map;
 
 public interface StockService {
-    JsonNode getRealTimeStockData(String stockCode);
-    Map<String, Object> getStockListData();
+    JsonNode getRealTimeStockData(String stockCode);  // 특정 종목 실시간 주식 데이터 조회
+    Map<String, Object> getStockListData();  // 여러 종목의 주식 리스트 데이터 조회
+    JsonNode getStockChartData(String stockId, String period, String startDate, String endDate); // 일/주/월/년 차트 데이터 조회
+    List<String> getAllCompanyCodes();  // DB에서 모든 기업 코드를 가져옴
 }
