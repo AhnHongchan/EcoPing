@@ -24,60 +24,56 @@ public class UserStockTransactionController {
     private final UserStockHoldingsService holdingsService;
 
     public UserStockTransactionController(UserStockTransactionService transactionService,
-                                          CompanyService companyService,
-                                          UserStockHoldingsService holdingsService) {
+        CompanyService companyService,
+        UserStockHoldingsService holdingsService) {
         this.transactionService = transactionService;
         this.companyService = companyService;
         this.holdingsService = holdingsService;
     }
 
     // 매수
-    @PostMapping("/{stockNumber}/buy")
+    @PostMapping("/{companyNumber}/buy")
     public ResponseEntity<UserStockTransaction> buyStock(
-            @PathVariable("stockNumber") String companyNumber,
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody StockTransactionRequest request) {
+        @PathVariable("companyNumber") String companyNumber,
+        @AuthenticationPrincipal CustomUserDetails userDetails,
+        @RequestBody StockTransactionRequest request) {
 
         Optional<Company> company = companyService.getCompanyByCompanyNumber(companyNumber);
         if (company.isEmpty()) {
             throw new RuntimeException("Company not found");
         }
 
-        // 매수 트랜잭션 생성
         UserStockTransaction transaction = transactionService.buyStock(userDetails.getUser(), company.get(), request.getQuantity(), request.getCurrentPrice());
 
-        // 매수 후 보유 주식 업데이트 (purchasePrice 추가)
         holdingsService.updateHoldings(userDetails.getUser(), company.get(), request.getQuantity(), true, request.getCurrentPrice());
 
         return ResponseEntity.ok(transaction);
     }
 
     // 매도
-    @PostMapping("/{stockNumber}/sell")
+    @PostMapping("/{companyNumber}/sell")
     public ResponseEntity<UserStockTransaction> sellStock(
-            @PathVariable("stockNumber") String companyNumber,
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody StockTransactionRequest request) {
+        @PathVariable("companyNumber") String companyNumber,
+        @AuthenticationPrincipal CustomUserDetails userDetails,
+        @RequestBody StockTransactionRequest request) {
 
         Optional<Company> company = companyService.getCompanyByCompanyNumber(companyNumber);
         if (company.isEmpty()) {
             throw new RuntimeException("Company not found");
         }
 
-        // 매도 트랜잭션 생성
         UserStockTransaction transaction = transactionService.sellStock(userDetails.getUser(), company.get(), request.getQuantity(), request.getCurrentPrice());
 
-        // 매도 후 보유 주식 업데이트 (purchasePrice 추가)
         holdingsService.updateHoldings(userDetails.getUser(), company.get(), request.getQuantity(), false, request.getCurrentPrice());
 
         return ResponseEntity.ok(transaction);
     }
 
     // 주식 보유량 조회
-    @GetMapping("/{stockNumber}/holdings")
+    @GetMapping("/{companyNumber}/holdings")
     public ResponseEntity<Integer> getHoldings(
-            @PathVariable("stockNumber") String companyNumber,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        @PathVariable("companyNumber") String companyNumber,
+        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Optional<Company> company = companyService.getCompanyByCompanyNumber(companyNumber);
         if (company.isEmpty()) {

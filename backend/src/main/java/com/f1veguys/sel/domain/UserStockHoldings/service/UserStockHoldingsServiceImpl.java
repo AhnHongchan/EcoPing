@@ -20,12 +20,12 @@ public class UserStockHoldingsServiceImpl implements UserStockHoldingsService {
     @Transactional
     public UserStockHoldings updateHoldings(User user, Company company, int quantity, boolean isBuy, double purchasePrice) {
         UserStockHoldings holdings = holdingsRepository.findByUserAndCompany(user, company)
-                .orElseGet(() -> UserStockHoldings.builder()
-                        .user(user)
-                        .company(company)
-                        .quantity(0)
-                        .averagePurchasePrice(0.0) // 초기 평단가 설정
-                        .build());
+            .orElseGet(() -> UserStockHoldings.builder()
+                .user(user)
+                .company(company)
+                .quantity(0)
+                .averagePurchasePrice(0.0)
+                .build());
 
         if (isBuy) {
             holdings.increaseQuantity(quantity, purchasePrice);
@@ -39,15 +39,15 @@ public class UserStockHoldingsServiceImpl implements UserStockHoldingsService {
     @Override
     public int getHoldings(User user, Company company) {
         return holdingsRepository.findByUserAndCompany(user, company)
-                .map(UserStockHoldings::getQuantity)
-                .orElse(0);
+            .map(UserStockHoldings::getQuantity)
+            .orElse(0);  // 주식이 없을 경우 0 반환
     }
 
     @Override
     public double getAveragePurchasePrice(User user, Company company) {
         return holdingsRepository.findByUserAndCompany(user, company)
-                .map(UserStockHoldings::getAveragePurchasePrice)
-                .orElse(0.0);
+            .map(UserStockHoldings::getAveragePurchasePrice)
+            .orElse(0.0);  // 평균 매입가가 없을 경우 0 반환
     }
 
     @Override

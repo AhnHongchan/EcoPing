@@ -25,13 +25,13 @@ public class UserInterestedCompanyServiceImpl implements UserInterestedCompanySe
     @Transactional
     public void addInterestedCompany(User user, String companyNumber) {
         Company company = companyRepository.findByCompanyNumber(companyNumber)
-                .orElseThrow(() -> new RuntimeException("Company not found"));
+            .orElseThrow(() -> new RuntimeException("Company not found"));
 
         if (!interestedCompanyRepository.existsByUserAndCompany(user, company)) {
             UserInterestedCompany interestedCompany = UserInterestedCompany.builder()
-                    .user(user)
-                    .company(company)
-                    .build();
+                .user(user)
+                .company(company)
+                .build();
             interestedCompanyRepository.save(interestedCompany);
         }
     }
@@ -40,7 +40,7 @@ public class UserInterestedCompanyServiceImpl implements UserInterestedCompanySe
     @Transactional
     public void removeInterestedCompany(User user, String companyNumber) {
         Company company = companyRepository.findByCompanyNumber(companyNumber)
-                .orElseThrow(() -> new RuntimeException("Company not found"));
+            .orElseThrow(() -> new RuntimeException("Company not found"));
 
         interestedCompanyRepository.deleteByUserAndCompany(user, company);
     }
@@ -48,11 +48,15 @@ public class UserInterestedCompanyServiceImpl implements UserInterestedCompanySe
     @Override
     public List<CompanyDto> getInterestedCompanies(User user) {
         return interestedCompanyRepository.findAllByUser(user).stream()
-                .map(ic -> new CompanyDto(
-                        ic.getCompany().getCompanyName(),
-                        ic.getCompany().getCompanyNumber(),
-                        ic.getCompany().getEcoScore()))
-                .collect(Collectors.toList());
+            .map(ic -> new CompanyDto(
+                ic.getCompany().getCompanyName(),
+                ic.getCompany().getCompanyNumber(),
+                ic.getCompany().getEcoScore()))
+            .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean isInterested(User user, Company company) {
+        return interestedCompanyRepository.existsByUserAndCompany(user, company);  // 흥미 여부 확인
+    }
 }

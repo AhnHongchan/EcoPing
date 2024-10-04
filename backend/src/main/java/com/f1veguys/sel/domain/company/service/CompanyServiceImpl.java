@@ -15,13 +15,7 @@ public class CompanyServiceImpl implements CompanyService {
         this.companyRepository = companyRepository;
     }
 
-    // 회사 ID로 회사 조회
-    @Override
-    public Optional<Company> getCompanyById(Long stockId) {
-        return companyRepository.findById(stockId);
-    }
-
-    // 회사번호로 회사 조회
+    // 회사 고유번호로 회사 조회
     @Override
     public Optional<Company> getCompanyByCompanyNumber(String companyNumber) {
         return companyRepository.findByCompanyNumber(companyNumber);
