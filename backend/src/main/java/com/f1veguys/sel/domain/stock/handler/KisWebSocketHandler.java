@@ -80,7 +80,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
                     // 필요한 데이터만 추출 (종목코드, 주식 이름, 현재가, 전일 대비 가격, 전일 대비 등락률)
                     Map<String, Object> filteredStockData = new HashMap<>();
-                    filteredStockData.put("stockId", stockData.get("output").get("stck_shrn_iscd").asText()); // 종목 코드
+                    filteredStockData.put("companyNumber", stockData.get("output").get("stck_shrn_iscd").asText()); // 종목 코드
                     filteredStockData.put("stockName", stockData.get("output").get("rprs_mrkt_kor_name").asText()); // 주식 이름
                     filteredStockData.put("currentPrice", stockData.get("output").get("stck_prpr").asText()); // 현재가
                     filteredStockData.put("priceDifference", stockData.get("output").get("prdy_vrss").asText()); // 전일 대비 가격
