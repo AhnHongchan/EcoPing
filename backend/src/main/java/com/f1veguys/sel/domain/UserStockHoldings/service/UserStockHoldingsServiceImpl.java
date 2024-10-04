@@ -1,6 +1,7 @@
 package com.f1veguys.sel.domain.UserStockHoldings.service;
 
 import com.f1veguys.sel.domain.UserStockHoldings.domain.UserStockHoldings;
+import com.f1veguys.sel.domain.UserStockHoldings.dto.UserStockHoldingsDto;
 import com.f1veguys.sel.domain.UserStockHoldings.repository.UserStockHoldingsRepository;
 import com.f1veguys.sel.domain.company.domain.Company;
 import com.f1veguys.sel.domain.user.domain.User;
@@ -8,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,18 +42,26 @@ public class UserStockHoldingsServiceImpl implements UserStockHoldingsService {
     public int getHoldings(User user, Company company) {
         return holdingsRepository.findByUserAndCompany(user, company)
             .map(UserStockHoldings::getQuantity)
-            .orElse(0);  // 주식이 없을 경우 0 반환
+            .orElse(0);
     }
 
     @Override
     public double getAveragePurchasePrice(User user, Company company) {
         return holdingsRepository.findByUserAndCompany(user, company)
             .map(UserStockHoldings::getAveragePurchasePrice)
-            .orElse(0.0);  // 평균 매입가가 없을 경우 0 반환
+            .orElse(0.0);
     }
 
     @Override
-    public Optional<UserStockHoldings> getUserStockHoldings(Company company, User user) {
-        return holdingsRepository.findByCompanyAndUser(company, user);
+    public List<UserStockHoldingsDto> getUserStockHoldingsList(User user) {
+        // 사용자가 소유한 주식 목록을 UserStockHoldingsDto로 변환하여 반환
+        return holdingsRepository.findAllByUser(user).stream()
+            .map(holdings -> new UserStockHoldingsDto(
+                holdings.getCompany().getCompanyNumber(),
+                holdings.getCompany().getCompanyName(),
+                holdings.getQuantity(),
+                holdings.getAveragePurchasePrice()
+            ))
+            .collect(Collectors.toList());
     }
 }
