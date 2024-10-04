@@ -56,28 +56,29 @@ public class StockServiceImpl implements StockService {
         );
     }
 
-    @Override
     public JsonNode getStockChartData(String stockId, String period, String startDate, String endDate) {
         String token = kisAccessTokenUtil.getAccessToken();
         String url = "/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice";
 
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("FID_COND_MRKT_DIV_CODE", "J")
-                        .queryParam("FID_INPUT_ISCD", stockId)
-                        .queryParam("FID_PERIOD_DIV_CODE", period)
-                        .queryParam("FID_INPUT_DATE_1", startDate)
-                        .queryParam("FID_INPUT_DATE_2", endDate)
-                        .build())
-                .header("Authorization", "Bearer " + token)
-                .header("appkey", kisConfig.getAppKey())
-                .header("appsecret", kisConfig.getAppSecret())
-                .header("tr_id", "FHKST03010100")
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
+            .uri(uriBuilder -> uriBuilder
+                .path(url)
+                .queryParam("FID_COND_MRKT_DIV_CODE", "J")  // 주식, ETF, ETN을 나타냄
+                .queryParam("FID_INPUT_ISCD", stockId)      // 종목코드 6자리
+                .queryParam("FID_PERIOD_DIV_CODE", period)  // D: 일봉, W: 주봉, M: 월봉, Y: 년봉
+                .queryParam("FID_INPUT_DATE_1", startDate)  // 시작일
+                .queryParam("FID_INPUT_DATE_2", endDate)    // 종료일
+                .queryParam("FID_ORG_ADJ_PRC", "0")         // 수정주가 여부 (0: 수정주가, 1: 원주가)
+                .build())
+            .header("Authorization", "Bearer " + token)
+            .header("appkey", kisConfig.getAppKey())
+            .header("appsecret", kisConfig.getAppSecret())
+            .header("tr_id", "FHKST03010100")
+            .retrieve()
+            .bodyToMono(JsonNode.class)
+            .block();
     }
+
 
     @Override
     public List<String> getAllCompanyCodes() {
