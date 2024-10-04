@@ -1,6 +1,8 @@
 package com.f1veguys.sel.domain.customuser;
 
 import com.f1veguys.sel.domain.user.domain.User;
+import com.f1veguys.sel.dto.AgeGroup;
+import com.f1veguys.sel.dto.Gender;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -59,4 +61,6 @@ public class CustomUserDetails implements UserDetails {
     public int getId() {
         return user.getId();
     }
+    public Gender getGender() {return user.getGender();}
+    public AgeGroup getAgeGroup() {return user.getAgeGroup();}
 }
