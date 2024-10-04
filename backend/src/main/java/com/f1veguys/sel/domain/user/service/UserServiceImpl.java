@@ -46,51 +46,6 @@ public class UserServiceImpl implements UserService {
         // 생성 날짜 설정
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreatedDate(LocalDateTime.now());
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("apiKey", apiKey);
-        requestBody.put("userId", user.getEmail());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-
-        String url = baseUrl + "member/";
-        System.out.println(url);
-
-        ResponseEntity<Map> response = restTemplate.exchange(
-                url,
-                HttpMethod.POST,
-                entity,
-                Map.class
-        );
-
-        Map<String, Object> responseBody = response.getBody();
-        String userKey = (String) responseBody.get("userKey");
-        user.setApiId(userKey);
-        url = baseUrl + "edu/demandDeposit/createDemandDepositAccount";
-        String accountTypeUniqueNo = "001-1-d2f55ed6be7b4a";
-        String apiName = "createDemandDepositAccount";
-        Map<String, String> headerInfo = headerUtil.createHeaderUser(apiName, apiName, userKey);
-        System.out.println(url);
-        requestBody = new HashMap<>();
-        requestBody.put("Header", headerInfo);
-        requestBody.put("accountTypeUniqueNo", accountTypeUniqueNo);
-
-        entity = new HttpEntity<>(requestBody, headers);
-
-        response = restTemplate.exchange(
-                url,
-                HttpMethod.POST,
-                entity,
-                Map.class
-        );
-
-        responseBody = response.getBody();
-        Map<String, Object> rec = (Map<String, Object>) responseBody.get("REC");
-
-        String accountNo = (String) rec.get("accountNo");
-        System.out.println(accountNo);
-        user.setAccountNum(accountNo);
         int age = LocalDateTime.now().getYear()-user.getBirthDate().getYear();
         user.setAgeGroup(determineAgeGroup(age));
         // 회원 정보 저장

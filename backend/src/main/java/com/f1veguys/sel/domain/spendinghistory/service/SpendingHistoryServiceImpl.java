@@ -1,6 +1,8 @@
 package com.f1veguys.sel.domain.spendinghistory.service;
 
 import com.f1veguys.sel.domain.ecocompany.repository.EcoCompanyRepository;
+import com.f1veguys.sel.domain.ecogroupratio.domain.EcoGroupRatio;
+import com.f1veguys.sel.domain.ecogroupratio.repository.EcoGroupRatioRepository;
 import com.f1veguys.sel.domain.ecoratio.domain.EcoRatio;
 import com.f1veguys.sel.domain.ecoratio.repository.EcoRatioRepository;
 import com.f1veguys.sel.domain.points.service.PointsService;
@@ -32,6 +34,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
     private final PointsHistoryService pointsHistoryService;
     private final EcoRatioRepository ecoRatioRepository;
     private final UserRepository userRepository;
+    private final EcoGroupRatioRepository ecoGroupRatioRepository;
     @Override
     public StatisticsResponse getStatistics(int userId) {
         int period = 30;
@@ -49,11 +52,11 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
         }else{
             previousMonth = 0;
         }
-        Optional<EcoRatio> ratio = ecoRatioRepository.findMostRecent();
+        Optional<EcoGroupRatio> ratio = ecoGroupRatioRepository.findMostRecentUnknownGenderAndAllAgeGroup();
         double eco;
         if(ratio.isPresent()) {
-            EcoRatio ecoRatio = ratio.get();
-            eco = ecoRatio.getAverageRatio();
+            EcoGroupRatio ecoRatio = ratio.get();
+            eco = ecoRatio.getEcoSum() / ecoRatio.getTotalSum();
         }else{
             eco = 0;
         }

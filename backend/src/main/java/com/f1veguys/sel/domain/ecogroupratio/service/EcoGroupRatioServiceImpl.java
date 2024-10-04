@@ -1,6 +1,7 @@
 package com.f1veguys.sel.domain.ecogroupratio.service;
 
 import com.f1veguys.sel.domain.ecogroupratio.domain.EcoGroupRatio;
+import com.f1veguys.sel.domain.ecogroupratio.dto.EcoGroupRatioDto;
 import com.f1veguys.sel.domain.ecogroupratio.repository.EcoGroupRatioRepository;
 import com.f1veguys.sel.dto.AgeGroup;
 import com.f1veguys.sel.dto.Gender;
@@ -25,15 +26,24 @@ public class EcoGroupRatioServiceImpl implements EcoGroupRatioService {
     public void calculateMonthlyEcoRatios() {
         LocalDateTime endDate = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime startDate = endDate.minusMonths(1);
-        LocalDateTime currentDate = LocalDateTime.now();
-        int currentYear = currentDate.getYear();
-        List<EcoGroupRatio> ecoRatios = ecoGroupRatioRepository.getEcoRatiosByPeriod(
-                startDate, endDate);
 
-        double totalEcoSum = ecoRatios.stream().mapToDouble(EcoGroupRatio::getEcoSum).sum();
-        double totalSum = ecoRatios.stream().mapToDouble(EcoGroupRatio::getTotalSum).sum();
-        ecoRatios.add(new EcoGroupRatio(Gender.unknown, AgeGroup.ALL, totalEcoSum, totalSum));
+        List<EcoGroupRatio> ecoGroupRatios = ecoGroupRatioRepository.getEcoRatiosByPeriod(startDate, endDate);
 
+        ecoGroupRatioRepository.saveAll(ecoGroupRatios);
+
+        double totalEcoSum = ecoGroupRatios.stream().mapToDouble(EcoGroupRatio::getEcoSum).sum();
+        double totalSum = ecoGroupRatios.stream().mapToDouble(EcoGroupRatio::getTotalSum).sum();
+        ecoGroupRatioRepository.save(new EcoGroupRatio(Gender.unknown, AgeGroup.ALL, totalEcoSum, totalSum));
+    }
+
+    @Override
+    public EcoGroupRatioDto getAllGroupRatio() {
+        return ecoGroupRatioRepository.findMostRecentUnknownGenderAndAllAgeGroup().get().toDto();
+    }
+
+    @Override
+    public EcoGroupRatioDto getAgeGroupRatio(Gender gender, AgeGroup ageGroup) {
+        return ecoGroupRatioRepository.findMostRecentByGenderAndAgeGroup(gender, ageGroup).get().toDto();
     }
 
 }

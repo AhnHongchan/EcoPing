@@ -41,9 +41,6 @@ public class User {
     @Column(name = "admin", nullable = false)
     private boolean admin;
 
-    @Column(name = "api_id")
-    private String apiId;
-
     @Column(name = "phone_number")
     private String phoneNumber;
 
@@ -57,9 +54,6 @@ public class User {
     @CreationTimestamp
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate;
-
-    @Column(name = "account_num", nullable = false, unique = true)
-    private String accountNum ="";
 
     @Column(name = "campaign_point", nullable = false)
     private int campaignPoint = 0;
