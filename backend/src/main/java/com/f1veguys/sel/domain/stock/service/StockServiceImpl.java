@@ -28,47 +28,48 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public JsonNode getRealTimeStockData(String stockCode) {
+    public JsonNode getRealTimeStockData(String companyNumber) {
         String token = kisAccessTokenUtil.getAccessToken();
         String url = "/uapi/domestic-stock/v1/quotations/inquire-price";
 
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(url)
-                        .queryParam("FID_COND_MRKT_DIV_CODE", "J")
-                        .queryParam("FID_INPUT_ISCD", stockCode)
-                        .build())
-                .header("Authorization", "Bearer " + token)
-                .header("appkey", kisConfig.getAppKey())
-                .header("appsecret", kisConfig.getAppSecret())
-                .header("tr_id", "FHKST01010100")
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .block();
+            .uri(uriBuilder -> uriBuilder
+                .path(url)
+                .queryParam("FID_COND_MRKT_DIV_CODE", "J")
+                .queryParam("FID_INPUT_ISCD", companyNumber)
+                .build())
+            .header("Authorization", "Bearer " + token)
+            .header("appkey", kisConfig.getAppKey())
+            .header("appsecret", kisConfig.getAppSecret())
+            .header("tr_id", "FHKST01010100")
+            .retrieve()
+            .bodyToMono(JsonNode.class)
+            .block();
     }
 
     @Override
     public Map<String, Object> getStockListData() {
         return Map.of(
-                "success", true,
-                "message", "Stock list fetched from DB",
-                "data", companyRepository.findAll()  // DB에서 회사 목록을 불러옴
+            "success", true,
+            "message", "Stock list fetched from DB",
+            "data", companyRepository.findAll()  // DB에서 회사 목록을 불러옴
         );
     }
 
-    public JsonNode getStockChartData(String stockId, String period, String startDate, String endDate) {
+    @Override
+    public JsonNode getStockChartData(String companyNumber, String period, String startDate, String endDate) {
         String token = kisAccessTokenUtil.getAccessToken();
         String url = "/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice";
 
         return webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path(url)
-                .queryParam("FID_COND_MRKT_DIV_CODE", "J")  // 주식, ETF, ETN을 나타냄
-                .queryParam("FID_INPUT_ISCD", stockId)      // 종목코드 6자리
-                .queryParam("FID_PERIOD_DIV_CODE", period)  // D: 일봉, W: 주봉, M: 월봉, Y: 년봉
-                .queryParam("FID_INPUT_DATE_1", startDate)  // 시작일
-                .queryParam("FID_INPUT_DATE_2", endDate)    // 종료일
-                .queryParam("FID_ORG_ADJ_PRC", "0")         // 수정주가 여부 (0: 수정주가, 1: 원주가)
+                .queryParam("FID_COND_MRKT_DIV_CODE", "J")
+                .queryParam("FID_INPUT_ISCD", companyNumber)
+                .queryParam("FID_PERIOD_DIV_CODE", period)
+                .queryParam("FID_INPUT_DATE_1", startDate)
+                .queryParam("FID_INPUT_DATE_2", endDate)
+                .queryParam("FID_ORG_ADJ_PRC", "0")  // 수정주가 여부
                 .build())
             .header("Authorization", "Bearer " + token)
             .header("appkey", kisConfig.getAppKey())
@@ -79,12 +80,11 @@ public class StockServiceImpl implements StockService {
             .block();
     }
 
-
     @Override
     public List<String> getAllCompanyCodes() {
         // DB에서 모든 기업 코드를 가져와 리스트로 반환
         return companyRepository.findAll().stream()
-                .map(Company::getCompanyNumber)
-                .collect(Collectors.toList());
+            .map(Company::getCompanyNumber)
+            .collect(Collectors.toList());
     }
 }

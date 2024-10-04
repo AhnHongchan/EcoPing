@@ -10,4 +10,5 @@ public interface UserInterestedCompanyService {
     void addInterestedCompany(User user, String companyNumber);
     void removeInterestedCompany(User user, String companyNumber);
     List<CompanyDto> getInterestedCompanies(User user);
+    boolean isInterested(User user, Company company);  // 흥미 여부 확인 메서드 추가
 }
