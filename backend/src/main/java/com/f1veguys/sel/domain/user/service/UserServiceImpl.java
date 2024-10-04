@@ -1,11 +1,9 @@
 package com.f1veguys.sel.domain.user.service;
-import com.f1veguys.sel.domain.points.domain.Points;
 import com.f1veguys.sel.domain.points.repository.PointsRepository;
 import com.f1veguys.sel.domain.user.domain.User;
 import com.f1veguys.sel.dto.AgeGroup;
 import com.f1veguys.sel.global.util.HeaderUtil;
 import com.f1veguys.sel.global.util.JwtUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.f1veguys.sel.dto.LoginRequest;
 import com.f1veguys.sel.domain.user.repository.UserRepository;
-import com.f1veguys.sel.global.util.UniqueNoGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -99,5 +97,10 @@ public class UserServiceImpl implements UserService {
         } else {
             return AgeGroup.OVER_80;
         }
+
+
+    @Override
+    public Optional<User> getUserById(int userId) {
+        return userRepository.findById(userId);
     }
 }

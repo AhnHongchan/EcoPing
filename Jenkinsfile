@@ -134,7 +134,8 @@ pipeline {
                             docker stop nginx || true
                             docker rm nginx || true
                             # Ensure that nginx.conf is a regular file
-                            docker run -d --name nginx -p 80:80 -v /home/ubuntu/nginx.conf:/etc/nginx/nginx.conf:ro nginx:alpine
+                            docker run -d --name nginx -p 80:80 -p 443:443 -v /home/ubuntu/nginx.conf:/etc/nginx/nginx.conf:ro -v /etc/letsencrypt:/etc/letsencrypt:ro nginx:alpine
+
                         '
                     """
                 }
