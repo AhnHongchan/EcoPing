@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
         } else {
             return AgeGroup.OVER_80;
         }
+    }
 
 
     @Override
