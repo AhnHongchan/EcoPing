@@ -3,13 +3,56 @@
 import React, { useEffect, useState } from "react";
 import "./Tree.css";
 import Scene from "scenejs"; 
+import Modal from './modal';
+import Modal2 from './modal2';
 
+import {BiCloudRain , BiGift, BiBookOpen, BiInfoCircle } from "react-icons/bi";
 import instance from "@/lib/axios";
+
 
 const Tree = () => {
   const [level, setLevel] = useState(0); 
   const [waterPoint, setWaterPoint] = useState(0);
+  const [isDark, setIsDark] = useState(false); 
+  const [isClient, setIsClient] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModal2Open, setIsModal2Open] = useState(false);
+
+
+  const openModal = () => {
+    setIsModalOpen(true); 
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); 
+  };
+
   
+
+  const openModal2 = () => {
+    setIsModal2Open(true); 
+  };
+
+  const closeModal2 = () => {
+    setIsModal2Open(false); 
+  };
+
+
+
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+
+  useEffect(() => {
+    const currentHour = new Date().getHours();
+    if (currentHour < 6 || currentHour >= 18) {
+      setIsDark(true); 
+    } else {
+      setIsDark(false); 
+    }
+  }, []); 
 
   useEffect(() => {
     const fetchWaterPoint = async () => {
@@ -23,7 +66,8 @@ const Tree = () => {
     };
 
     fetchWaterPoint(); 
-  }, []); 
+  }, []);
+  
 
   // useEffect(() => {
   //   const sceneTree = new Scene({
@@ -98,11 +142,10 @@ const Tree = () => {
   useEffect(() => {
     const flowers = document.querySelectorAll(".background > .flower");
   
-    // Check if flowers exist in the DOM before creating the Scene
     if (flowers.length > 0 && level >= 6) {
       const sceneTree = new Scene(
         {
-          ".background>.flower": function (i) {
+          ".background>.flower": function (i:any) {
             return {
               0: {opacity: 0, transform: "translateY(0px) rotate(0deg)"},
               1: {opacity: 1},
@@ -123,7 +166,7 @@ const Tree = () => {
     } else if (flowers.length > 0) {
       const sceneTree = new Scene(
         {
-          ".background>.flower": function (i) {
+          ".background>.flower": function (i:any) {
             return {
               0: {opacity: 0, transform: "translateY(0px) rotate(0deg)"}
             };
@@ -185,11 +228,14 @@ const Tree = () => {
         sceneItem.setCSS(0, ["transform"]);
   
         const time = depths[0] * 0.5 + depths[1] * 0.5 + depths[2] * 0.5;
-        sceneItem.set(time, "transform", "scale", 0);
+        sceneItem.set(time, "transform", "scale", 0); 
         sceneItem.set(time + 1, "transform", "scale", 1);
       }
   
+      
       sceneTree.playCSS(); 
+
+      
     }
   }, [level]);
   
@@ -339,12 +385,34 @@ const Tree = () => {
     }
   };
 
+  const toggleDarkMode = () => {
+    setIsDark((prev) => !prev); 
+  };
+
+
+  const resetTree = () => {
+    setWaterPoint(0);
+    setLevel(0);
+  };
+
+  // useEffect(() => {
+  //   console.log(waterPoint+ " " + level)
+  // }, [level, waterPoint]);
+
+  
+
   return (
-<div className="mt-[calc(100vh-16rem)]">
-  <div className="scene">
-      <div className="sun"></div>
-      <div className="bg"></div>
-  </div>
+    <div>
+
+<div className="">
+  
+{isClient && (
+      <div className={isDark ? 'dark' : ''}>
+        <div className="scene">
+          <div className="sun" onClick={toggleDarkMode}></div>
+        </div>
+      </div>
+    )}
 <div className="background overflow-hidden">
         {level >= 6 && (
       <div className="background">
@@ -567,11 +635,27 @@ const Tree = () => {
           )}
 
 </div>
-<button className="pouring-button" onClick={handleButtonClick}>
-            물주기
-            </button>
 
       </div>
+      <div className="flex flex-col absolute buttonGroup">
+      <button className="info-button" onClick={openModal2}>
+      <BiInfoCircle />
+      </button>
+      <button className="dogam-button">
+      <BiBookOpen />
+      </button>
+      {level >= 6 || waterPoint >= 6 ? (
+      <button className="receiveButton" onClick={openModal} >
+      <BiGift  />
+      </button> 
+       ) : (
+        <button className="pouringWater " onClick={handleButtonClick}>
+        <BiCloudRain />
+        </button>     )}
+      </div>
+      {isModalOpen && <Modal onClose={closeModal} onResetTree={resetTree} />}
+      {isModal2Open && <Modal2 onClose={closeModal2} />}
+    </div>
   );
 };
 
