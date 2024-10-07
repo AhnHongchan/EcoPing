@@ -57,13 +57,50 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
                     }
                 }
             }, kisConfig.getWebsocketUrl() + "?approval_key=" + approvalKey);
+
+            // 웹소켓 연결 후 초기 데이터 전송
+            sendInitialStockUpdates(session);
+
         } catch (Exception e) {
             session.sendMessage(new TextMessage("Approval Key 발급 실패: " + e.getMessage()));
             session.close();
         }
+    }
 
-        // 웹소켓 연결 후 주식 리스트를 즉시 전송
-        sendStockUpdates();
+    // 초기 데이터 전송 메서드
+    private void sendInitialStockUpdates(WebSocketSession session) {
+        try {
+            // DB에서 기업 리스트를 가져와서 주식 데이터를 요청
+            List<String> companyNumbers = stockService.getAllCompanyCodes();
+            List<Map<String, Object>> stockDataList = new ArrayList<>();
+
+            for (String companyCode : companyNumbers) {
+                // 각 기업에 대해 실시간 주식 데이터를 요청
+                JsonNode stockData = stockService.getRealTimeStockData(companyCode);
+
+                // 필요한 데이터만 추출 (종목코드, 주식 이름, 현재가, 전일 대비 가격, 전일 대비 등락률)
+                Map<String, Object> filteredStockData = new HashMap<>();
+                filteredStockData.put("companyNumber", stockData.get("output").get("stck_shrn_iscd").asText());
+                filteredStockData.put("stockName", stockData.get("output").get("rprs_mrkt_kor_name").asText());
+                filteredStockData.put("currentPrice", stockData.get("output").get("stck_prpr").asText());
+                filteredStockData.put("priceDifference", stockData.get("output").get("prdy_vrss").asText());
+                filteredStockData.put("rateDifference", stockData.get("output").get("prdy_ctrt").asText());
+
+                // 리스트에 추가
+                stockDataList.add(filteredStockData);
+            }
+
+            // JSON으로 직렬화
+            String stockDataJson = objectMapper.writeValueAsString(stockDataList);
+
+            // 연결된 세션에 전송
+            if (session.isOpen()) {
+                session.sendMessage(new TextMessage(stockDataJson));
+            }
+        } catch (Exception e) {
+            System.out.println("초기 데이터 전송 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Scheduled(fixedRate = 10000)  // 10초마다 실행
@@ -80,17 +117,17 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
                     // 필요한 데이터만 추출 (종목코드, 주식 이름, 현재가, 전일 대비 가격, 전일 대비 등락률)
                     Map<String, Object> filteredStockData = new HashMap<>();
-                    filteredStockData.put("companyNumber", stockData.get("output").get("stck_shrn_iscd").asText()); // 종목 코드
-                    filteredStockData.put("stockName", stockData.get("output").get("rprs_mrkt_kor_name").asText()); // 주식 이름
-                    filteredStockData.put("currentPrice", stockData.get("output").get("stck_prpr").asText()); // 현재가
-                    filteredStockData.put("priceDifference", stockData.get("output").get("prdy_vrss").asText()); // 전일 대비 가격
-                    filteredStockData.put("rateDifference", stockData.get("output").get("prdy_ctrt").asText()); // 전일 대비 등락률
+                    filteredStockData.put("companyNumber", stockData.get("output").get("stck_shrn_iscd").asText());
+                    filteredStockData.put("stockName", stockData.get("output").get("rprs_mrkt_kor_name").asText());
+                    filteredStockData.put("currentPrice", stockData.get("output").get("stck_prpr").asText());
+                    filteredStockData.put("priceDifference", stockData.get("output").get("prdy_vrss").asText());
+                    filteredStockData.put("rateDifference", stockData.get("output").get("prdy_ctrt").asText());
 
                     // 리스트에 추가
                     stockDataList.add(filteredStockData);
                 }
 
-                // 전체 데이터를 묶어서 JSON으로 변환
+                // JSON으로 직렬화
                 String stockDataJson = objectMapper.writeValueAsString(stockDataList);
 
                 // 각 세션에 전송
