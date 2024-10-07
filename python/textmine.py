@@ -9,7 +9,7 @@ from konlpy.tag import Mecab
 import re
 import os
 
-app = FastAPI()
+app = FastAPI(docs_url='/py/docs', openapi_url='/py/openapi.json')
 
 # CORS 설정
 app.add_middleware(
