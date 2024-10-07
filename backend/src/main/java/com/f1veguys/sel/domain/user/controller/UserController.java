@@ -29,7 +29,6 @@ public class UserController {
     // 회원가입 API
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) throws JsonProcessingException {
-        System.out.println("start");
         userService.register(user);
         int userId = user.getId();
         Points points = pointsService.makePoints(userId);
