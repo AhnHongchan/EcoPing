@@ -42,6 +42,29 @@ public class StockController {
         Map<String, Object> response = stockService.getStockListData();
         return ResponseEntity.ok(response);
     }
+    // 기초데이터
+    @GetMapping("/initial-data")
+    public ResponseEntity<List<Map<String, Object>>> getInitialStockData() {
+        List<String> companyNumbers = companyService.getAllCompanyNumbers();
+        List<Map<String, Object>> stockDataList = new ArrayList<>();
+
+        for (String companyCode : companyNumbers) {
+            JsonNode stockData = stockService.getRealTimeStockData(companyCode);
+
+            // 필요한 데이터만 추출
+            Map<String, Object> filteredStockData = new HashMap<>();
+            filteredStockData.put("companyNumber", stockData.get("output").get("stck_shrn_iscd").asText());
+            filteredStockData.put("stockName", stockData.get("output").get("rprs_mrkt_kor_name").asText());
+            filteredStockData.put("currentPrice", stockData.get("output").get("stck_prpr").asText());
+            filteredStockData.put("priceDifference", stockData.get("output").get("prdy_vrss").asText());
+            filteredStockData.put("rateDifference", stockData.get("output").get("prdy_ctrt").asText());
+
+            stockDataList.add(filteredStockData);
+        }
+
+        return ResponseEntity.ok(stockDataList);
+    }
+
 
     @GetMapping("/{companyNumber}")
     public ResponseEntity<Map<String, Object>> getStockDetails(@PathVariable("companyNumber") String companyNumber,
