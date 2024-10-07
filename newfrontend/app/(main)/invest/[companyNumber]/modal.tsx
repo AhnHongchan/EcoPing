@@ -1,19 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FinalModal from './final-modal';
-
-interface StockDetailData {
-  stockId: string;
-  stockName: string;
-  currentPrice: number;
-  priceDifference: string;
-  rateDifference: number;
-  min52: number;
-  max52: number;
-  Isinterested: boolean;
-  envPoint: string;
-  recommendRank: number;
-  hold: number;
-}
+import instance from '@/lib/axios';
+import StockDetailData from '@/app/types/stock-detail';
 
 interface ModalProps {
   onClose: () => void;
@@ -22,31 +10,95 @@ interface ModalProps {
 
 const Modal = ({ onClose, stockData }: ModalProps) => {
   const [quantity, setQuantity] = useState(0);
+  const [inputValue, setInputValue] = useState('0'); // 입력 필드를 위한 문자열 상태 추가
   const [isFinalModalOpen, setIsFinalModalOpen] = useState(false);
+  const [myPoint, setMyPoint] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value)) {
-      setQuantity(value);
+    const value = e.target.value;
+
+    // 빈 문자열, '-', 또는 숫자 형식의 입력만 허용
+    if (value === '' || value === '-' || /^-?[0-9]*$/.test(value)) {
+      setInputValue(value);
+
+      // 숫자로 변환 가능한 경우에만 `quantity` 업데이트
+      if (value === '-' || value === '') {
+        setQuantity(0); // '-' 또는 빈 문자열인 경우 `quantity`를 0으로 설정
+      } else {
+        setQuantity(parseInt(value, 10));
+      }
     }
   };
 
-  const handleIncrease = () => setQuantity(prev => prev + 1);
-  const handleDecrease = () => setQuantity(prev => prev - 1);
+  const handleIncrease = () => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    setInputValue(newQuantity.toString());
+  };
+
+  const handleDecrease = () => {
+    const newQuantity = quantity - 1;
+    setQuantity(newQuantity);
+    setInputValue(newQuantity.toString());
+  };
+
   const handleContentClick = (e: React.MouseEvent) => e.stopPropagation();
 
-  // 포인트 계산
   const totalPoints = stockData.currentPrice * quantity / 100;
   const formattedPoints = totalPoints.toLocaleString();
 
-  const handleFinalModal = () => {
-    setIsFinalModalOpen(true);
-  }
+  const getMyPoint = async () => {
+    const response = await instance.get('points/mypoint', {
+      headers: {
+        userId: 1,
+      }
+    });
 
+    const data = response.data;
+    setMyPoint(data);
+  };
 
-  const closeFianlModal = () => {
+  useEffect(() => {
+    if (quantity > 0 && totalPoints > myPoint) {
+      setErrorMessage('포인트를 초과하여 매수할 수 없습니다.');
+    } else if (quantity < 0 && Math.abs(quantity) > stockData.hold) {
+      setErrorMessage('보유량을 초과하여 매도할 수 없습니다.');
+    } else {
+      setErrorMessage('');
+    }
+  }, [quantity, totalPoints, myPoint, stockData.hold]);
+
+  const handleFinalModal = async () => {
+    if (errorMessage) return;
+
+    const endpoint = quantity > 0 
+      ? `transaction/stock/${stockData.companyNumber}/buy` 
+      : `transaction/stock/${stockData.companyNumber}/sell`;
+
+    try {
+      const response = await instance.post(
+        endpoint,
+        {
+          quantity: Math.abs(quantity),
+          currentPrice: stockData.currentPrice / 100,
+        },
+        {}
+      );
+      
+      setIsFinalModalOpen(true);
+    } catch (error) {
+      console.error('Error during transaction:', error);
+    }
+  };
+
+  useEffect(() => {
+    getMyPoint();
+  }, []);
+
+  const closeFinalModal = () => {
     setIsFinalModalOpen(false);
-  }
+  };
 
   return (
     <div 
@@ -54,41 +106,50 @@ const Modal = ({ onClose, stockData }: ModalProps) => {
       onClick={onClose}
     >
       <div 
-        className="bg-loginLightGreen p-4 rounded" 
+        className="bg-loginLightGreen p-4 w-60 rounded" 
         onClick={handleContentClick}
       >
-        <p className='text-center mb-2'>거래하기</p>
-        <p className='text-center'>거래 주식 수</p>
-        <br />
-        <div className='flex gap-4'>
+        <p className='text-center mb-1'>거래하기</p>
+        <p className='text-center mb-2'>거래 주식 수</p>
+        <div className='flex gap-4 justify-center mb-4'>
           <button className='bg-green-500 w-6 shadow-md rounded-md' onClick={handleDecrease}>-</button>
           <input 
             className='rounded-md w-24 text-center appearance-none' 
             type="text"
-            value={quantity}
+            value={inputValue} // `inputValue`로 입력 필드 관리
             onChange={handleChange}
           />
           <button className='bg-green-500 w-6 shadow-md rounded-md' onClick={handleIncrease}>+</button>
         </div>
-        <div>
+        <div className='flex flex-col items-center justify-center text-center'>
           {quantity !== 0 && (
-            <div>
-              <p>{quantity > 0 ? '필요 포인트:' : '획득 포인트:'}</p>
-              <p>{quantity > 0 ? formattedPoints : Math.abs(totalPoints).toLocaleString()}</p>
+            <div className='mb-2'>
+              <p>{quantity > 0 ? '필요 포인트' : '획득 포인트'}</p>
+              <p>{quantity > 0 ? formattedPoints : Math.abs(totalPoints).toLocaleString()} 포인트</p>
             </div>
           )}
           <div>
-            <p>포인트 총액:</p>
-            <p>현재 포인트 - {formattedPoints}</p>
+            <p>포인트 총액 </p>
+            <p>{(myPoint - totalPoints).toLocaleString()} 포인트</p>
           </div>
         </div>
-        <br />
-        <div className='flex gap-4 justify-center'>
-          <button onClick={handleFinalModal} className="mt-2 p-2 bg-green-500 text-white rounded-md text-sm">확인</button>
-          <button onClick={onClose} className="mt-2 p-2 bg-red-500 text-white rounded-md text-sm">닫기</button>        
+
+        {errorMessage && (
+          <p className="text-red-500 text-center mt-2">{errorMessage}</p>
+        )}
+
+        <div className='flex gap-4 justify-center mt-4'>
+          <button 
+            onClick={handleFinalModal} 
+            className="p-2 bg-green-500 text-white rounded-md text-sm"
+            disabled={!!errorMessage} // 에러 메시지가 있으면 비활성화
+          >
+            확인
+          </button>
+          <button onClick={onClose} className="p-2 bg-red-500 text-white rounded-md text-sm">닫기</button>        
         </div>
       </div>
-      {isFinalModalOpen && <FinalModal onClose={closeFianlModal} stockData={stockData}/>}
+      {isFinalModalOpen && <FinalModal onClose={closeFinalModal} stockData={stockData} />}
     </div>
   );
 };

@@ -5,7 +5,9 @@ interface AuthStore {
   setUserId: (id: string) => void;
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
+const useAuthStore = create<AuthStore>((set) => ({
   userId: '',
   setUserId: (id) => set({ userId: id }),
 }));
+
+export default useAuthStore;

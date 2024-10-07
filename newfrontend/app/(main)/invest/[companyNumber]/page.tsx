@@ -2,45 +2,58 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import instance from "@/lib/axios";
+
+import useStockStore from "@/app/store/stock-store";
+import Company from "@/app/types/company";
+import StockDetailData from "@/app/types/stock-detail";
+
 import { BiSolidHeart } from "react-icons/bi";
 import Modal from './modal';
 
-interface StockDetailData {
-  stockId: string;
-  stockName: string;
-  currentPrice: number;
-  priceDifference: string;
-  rateDifference: number;
-  min52: number;
-  max52: number;
-  Isinterested: boolean;
-  envPoint: string;
-  recommendRank: number;
-  hold: number,
-}
-
 const StockDetail = (): JSX.Element => {
   const router = useRouter();
-  const { stockId } = useParams();
+  const { companyNumber } = useParams();
   const [stockData, setStockData] = useState<StockDetailData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { companyStoreDict, setCompanyStoreDict } = useStockStore();
 
-  const fetchData = {
-    stockId: stockId as string,
-    stockName: "Samsung Electronics",
-    currentPrice: 72100,
-    priceDifference: "-200",
-    rateDifference: -0.28,
-    min52: 60000,
-    max52: 80000,
-    Isinterested: true,
-    envPoint: "A+",
-    recommendRank: 1,
-    hold: 10,
+  const fetchData = async () => {
+    const response = await instance.get(`stock/${companyNumber}`)
+    const data = response.data.data
+    setStockData(data);
+
+    if (!companyStoreDict[data.companyNumber]) {
+
+      const nameResponse = await instance.get("/stock/list");
+      const nameData = nameResponse.data.data;
+      const companyDict = nameData.reduce(
+        (
+          acc: {
+            [key: string]: { name: string; ecoScore: number; ranking: number };
+          },
+          item: Company
+        ) => {
+          acc[item.companyNumber] = {
+            name: item.companyName,
+            ecoScore: item.ecoScore,
+            ranking: item.ranking,
+          };
+
+          return acc;
+        },
+        {}
+      );
+  
+      setCompanyStoreDict(companyDict);
+    }
   };
 
+
+  
+
   const handleClick = () => {
-    router.push(`https://m.stock.naver.com/domestic/stock/${stockId}/total`);
+    router.push(`https://m.stock.naver.com/domestic/stock/${companyNumber}/total`);
   };
 
   const handleTrade = () => {
@@ -52,8 +65,8 @@ const StockDetail = (): JSX.Element => {
   };
 
   useEffect(() => {
-    setStockData(fetchData);
-  }, [stockId]);
+    fetchData();
+  }, [companyNumber]);
 
   if (!stockData) {
     return <p>해당하는 데이터가 없습니다.</p>;
@@ -62,21 +75,33 @@ const StockDetail = (): JSX.Element => {
   return (
     <div>
       <div className="flex items-center justify-center text-center">
-        <BiSolidHeart className={`${stockData.Isinterested ? '' : 'opacity-0'} text-md text-red-500`}/>
+        <BiSolidHeart className={`${stockData.Isinterested ? '' : 'hidden'} text-md text-red-500`}/>
         <p className='small-title ml-2'>
-          {stockData.stockName}
+          {companyStoreDict[companyNumber]?.name}
         </p>
       </div>
       <br />
       <div className="box-style bg-loginLightGreen">
-        <p>현재가: {stockData.currentPrice.toLocaleString()}</p>
-        <p>52주 최저가: {stockData.min52.toLocaleString()}원</p>
-        <p>52주 최고가: {stockData.max52.toLocaleString()}원</p>
+        <p>현재가: {Number(stockData.currentPrice).toLocaleString()}원</p>
+        <p>52주 최저가: {Number(stockData.min52).toLocaleString()}원</p>
+        <p>52주 최고가: {Number(stockData.max52).toLocaleString()}원</p>
+
+        <p>
+          전일 대비:{" "}
+          <span
+            className={parseFloat(stockData.priceDifference) > 0 ? "text-red-500" : "text-blue-700"}
+          >
+            {Math.abs(parseFloat(stockData.priceDifference)).toLocaleString()}원{" "}
+            ({parseFloat(stockData.rateDifference).toLocaleString()}%)
+            {parseFloat(stockData.priceDifference) > 0 ? " 상승" : " 하락"}
+          </span>
+        </p>
+        <p></p>
       </div>
       <br />
       <div className="box-style bg-loginLightGreen">
-        <p>친환경 지수: {stockData.envPoint}</p>
-        <p>추천 순위: {stockData.recommendRank}위</p>
+        <p>친환경 지수: {companyStoreDict[companyNumber]?.ecoScore.toFixed(2)}</p>
+        <p>추천 순위: {companyStoreDict[companyNumber]?.ranking}위</p>
       </div>
       <br />
       {stockData.hold > 0 && (
@@ -87,8 +112,8 @@ const StockDetail = (): JSX.Element => {
               <p>{stockData.hold.toLocaleString()}개</p>
             </div>
             <div className="flex justify-between">
-              <p>보유 자산:</p>
-              <p>{(stockData.currentPrice * stockData.hold).toLocaleString()}포인트</p>
+              <p>보유 가치:</p>
+              <p>{(stockData.currentPrice * stockData.hold / 100).toLocaleString()}포인트</p>
             </div>
           </div>
           <br />

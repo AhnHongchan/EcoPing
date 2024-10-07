@@ -6,11 +6,15 @@ import { useRouter } from "next/navigation";
 import instance from "@/lib/axios";
 
 import Cookies from "js-cookie";
-import { useAuthStore } from "../store/useAuthStore";
+import useAuthStore from "../store/use-auth-store";
 
 import "../../styles/globals.css";
-import { BiSolidLockAlt, BiSolidUser, BiSolidShow, BiSolidHide } from "react-icons/bi";
-
+import {
+  BiSolidLockAlt,
+  BiSolidUser,
+  BiSolidShow,
+  BiSolidHide,
+} from "react-icons/bi";
 
 const Login = (): JSX.Element => {
   const router = useRouter();
@@ -30,7 +34,6 @@ const Login = (): JSX.Element => {
         password: password,
       });
 
-
       if (
         response.status === 200 &&
         Cookies.get("accessToken") &&
@@ -40,8 +43,7 @@ const Login = (): JSX.Element => {
         router.push("/dashboard");
       } else {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const togglePasswordVisibility = () => {
@@ -58,12 +60,14 @@ const Login = (): JSX.Element => {
       <h2 className="text-2xl font-bold text-center text-loginDarkGreen mt-4">
         환영합니다
       </h2>
-      <p className="text-center text-gray-400 mb-6 mt-1">로그인 후 이용가능합니다</p>
+      <p className="text-center text-gray-400 mb-6 mt-1">
+        로그인 후 이용가능합니다
+      </p>
       <div className="mt-8 flex flex-col justify-center items-center">
         <div className="flex items-center bg-loginLightGreen p-2 rounded-lg w-10/12">
           <div className="p-2">
-          <BiSolidUser  className="text-loginDarkGreen" />
-        </div>
+            <BiSolidUser className="text-loginDarkGreen" />
+          </div>
           <input
             ref={idRef}
             type="text"
@@ -74,22 +78,22 @@ const Login = (): JSX.Element => {
         </div>
 
         <div className="flex items-center bg-loginLightGreen p-2 rounded-lg w-10/12 mt-4">
-        <div className="p-2">
-          <BiSolidLockAlt className="text-loginDarkGreen" />
-        </div>
+          <div className="p-2">
+            <BiSolidLockAlt className="text-loginDarkGreen" />
+          </div>
           <input
             ref={passwordRef}
-            type={showPassword ? "text" : "password"} 
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="비밀번호"
             className="bg-loginLightGreen text-loginDarkGreen placeholder-loginDarkGreen flex-1 py-2 px-4 rounded-lg focus:outline-none"
           />
           <p
-        className="text-loginDarkGreen mr-4 cursor-pointer"
-        onClick={togglePasswordVisibility}
-      >
-        {showPassword ? <BiSolidHide /> : <BiSolidShow />}
-      </p>
+            className="text-loginDarkGreen mr-4 cursor-pointer"
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? <BiSolidHide /> : <BiSolidShow />}
+          </p>
         </div>
       </div>
 
@@ -105,7 +109,9 @@ const Login = (): JSX.Element => {
       <div className="text-center mt-4 flex justify-center">
         <p className="text-gray-400 mr-1">아직 계정이 없으시다면? </p>
         <Link href="/account">
-          <p className="text-loginDarkGreen font-bold underline cursor-pointer">회원가입</p>
+          <p className="text-loginDarkGreen font-bold underline cursor-pointer">
+            회원가입
+          </p>
         </Link>
       </div>
     </div>

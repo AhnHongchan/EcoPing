@@ -1,20 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-
-interface StockDetailData {
-  stockId: string;
-  stockName: string;
-  currentPrice: number;
-  priceDifference: string;
-  rateDifference: number;
-  min52: number;
-  max52: number;
-  Isinterested: boolean;
-  envPoint: string;
-  recommendRank: number;
-  hold: number;
-}
+import StockDetailData from '@/app/types/stock-detail';
 
 interface ModalProps {
   onClose: () => void;
