@@ -5,9 +5,10 @@ import com.f1veguys.sel.domain.company.service.CompanyService;
 import com.f1veguys.sel.domain.stock.service.StockService;
 import com.f1veguys.sel.domain.UserStockHoldings.service.UserStockHoldingsService;
 import com.f1veguys.sel.domain.UserStockTransaction.service.UserStockTransactionService;
-import com.f1veguys.sel.domain.UserInterestedCompany.service.UserInterestedCompanyService;
 import com.f1veguys.sel.domain.customuser.CustomUserDetails;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,17 +25,14 @@ public class StockController {
     private final CompanyService companyService;
     private final UserStockHoldingsService userStockHoldingsService;
     private final UserStockTransactionService transactionService;
-    private final UserInterestedCompanyService userInterestedCompanyService; // 흥미 여부 확인을 위한 서비스
 
     public StockController(StockService stockService, CompanyService companyService,
         UserStockHoldingsService userStockHoldingsService,
-        UserStockTransactionService transactionService,
-        UserInterestedCompanyService userInterestedCompanyService) {
+        UserStockTransactionService transactionService) {
         this.stockService = stockService;
         this.companyService = companyService;
         this.userStockHoldingsService = userStockHoldingsService;
         this.transactionService = transactionService;
-        this.userInterestedCompanyService = userInterestedCompanyService;
     }
 
     @GetMapping("/list")
@@ -42,7 +40,7 @@ public class StockController {
         Map<String, Object> response = stockService.getStockListData();
         return ResponseEntity.ok(response);
     }
-    // 기초데이터
+
     @GetMapping("/initial-data")
     public ResponseEntity<List<Map<String, Object>>> getInitialStockData() {
         List<String> companyNumbers = companyService.getAllCompanyNumbers();
@@ -96,9 +94,9 @@ public class StockController {
             int holdAmount = userStockHoldingsService.getHoldings(userDetails.getUser(), companyData);
             stockDetails.put("hold", holdAmount);
 
-            // 사용자의 흥미 여부 확인
-            boolean isInterested = userInterestedCompanyService.isInterested(userDetails.getUser(), companyData);
-            stockDetails.put("isInterested", isInterested);
+            // 에코 점수 및 순위 추가
+            stockDetails.put("ecoScore", companyData.getEcoScore());
+            stockDetails.put("ranking", companyData.getRanking());
 
             response.put("success", true);
             response.put("data", stockDetails);
