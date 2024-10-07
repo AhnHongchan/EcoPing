@@ -40,7 +40,7 @@ public class StockController {
         Map<String, Object> response = stockService.getStockListData();
         return ResponseEntity.ok(response);
     }
-
+    // 기초데이터
     @GetMapping("/initial-data")
     public ResponseEntity<List<Map<String, Object>>> getInitialStockData() {
         List<String> companyNumbers = companyService.getAllCompanyNumbers();
