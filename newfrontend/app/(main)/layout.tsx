@@ -16,16 +16,16 @@ const RootLayout = ({
 }>) => {
   return (
     <div className="min-h-screen flex flex-col items-center relative">
-      <div className="w-full h-16 bg-mainGreen z-20 fixed top-0 left-0">
+      <div className="w-full h-16 bg-loginLightGreen z-20 fixed top-0 left-0">
         <Header />
       </div>
 
       {/* Main Content */}
-      <main className="px-4 py-24 w-full max-w-[400px] mx-auto relative z-10 overflow-x-auto">
+      <main className="px-4 py-24 w-[400px] mx-auto relative z-10 overflow-x-auto">
         {children}
       </main>
 
-      <div className="w-full bg-mainGreen fixed bottom-0 left-0 z-20">
+      <div className="w-full fixed bottom-0 left-0 z-20">
         <Navbar />
       </div>
     </div>
