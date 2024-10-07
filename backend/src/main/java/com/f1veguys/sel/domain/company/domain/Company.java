@@ -18,5 +18,4 @@ public class Company {
     private String companyName;
     private String companyNumber;
     private double ecoScore;
-    private int ranking; // 순위 필드 추가
 }
