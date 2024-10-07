@@ -2,6 +2,7 @@ package com.f1veguys.sel.domain.user.domain;
 
 import com.f1veguys.sel.domain.badge.domain.Badge;
 import com.f1veguys.sel.domain.campaignhistory.domain.CampaignHistory;
+import com.f1veguys.sel.domain.card.domain.Card;
 import com.f1veguys.sel.domain.tree.domain.Tree;
 import com.f1veguys.sel.dto.AgeGroup;
 import com.f1veguys.sel.dto.Gender;
@@ -61,6 +62,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "age_group", nullable = false)
     private AgeGroup ageGroup;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "user-card")
+    private Card card;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "user-campaign-history")

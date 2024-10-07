@@ -1,5 +1,6 @@
 package com.f1veguys.sel.domain.customuser;
 
+import com.f1veguys.sel.domain.card.domain.Card;
 import com.f1veguys.sel.domain.user.domain.User;
 import com.f1veguys.sel.dto.AgeGroup;
 import com.f1veguys.sel.dto.Gender;
@@ -63,4 +64,5 @@ public class CustomUserDetails implements UserDetails {
     }
     public Gender getGender() {return user.getGender();}
     public AgeGroup getAgeGroup() {return user.getAgeGroup();}
+    public Card getCard() {return user.getCard();}
 }
