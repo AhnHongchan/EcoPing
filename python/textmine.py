@@ -40,14 +40,15 @@ def load_and_preprocess_data():
     try:
         df = pd.read_excel(DATA_FILE)
         product_names = df['제품명'].fillna('').tolist()
+        manufacturers = df['제조사/유통사'].fillna('').tolist()  # 제조사/유통사 열 추가
         preprocessed_names = [preprocess(name) for name in product_names]
-        return product_names, preprocessed_names
+        return product_names, manufacturers, preprocessed_names  # 제조사/유통사도 반환
     except FileNotFoundError:
         print(f"Error: The file {DATA_FILE} was not found.")
-        return [], []
+        return [], [], []
     except Exception as e:
         print(f"Error loading data: {str(e)}")
-        return [], []
+        return [], [], []
 
 # TF-IDF 벡터화 함수
 def vectorize_data(preprocessed_names):
@@ -56,7 +57,7 @@ def vectorize_data(preprocessed_names):
     return vectorizer, tfidf_matrix
 
 # 전역 변수로 데이터와 모델 저장
-product_names, preprocessed_names = load_and_preprocess_data()
+product_names, manufacturers, preprocessed_names = load_and_preprocess_data()
 vectorizer, tfidf_matrix = vectorize_data(preprocessed_names)
 
 class Query(BaseModel):
@@ -70,16 +71,20 @@ def find_similar_products(query: str):
     max_similarity = cosine_similarities[max_similarity_index]
     
     if max_similarity >= 0.3:
-        return product_names[max_similarity_index], max_similarity
+        return product_names[max_similarity_index], manufacturers[max_similarity_index], max_similarity  # 제조사/유통사 추가
     else:
-        return None, max_similarity
+        return None, None, max_similarity
 
 @app.post("/find_similar_products")
 async def api_find_similar_products(query: Query):
     try:
-        similar_product, similarity = find_similar_products(query.text)
+        similar_product, manufacturer, similarity = find_similar_products(query.text)
         if similar_product:
-            return {"query": query.text, "similar_product": similar_product}
+            return {
+                "query": query.text,
+                "similar_product": similar_product,
+                "manufacturer": manufacturer  # 제조사/유통사 포함
+            }
         else:
             return {"query": query.text, "result": "해당하는 제품을 못찾았습니다."}
     except Exception as e:
