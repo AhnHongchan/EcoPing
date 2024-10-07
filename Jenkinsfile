@@ -26,20 +26,24 @@ pipeline {
             }
         }
 
-        // 백엔드 애플리케이션 빌드 및 배포
-        stage('Backend - Add Env') {
-            steps {
-                dir('backend') {
-                    withCredentials([file(credentialsId: 'application', variable: 'application')]) {
-                        sh '''
-                            mkdir -p src/main/resources
-                            chmod -R 777 src/main/resources
-                            cp ${application} src/main/resources/application.yml
-                        '''
-                    }
-                }
+       // 백엔드 애플리케이션 빌드 및 배포
+stage('Backend - Add Env') {
+    steps {
+        dir('backend') {
+            withCredentials([
+                file(credentialsId: 'application', variable: 'application'),
+                file(credentialsId: 'import', variable: 'import')
+            ]) {
+                sh '''
+                    mkdir -p src/main/resources
+                    chmod -R 777 src/main/resources
+                    cp ${application} src/main/resources/application.yml
+                    cp ${import} src/main/resources/import.sql
+                '''
             }
         }
+    }
+}
 
         stage('Backend - Build') {
             steps {
@@ -68,6 +72,18 @@ pipeline {
                 }
             }
         }
+        stage('Frontend - Add Env') {
+            steps {
+                dir('newfrontend') {
+            withCredentials([file(credentialsId: 'env', variable: 'frontendEnv')]) {
+                sh '''
+                    cp ${frontendEnv} .env
+                    chmod 644 .env
+                '''
+            }
+        }
+    }
+}
 
         // 프론트엔드 애플리케이션 빌드 및 배포
         stage('Frontend - Docker Build') {
