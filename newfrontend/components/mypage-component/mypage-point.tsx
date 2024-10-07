@@ -10,7 +10,7 @@ interface MypagePointProps {
 
 const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
   const router = useRouter();
-  const dummyUser: number = 1;  
+  const dummyUser: number = 4;  
 
   const [points, setPoints] = useState<number | null>(null); 
   const [loading, setLoading] = useState<boolean>(true); 
