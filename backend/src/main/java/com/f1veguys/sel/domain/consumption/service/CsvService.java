@@ -20,7 +20,6 @@ public class CsvService {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    // application.yml에서 upload-dir 설정 읽어오기
     @Value("${file.upload-dir}")
     private String uploadDir;
 
