@@ -1,7 +1,6 @@
 package com.f1veguys.sel.domain.ecoratio.service;
 
 import com.f1veguys.sel.domain.ecoratio.domain.EcoRatio;
-import com.f1veguys.sel.domain.ecocompany.repository.EcoCompanyRepository;
 import com.f1veguys.sel.domain.ecoratio.repository.EcoRatioRepository;
 import com.f1veguys.sel.domain.spendinghistory.repository.SpendingHistoryRepository;
 import lombok.RequiredArgsConstructor;

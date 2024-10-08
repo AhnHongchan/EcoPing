@@ -1,6 +1,6 @@
 package com.f1veguys.sel.domain.consumption.service;
 
-import com.f1veguys.sel.domain.consumption.dto.Consumption;
+import com.f1veguys.sel.domain.consumption.dto.ConsumptionResponse;
 import com.f1veguys.sel.domain.consumption.dto.Statistics;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +14,28 @@ import java.util.stream.Collectors;
 @Service
 public class StatisticsService {
 
-    public Statistics calculateStatistics(List<Consumption> consumptionList) {
-        // 1. 총 항목 수 계산
-        int totalCount = consumptionList.size();
+    public Statistics calculateStatistics(List<ConsumptionResponse> consumptionDtoList) {
+        // 총 항목 수 계산
+        int totalCount = consumptionDtoList.size();
 
-        // 2. 총 소비 금액 계산
-        int totalAmount = consumptionList.stream()
-                .mapToInt(Consumption::getTotalAmount)
+        // 총 소비 금액 계산
+        int totalAmount = consumptionDtoList.stream()
+                .mapToInt(ConsumptionResponse::getTotalAmount)
                 .sum();
 
-        // 3. 최근 30일 내에 가장 많이 구매한 3개 항목을 찾기 위한 로직
+        // 최근 30일 내에 가장 많이 구매한 3개 항목을 찾기 위한 로직
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime thirtyDaysAgo = now.minusDays(30);
 
         // 30일 이내의 소비 내역 필터링
-        Map<String, Integer> itemPurchaseCount = consumptionList.stream()
-                .filter(consumption -> consumption.date().isAfter(thirtyDaysAgo))
-                .collect(Collectors.groupingBy(Consumption::name, Collectors.summingInt(Consumption::quantity)));
+        Map<String, Integer> itemPurchaseCount = consumptionDtoList.stream()
+                .filter(consumptionDto -> consumptionDto.date().isAfter(thirtyDaysAgo))
+                .collect(Collectors.groupingBy(ConsumptionResponse::name, Collectors.summingInt(ConsumptionResponse::quantity)));
 
         Map<String, Integer> top3Items = itemPurchaseCount.entrySet()
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .limit(1) // 최대 1개 추출
+                .limit(1) // 1개 추출
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
@@ -48,7 +48,7 @@ public class StatisticsService {
             top3Items = Collections.emptyMap();
         }
 
-        // 4. 결과로 Statistics 객체 반환
+        // 결과로 Statistics 객체 반환
         return new Statistics(totalCount, totalAmount, top3Items);
     }
 }
