@@ -2,6 +2,8 @@ package com.f1veguys.sel.domain.spendinghistory.repository;
 
 
 import com.f1veguys.sel.domain.spendinghistory.domain.SpendingHistory;
+import com.f1veguys.sel.domain.spendinghistory.dto.MonthlySpendingDto;
+import com.f1veguys.sel.domain.spendinghistory.dto.PeriodStatisticsResponse;
 import com.f1veguys.sel.domain.spendinghistory.dto.PreviousMonthSummaryDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -40,4 +42,18 @@ public interface SpendingHistoryRepository extends JpaRepository<SpendingHistory
             "WHERE sh.spendTime >= :startDate AND sh.spendTime < :endDate")
     List<Integer[]> calculateAvgEco(@Param("startDate") LocalDateTime startDate,
                                          @Param("endDate") LocalDateTime endDate);
+
+    @Query(value = "SELECT " +
+            "YEAR(sh.spendTime) AS year, " +
+            "MONTH(sh.spendTime) AS month, " +
+            "COALESCE(SUM(sh.amount), 0) AS totalAmount, " +
+            "COALESCE(SUM(CASE WHEN sh.isEco = true THEN sh.amount ELSE 0 END), 0) AS ecoAmount " +
+            "FROM SpendingHistory sh " +
+            "WHERE sh.userId = :userId " +
+            "AND sh.spendTime >= :startDate AND sh.spendTime < :endDate " +
+            "GROUP BY YEAR(sh.spendTime), MONTH(sh.spendTime) " +
+            "ORDER BY YEAR(sh.spendTime), MONTH(sh.spendTime)", nativeQuery = true)
+    List<MonthlySpendingDto> getMonthlySpendingData(@Param("userId") int userId,
+                                                    @Param("startDate") LocalDateTime startDate,
+                                                    @Param("endDate") LocalDateTime endDate);
 }
