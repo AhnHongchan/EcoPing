@@ -69,6 +69,7 @@ const CreateAccount = () => {
         setEmailValid(false);
         setEmailMessage("이미 사용 중인 이메일입니다. 다른 이메일을 사용해 주세요.");
       } else {
+        console.log(error)
         setEmailMessage("서버 오류로 이메일 중복 확인에 실패했습니다.");
       }
     } finally {
