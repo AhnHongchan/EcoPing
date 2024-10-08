@@ -1,4 +1,3 @@
-# textmine.py
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware 
@@ -9,6 +8,7 @@ from konlpy.tag import Mecab
 import re
 import os
 from collections import Counter
+from fastapi.responses import JSONResponse
 
 app = FastAPI(root_path="/py/")
 
@@ -104,21 +104,30 @@ async def api_find_similar_products(products: list[ProductItem]):
             similar_product, manufacturer, similarity = find_similar_products(most_frequent_product_name)
             
             if similar_product:
-                return {
-                    "query": most_frequent_product_name,
-                    "similar_product": similar_product,
-                    "manufacturer": manufacturer,  # 제조사/유통사 포함
-                    "similarity": similarity  # 유사도 추가
-                }, 200
+                return JSONResponse(
+                    content={
+                        "query": most_frequent_product_name,
+                        "similar_product": similar_product,
+                        "manufacturer": manufacturer,  # 제조사/유통사 포함
+                        "similarity": similarity  # 유사도 추가
+                    },
+                    status_code=200
+                )
             else:
-                return {
-                    "query": most_frequent_product_name,
-                    "error": "유사한 제품을 찾지 못했습니다."
-                }, 404
+                return JSONResponse(
+                    content={
+                        "query": most_frequent_product_name,
+                        "error": "유사한 제품을 찾지 못했습니다."
+                    },
+                    status_code=404
+                )
         else:
-            return {
-                "error": "제품명이 충분하지 않습니다."
-            }, 400
+            return JSONResponse(
+                content={
+                    "error": "제품명이 충분하지 않습니다."
+                },
+                status_code=400
+            )
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"서버 오류: {str(e)}")
