@@ -29,14 +29,16 @@ public class ConsumptionController {
         List<ConsumptionResponse> consumptionResponseList = consumptionService.findRecentConsumption();
 
         String url = "https://j11a304.p.ssafy.io/py/find_similar_products";
-        ResponseEntity<List> response = restTemplate.postForEntity(url, consumptionResponseList, List.class);
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, consumptionResponseList, Map.class);
 
-        List<Map<String, Object>> responseBody = response.getBody();
+        Map<String, Object> responseBody = response.getBody();
 
         if (responseBody != null) {
+            List<Map<String, Object>> similarProducts = (List<Map<String, Object>>) responseBody.get("similar_products");
+
             List<ProductResponse> productResponseList = new ArrayList<>();
 
-            for (Map<String, Object> productData : responseBody) {
+            for (Map<String, Object> productData : similarProducts) {
                 String query = (String) productData.get("query");
                 String similarProduct = (String) productData.get("similar_product");
                 String manufacturer = (String) productData.get("manufacturer");
