@@ -83,20 +83,31 @@ public class StockServiceImpl implements StockService {
 
 // JSON 응답을 DTO 리스트로 변환
         List<StockChartDataDto> chartDataList = new ArrayList<>();
-        JsonNode outputList = response.get("output");
-        if (outputList.isArray()) {
-            for (JsonNode node : outputList) {
-                StockChartDataDto dto = new StockChartDataDto(
-                    node.has("stck_bsop_date") ? node.get("stck_bsop_date").asText("0") : "0",
-                    node.has("stck_clpr") ? node.get("stck_clpr").asText("0") : "0",
-                    node.has("stck_oprc") ? node.get("stck_oprc").asText("0") : "0",
-                    node.has("stck_hgpr") ? node.get("stck_hgpr").asText("0") : "0",
-                    node.has("stck_lwpr") ? node.get("stck_lwpr").asText("0") : "0",
-                    node.has("acml_vol") ? node.get("acml_vol").asText("0") : "0",
-                    node.has("acml_tr_pbmn") ? node.get("acml_tr_pbmn").asText("0") : "0"
-                );
-                chartDataList.add(dto);
+
+        if (response != null) {  // response가 널인지 확인
+            JsonNode outputList = response.get("output");
+            if (outputList != null && outputList.isArray()) {  // outputList가 널인지 확인
+                for (JsonNode node : outputList) {
+                    StockChartDataDto dto = new StockChartDataDto(
+                        node.has("stck_bsop_date") ? node.get("stck_bsop_date").asText("0") : "0",
+                        node.has("stck_clpr") ? node.get("stck_clpr").asText("0") : "0",
+                        node.has("stck_oprc") ? node.get("stck_oprc").asText("0") : "0",
+                        node.has("stck_hgpr") ? node.get("stck_hgpr").asText("0") : "0",
+                        node.has("stck_lwpr") ? node.get("stck_lwpr").asText("0") : "0",
+                        node.has("acml_vol") ? node.get("acml_vol").asText("0") : "0",
+                        node.has("acml_tr_pbmn") ? node.get("acml_tr_pbmn").asText("0") : "0"
+                    );
+                    chartDataList.add(dto);
+                }
+            } else {
+                // outputList가 널이거나 배열이 아닌 경우 기본값으로 하나의 DTO 추가
+                StockChartDataDto defaultDto = new StockChartDataDto("0", "0", "0", "0", "0", "0", "0");
+                chartDataList.add(defaultDto);
             }
+        } else {
+            // response가 널인 경우 기본값으로 하나의 DTO 추가
+            StockChartDataDto defaultDto = new StockChartDataDto("0", "0", "0", "0", "0", "0", "0");
+            chartDataList.add(defaultDto);
         }
 
         return chartDataList;
