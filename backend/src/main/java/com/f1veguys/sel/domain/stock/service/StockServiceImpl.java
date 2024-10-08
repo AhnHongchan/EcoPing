@@ -83,20 +83,24 @@ public class StockServiceImpl implements StockService {
 
         // JSON 응답을 DTO 리스트로 변환
         List<StockChartDataDto> chartDataList = new ArrayList<>();
-        JsonNode outputList = response.get("output");
-        if (outputList.isArray()) {
+
+        if (response != null && response.has("output2") && response.get("output2").isArray()) {
+            JsonNode outputList = response.get("output2");
             for (JsonNode node : outputList) {
                 StockChartDataDto dto = new StockChartDataDto(
-                    node.get("stck_bsop_date").asText(),
-                    node.get("stck_clpr").asText(),
-                    node.get("stck_oprc").asText(),
-                    node.get("stck_hgpr").asText(),
-                    node.get("stck_lwpr").asText(),
-                    node.get("acml_vol").asText(),
-                    node.get("acml_tr_pbmn").asText()
+                    node.has("stck_bsop_date") ? node.get("stck_bsop_date").asText() : "",
+                    node.has("stck_clpr") ? node.get("stck_clpr").asText() : "",
+                    node.has("stck_oprc") ? node.get("stck_oprc").asText() : "",
+                    node.has("stck_hgpr") ? node.get("stck_hgpr").asText() : "",
+                    node.has("stck_lwpr") ? node.get("stck_lwpr").asText() : "",
+                    node.has("acml_vol") ? node.get("acml_vol").asText() : "",
+                    node.has("acml_tr_pbmn") ? node.get("acml_tr_pbmn").asText() : ""
                 );
                 chartDataList.add(dto);
             }
+        } else {
+            // output2가 비어있거나 배열이 아닌 경우 로그 출력
+            System.out.println("output2 데이터가 없습니다. 응답이 비어있거나 형식이 잘못되었습니다.");
         }
 
         return chartDataList;
