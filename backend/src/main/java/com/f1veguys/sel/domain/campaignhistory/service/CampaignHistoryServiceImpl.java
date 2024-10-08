@@ -5,7 +5,6 @@ import com.f1veguys.sel.domain.campaignhistory.domain.CampaignHistory;
 import com.f1veguys.sel.domain.campaignhistory.dto.CampaignHistoryResponse;
 import com.f1veguys.sel.domain.campaignhistory.repository.CampaignHistoryRepository;
 import com.f1veguys.sel.domain.campaign.repository.CampaignRepository;
-import com.f1veguys.sel.domain.points.service.PointsService;
 import com.f1veguys.sel.domain.pointshistory.service.PointsHistoryService;
 import com.f1veguys.sel.dto.Operation;
 import com.f1veguys.sel.global.error.exception.CampaignNotFoundException;
@@ -35,10 +34,8 @@ public class CampaignHistoryServiceImpl implements CampaignHistoryService {
     private final UserRepository userRepository;
     private final PointsRepository pointsRepository;
     private final PointsHistoryService pointsHistoryService;
-    private final PointsService pointsService;
 
     @Override
-    @Transactional
     public CampaignHistory participateInCampaign(int campaignId, int userId, int pay) {
 
         Campaign campaign = campaignRepository.findById(campaignId)
@@ -77,12 +74,11 @@ public class CampaignHistoryServiceImpl implements CampaignHistoryService {
                 .build();
         campaignRepository.save(campaign);
 
-
-        pointsService.removePoints(userId, pay, "캠페인 참여");
-//        int nowPoint = userPoints.decreaseBalance(pay);
-//
-//        //내역 저장
-//        pointsHistoryService.savePointsHistory(userId, Operation.SPEND, pay, "캠페인 참여", nowPoint);
+        userPoints.setBalance(userPoints.getBalance() - pay);
+        pointsRepository.save(userPoints);
+        
+        //내역 저장
+        pointsHistoryService.savePointsHistory(userId, Operation.SPEND, pay, "캠페인 참여");
         userRepository.addCampaignPoint(userId, pay);
 
         return campaignHistoryRepository.save(history);

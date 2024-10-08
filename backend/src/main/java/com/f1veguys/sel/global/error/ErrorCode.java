@@ -14,7 +14,6 @@ public enum ErrorCode {
     TREE_NOT_FOUND(404, "나무를 찾을 수 없습니다."),
     BADGE_NOT_FOUND(404, "뱃지를 찾을 수 없습니다."),
     POINTS_NOT_FOUND(404, "포인트를 찾을 수 없습니다."),
-    CONSUMPTIONS_NOT_FOUND(404, "소비를 찾을 수 없습니다."),
     TREE_ALMOST_GROWN(400, "나무에 줄 수 있는 포인트는 최대 3000입니다. 남은 포인트: %d"),
     INSUFFICIENT_POINTS(400, "보유하고 있는 포인트가 부족합니다.");
 

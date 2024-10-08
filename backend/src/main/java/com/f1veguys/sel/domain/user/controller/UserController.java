@@ -8,8 +8,6 @@ import com.f1veguys.sel.dto.LoginRequest;
 import com.f1veguys.sel.domain.user.domain.User;
 import com.f1veguys.sel.domain.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,19 +37,8 @@ public class UserController {
 
     // 로그인 API
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) throws JsonProcessingException { //로그인 성공시 UniqueNo 반환
-        System.out.println(loginRequest.getEmail() + " " + loginRequest.getPassword());
+    public String login(@RequestBody LoginRequest loginRequest) { //로그인 성공시 UniqueNo 반환
         System.out.println("통과");
-        String user = userService.login(loginRequest, response);
-        return ResponseEntity.ok(user); //user Name
-    }
-
-    // 로그인 API
-    @GetMapping("/emailExist")
-    public ResponseEntity<?> emailExist(@RequestParam(value = "email") String email) {
-        if(userService.emailExist(email)){
-            return ResponseEntity.status(409).body("email already exist");
-        }
-        return ResponseEntity.ok("email is available");
+        return userService.login(loginRequest);
     }
 }

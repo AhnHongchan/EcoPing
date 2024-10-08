@@ -9,7 +9,6 @@ import com.f1veguys.sel.domain.user.service.UserService;
 import com.f1veguys.sel.dto.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,14 +23,13 @@ public class AttendanceServiceImpl implements AttendanceService{
     private final PointsService pointsService;
 
     @Override
-    @Transactional
     public void attend(int userId) {
         Attendance attendance = new Attendance();
         attendance.setUserId(userId);
         attendance.setAttendanceDate(LocalDateTime.now());
         Points points = pointsService.getPoints(userId);
-        int nowPoint = points.increaseBalance(10);
-        pointsHistoryService.savePointsHistory(userId, Operation.EARN, 10, "출석 체크", nowPoint);
+        points.setBalance(points.getBalance() + 10);
+        pointsHistoryService.savePointsHistory(userId, Operation.EARN, 10, "출석 체크");
         attendanceRepository.save(attendance);
     }
 

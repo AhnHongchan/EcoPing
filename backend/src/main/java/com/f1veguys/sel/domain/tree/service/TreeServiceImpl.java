@@ -1,6 +1,5 @@
 package com.f1veguys.sel.domain.tree.service;
 
-import com.f1veguys.sel.domain.points.service.PointsService;
 import com.f1veguys.sel.domain.pointshistory.service.PointsHistoryService;
 import com.f1veguys.sel.domain.tree.domain.Tree;
 import com.f1veguys.sel.dto.Operation;
@@ -24,7 +23,6 @@ public class TreeServiceImpl implements TreeService {
     private final TreeRepository treeRepository;
     private final PointsRepository pointsRepository;
     private final PointsHistoryService pointsHistoryService;
-    private final PointsService pointsService;
 
     @Override
     public Tree getTree(int userId) {
@@ -70,12 +68,12 @@ public class TreeServiceImpl implements TreeService {
             throw new TreeAlmostGrownException(0);
         }
 
-        pointsService.removePoints(tree.getUser().getId(), 500, "나무 물 주기");
-//        // 포인트 차감
-//        int nowPoint = userPoints.decreaseBalance(500);
-//
-//        //내역 저장
-//        pointsHistoryService.savePointsHistory(id, Operation.SPEND, 500, "나무 물 주기", nowPoint);
+        // 포인트 차감
+        userPoints.setBalance(userPoints.getBalance() - 500);
+        pointsRepository.save(userPoints);
+        
+        //내역 저장
+        pointsHistoryService.savePointsHistory(id, Operation.SPEND, 500, "나무 물 주기");
 
         // 나무 물주기
         tree.setCount(tree.getCount() + 500);

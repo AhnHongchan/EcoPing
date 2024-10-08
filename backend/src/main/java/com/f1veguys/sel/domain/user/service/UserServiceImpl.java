@@ -3,10 +3,7 @@ import com.f1veguys.sel.domain.points.domain.Points;
 import com.f1veguys.sel.domain.points.repository.PointsRepository;
 import com.f1veguys.sel.domain.user.domain.User;
 import com.f1veguys.sel.global.util.HeaderUtil;
-import com.f1veguys.sel.global.util.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -30,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private String baseUrl;
     @Value("${api.key}")
     private String apiKey;
-    private final JwtUtil jwtUtil;
+
     private final HeaderUtil headerUtil;
     @Autowired
     private RestTemplate restTemplate;
@@ -66,8 +63,10 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> responseBody = response.getBody();
         String userKey = (String) responseBody.get("userKey");
         user.setApiId(userKey);
+        System.out.println(userKey);
+
         url = baseUrl + "edu/demandDeposit/createDemandDepositAccount";
-        String accountTypeUniqueNo = "001-1-d2f55ed6be7b4a";
+        String accountTypeUniqueNo = "088-1-44755da19ce64f";
         String apiName = "createDemandDepositAccount";
         Map<String, String> headerInfo = headerUtil.createHeaderUser(apiName, apiName, userKey);
         System.out.println(url);
@@ -95,30 +94,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(LoginRequest loginRequest, HttpServletResponse response) {
+    public String login(LoginRequest loginRequest) {
         // 이메일로 사용자 찾기
-        User user = userRepository.findByEmail(loginRequest.getEmail())
+        userRepository.findByEmail(loginRequest.getEmail())
                 .filter(u -> passwordEncoder.matches(loginRequest.getPassword(), u.getPassword())) // 비밀번호 비교
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
-        Cookie accessCookie = new Cookie("accessToken", jwtUtil.generateAccessToken(user.getEmail()));
-        //accessCookie.setHttpOnly(true);
-        //accessCookie.setSecure(true);
-        accessCookie.setPath("/");
-        accessCookie.setMaxAge(60*60*12);
 
-        Cookie refreshCookie = new Cookie("refreshToken", jwtUtil.generateRefreshToken(user.getEmail()));
-        //refreshCookie.setHttpOnly(true);
-        //refreshCookie.setSecure(true);
-        refreshCookie.setPath("/");
-        refreshCookie.setMaxAge(60*60*24*3);
-
-        response.addCookie(accessCookie);
-        response.addCookie(refreshCookie);
-        return user.getEmail();
-    }
-
-    @Override
-    public boolean emailExist(String email) {
-        return userRepository.findByEmail(email).isPresent(); //있으면 true, 없으면 false
+        return UniqueNoGenerator.generateUniqueNo();
     }
 }

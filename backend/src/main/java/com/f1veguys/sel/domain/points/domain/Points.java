@@ -25,14 +25,4 @@ public class Points {
     public Points(int userId) {
         this.userId = userId;
     }
-
-    public int increaseBalance(int amount) {
-        this.balance += amount;
-        return this.balance;
-    }
-
-    public int decreaseBalance(int amount) {
-        this.balance -= amount;
-        return this.balance;
-    }
 }

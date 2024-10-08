@@ -15,8 +15,8 @@ import java.util.List;
 public class PointsHistoryServiceImpl implements PointsHistoryService {
     private final PointsHistoryRepository pointsHistoryRepository;
     @Override
-    public void savePointsHistory(int userId, Operation action, int amount, String description, int nowPoint) {
-        PointsHistory pointsHistory = new PointsHistory(userId, action, amount, description, nowPoint);
+    public void savePointsHistory(int userId, Operation action, int amount, String description) {
+        PointsHistory pointsHistory = new PointsHistory(userId, action, amount, description);
         pointsHistoryRepository.save(pointsHistory);
     }
 

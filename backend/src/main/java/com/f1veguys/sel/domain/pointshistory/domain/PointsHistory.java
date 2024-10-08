@@ -34,21 +34,17 @@ public class PointsHistory {
 
     private Integer amount;
 
-    @Column(name = "now_point")
-    private Integer nowPoint;
-
     @ManyToOne
     @JoinColumn(name = "users_id", insertable = false, updatable = false)
     private User user;
 
     @Builder
-    public PointsHistory(int userId, Operation action, int amount, String description, int nowPoint){
+    public PointsHistory(int userId, Operation action, int amount, String description){
         this.userId = userId;
         this.operation = action;
         this.amount = amount;
         this.description = description;
         this.createdTime = LocalDateTime.now();
-        this.nowPoint = nowPoint;
     }
 
 }

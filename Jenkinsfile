@@ -68,18 +68,6 @@ pipeline {
                 }
             }
         }
-        stage('Frontend - Add Env') {
-            steps {
-                dir('newfrontend') {
-            withCredentials([file(credentialsId: 'env', variable: 'frontendEnv')]) {
-                sh '''
-                    cp ${frontendEnv} .env
-                    chmod 644 .env
-                '''
-            }
-        }
-    }
-}
 
         // 프론트엔드 애플리케이션 빌드 및 배포
         stage('Frontend - Docker Build') {
@@ -146,8 +134,7 @@ pipeline {
                             docker stop nginx || true
                             docker rm nginx || true
                             # Ensure that nginx.conf is a regular file
-                            docker run -d --name nginx -p 80:80 -p 443:443 -v /home/ubuntu/nginx.conf:/etc/nginx/nginx.conf:ro -v /etc/letsencrypt:/etc/letsencrypt:ro nginx:alpine
-
+                            docker run -d --name nginx -p 80:80 -v /home/ubuntu/nginx.conf:/etc/nginx/nginx.conf:ro nginx:alpine
                         '
                     """
                 }
