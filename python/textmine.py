@@ -67,18 +67,11 @@ class ProductItem(BaseModel):
     price: float
     quantity: int
 
-# 가장 빈도가 높은 제품명을 찾는 함수
-def find_most_frequent_product_name(product_items):
+# 가장 빈도가 높은 최대 3개의 제품명을 찾는 함수
+def find_top_frequent_products(product_items):
     product_names = [item.name for item in product_items]
-    most_common_product = Counter(product_names).most_common(1)
-    
-    if most_common_product:
-        # 모든 제품명이 1번씩만 등장한 경우 처리
-        if most_common_product[0][1] == 1:
-            # 제품명이 모두 동일한 빈도로 등장하는 경우 첫 번째 제품을 사용
-            return product_names[0]  
-        return most_common_product[0][0]
-    return None
+    most_common_products = Counter(product_names).most_common(3)  # 최대 3개의 빈도수 높은 제품명 반환
+    return [product[0] for product in most_common_products]  # 제품명만 추출
 
 # 유사한 제품을 찾는 함수
 def find_similar_products(query: str):
@@ -96,27 +89,33 @@ def find_similar_products(query: str):
 @app.post("/find_similar_products")
 async def api_find_similar_products(products: list[ProductItem]):
     try:
-        # 가장 빈도가 높은 제품명을 찾음
-        most_frequent_product_name = find_most_frequent_product_name(products)
+        # 가장 빈도가 높은 최대 3개의 제품명을 찾음
+        top_frequent_products = find_top_frequent_products(products)
         
-        if most_frequent_product_name:
-            # 해당 제품명을 사용하여 유사한 제품 찾기
-            similar_product, manufacturer, similarity = find_similar_products(most_frequent_product_name)
-            
-            if similar_product:
-                return JSONResponse(
-                    content={
-                        "query": most_frequent_product_name,
+        if top_frequent_products:
+            similar_products = []
+            for product_name in top_frequent_products:
+                # 각 제품명에 대해 유사한 제품 찾기
+                similar_product, manufacturer, similarity = find_similar_products(product_name)
+                
+                if similar_product:
+                    similar_products.append({
+                        "query": product_name,
                         "similar_product": similar_product,
                         "manufacturer": manufacturer,  # 제조사/유통사 포함
                         "similarity": similarity  # 유사도 추가
+                    })
+            
+            if similar_products:
+                return JSONResponse(
+                    content={
+                        "similar_products": similar_products
                     },
                     status_code=200
                 )
             else:
                 return JSONResponse(
                     content={
-                        "query": most_frequent_product_name,
                         "error": "유사한 제품을 찾지 못했습니다."
                     },
                     status_code=404
