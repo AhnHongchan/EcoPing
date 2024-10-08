@@ -8,6 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from konlpy.tag import Mecab
 import re
 import os
+from collections import Counter
 
 app = FastAPI(root_path="/py/")
 
@@ -60,9 +61,26 @@ def vectorize_data(preprocessed_names):
 product_names, manufacturers, preprocessed_names = load_and_preprocess_data()
 vectorizer, tfidf_matrix = vectorize_data(preprocessed_names)
 
-class Query(BaseModel):
-    text: str
+# 제품 목록에 대한 입력 데이터 구조
+class ProductItem(BaseModel):
+    product_name: str
+    price: float
+    quantity: int
 
+# 가장 빈도가 높은 제품명을 찾는 함수
+def find_most_frequent_product_name(product_items):
+    product_names = [item.product_name for item in product_items]
+    most_common_product = Counter(product_names).most_common(1)
+    
+    if most_common_product:
+        # 모든 제품명이 1번씩만 등장한 경우 처리
+        if most_common_product[0][1] == 1:
+            # 제품명이 모두 동일한 빈도로 등장하는 경우 첫 번째 제품을 사용
+            return product_names[0]  
+        return most_common_product[0][0]
+    return None
+
+# 유사한 제품을 찾는 함수
 def find_similar_products(query: str):
     preprocessed_query = preprocess(query)
     query_vec = vectorizer.transform([preprocessed_query])
@@ -76,17 +94,24 @@ def find_similar_products(query: str):
         return None, None, max_similarity
 
 @app.post("/find_similar_products")
-async def api_find_similar_products(query: Query):
+async def api_find_similar_products(products: list[ProductItem]):
     try:
-        similar_product, manufacturer, similarity = find_similar_products(query.text)
-        if similar_product:
-            return {
-                "query": query.text,
-                "similar_product": similar_product,
-                "manufacturer": manufacturer  # 제조사/유통사 포함
-            }
+        # 가장 빈도가 높은 제품명을 찾음
+        most_frequent_product_name = find_most_frequent_product_name(products)
+        
+        if most_frequent_product_name:
+            # 해당 제품명을 사용하여 유사한 제품 찾기
+            similar_product, manufacturer, similarity = find_similar_products(most_frequent_product_name)
+            if similar_product:
+                return {
+                    "query": most_frequent_product_name,
+                    "similar_product": similar_product,
+                    "manufacturer": manufacturer  # 제조사/유통사 포함
+                }
+            else:
+                return {"query": most_frequent_product_name, "result": "유사한 제품을 찾지 못했습니다."}
         else:
-            return {"query": query.text, "result": "해당하는 제품을 못찾았습니다."}
+            return {"result": "제품명이 충분하지 않습니다."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
