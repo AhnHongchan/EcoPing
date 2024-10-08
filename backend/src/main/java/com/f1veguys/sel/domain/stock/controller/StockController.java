@@ -2,6 +2,7 @@ package com.f1veguys.sel.domain.stock.controller;
 
 import com.f1veguys.sel.domain.company.domain.Company;
 import com.f1veguys.sel.domain.company.service.CompanyService;
+import com.f1veguys.sel.domain.stock.dto.StockChartDataDto;
 import com.f1veguys.sel.domain.stock.service.StockService;
 import com.f1veguys.sel.domain.UserStockHoldings.service.UserStockHoldingsService;
 import com.f1veguys.sel.domain.UserStockTransaction.service.UserStockTransactionService;
@@ -63,6 +64,22 @@ public class StockController {
         return ResponseEntity.ok(stockDataList);
     }
 
+    @GetMapping("/chart/{companyNumber}/{period}")
+    public ResponseEntity<Map<String, Object>> getStockChartData(
+        @PathVariable("companyNumber") String companyNumber,
+        @PathVariable("period") String period,
+        @RequestParam("startDate") String startDate,
+        @RequestParam("endDate") String endDate) {
+
+        List<StockChartDataDto> chartDataList = stockService.getStockChartData(companyNumber, period, startDate, endDate);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("data", chartDataList);
+        response.put("message", "Chart data fetched successfully");
+
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/{companyNumber}")
     public ResponseEntity<Map<String, Object>> getStockDetails(@PathVariable("companyNumber") String companyNumber,

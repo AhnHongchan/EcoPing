@@ -1,6 +1,7 @@
 package com.f1veguys.sel.domain.stock.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.f1veguys.sel.domain.stock.dto.StockChartDataDto;
 import com.f1veguys.sel.global.config.KisConfig;
 import com.f1veguys.sel.global.util.KisAccessTokenUtil;
 import com.f1veguys.sel.domain.company.repository.CompanyRepository;
@@ -8,6 +9,7 @@ import com.f1veguys.sel.domain.company.domain.Company;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,11 +59,11 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public JsonNode getStockChartData(String companyNumber, String period, String startDate, String endDate) {
+    public List<StockChartDataDto> getStockChartData(String companyNumber, String period, String startDate, String endDate) {
         String token = kisAccessTokenUtil.getAccessToken();
         String url = "/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice";
 
-        return webClient.get()
+        JsonNode response = webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path(url)
                 .queryParam("FID_COND_MRKT_DIV_CODE", "J")
@@ -78,6 +80,26 @@ public class StockServiceImpl implements StockService {
             .retrieve()
             .bodyToMono(JsonNode.class)
             .block();
+
+        // JSON 응답을 DTO 리스트로 변환
+        List<StockChartDataDto> chartDataList = new ArrayList<>();
+        JsonNode outputList = response.get("output");
+        if (outputList.isArray()) {
+            for (JsonNode node : outputList) {
+                StockChartDataDto dto = new StockChartDataDto(
+                    node.get("stck_bsop_date").asText(),
+                    node.get("stck_clpr").asText(),
+                    node.get("stck_oprc").asText(),
+                    node.get("stck_hgpr").asText(),
+                    node.get("stck_lwpr").asText(),
+                    node.get("acml_vol").asText(),
+                    node.get("acml_tr_pbmn").asText()
+                );
+                chartDataList.add(dto);
+            }
+        }
+
+        return chartDataList;
     }
 
     @Override
