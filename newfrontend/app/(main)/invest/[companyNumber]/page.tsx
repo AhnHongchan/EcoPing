@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 
 const StockDetail = (): JSX.Element => {
   const router = useRouter();
-  const { companyNumber } = useParams();
+  const { companyNumber } = useParams<{ companyNumber: string }>();
   const [stockData, setStockData] = useState<StockDetailData | null>(null);
   const [stockGraphData, setStockGraphData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -124,7 +124,7 @@ const StockDetail = (): JSX.Element => {
       <div className="flex items-center justify-center text-center">
         <BiSolidHeart
           className={`${
-            stockData.Isinterested ? "" : "hidden"
+            stockData.hold > 0 ? "" : "hidden"
           } text-md text-red-500`}
         />
         <p className="small-title ml-2">

@@ -1,7 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { handleLogout, refreshTokenIfNeeded } from "../services/auth-service";
-import { useAuthStore } from "@/app/store/use-auth-store";
+import useAuthStore from "@/app/store/use-auth-store";
+
 
 // axios 인스턴스 생성
 const instance = axios.create({
