@@ -27,9 +27,10 @@ public class TreeController {
     private final TreeService treeService;
     private final BadgeService badgeService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/info")
     @Operation(summary = "나무 정보 조회", description = "나무의 상세 정보를 조회합니다.")
-    public ResponseEntity<Tree> getTree(@PathVariable("userId") int id) {
+    public ResponseEntity<Tree> getTree(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        int id = userDetails.getId();
         Tree tree = treeService.getTree(id);
         return ResponseEntity.ok(tree);
     }
@@ -41,10 +42,15 @@ public class TreeController {
 //    }
 
     // 물주기
-    @PutMapping("/{treeId}/water")
+    @PutMapping("/water")
     @Operation(summary = "나무에 물주기", description = "나무에 물(포인트, 500)를 줍니다.")
-    public ResponseEntity<Tree> waterTree(@PathVariable("treeId") int id) {
-        Tree tree = treeService.waterTree(id);
+    public ResponseEntity<Tree> waterTree(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+        Tree tree = treeService.getTree(user.getId());
+        if(tree==null){
+            tree = treeService.startTree(user);
+        }
+        tree = treeService.waterTree(tree, user.getId());
         return ResponseEntity.ok(tree);
     }
 
@@ -55,26 +61,16 @@ public class TreeController {
 //    }
 
     // 기프티콘 받기
-    @PutMapping("/{treeId}/gifticon")
+    @PutMapping("/gifticon")
     @Operation(summary = "완성된 나무에서 기프티콘 받기", description = "완성된 나무에서 기프티콘 받기 버튼을 눌러 나무를 초기화합니다")
-    public ResponseEntity<?> getGift(@PathVariable("treeId") int id, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Tree tree = treeService.getGift(id);
-        User user = userDetails.getUser();
-        List<Badge> badges = user.getBadges();
+    public ResponseEntity<?> getGift(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        int userId = userDetails.getId();
+        treeService.getGift(userId);
         Random random = new Random();
         int randomNum = random.nextInt(9)+1;
-        boolean newTree = true;
-        for (Badge badge : badges) {
-            if (badge.getType() == randomNum) {
-                newTree = false;
-                break;
-            }
-        }
+        boolean newTree = badgeService.isNewBadge(userId, randomNum);
         if(newTree){
-            Badge badge = Badge.builder()
-                    .user(user)
-                    .type(randomNum)
-                    .build();
+            badgeService.addBadge(userId, randomNum);
         }
         HashMap<String, Object> response = new HashMap<>();
         response.put("newTree", newTree);

@@ -45,4 +45,15 @@ public class BadgeServiceImpl implements BadgeService {
 
         return badgeRepository.findAllByUser_Id(userId);
     }
+
+    @Override
+    public boolean isNewBadge(int userId, int badgeId) {
+        List<Badge> badges = badgeRepository.findAllByUser_Id(userId);
+        for(Badge badge : badges) {
+            if(badge.getId() == badgeId) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
