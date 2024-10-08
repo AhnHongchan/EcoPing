@@ -63,13 +63,13 @@ vectorizer, tfidf_matrix = vectorize_data(preprocessed_names)
 
 # 제품 목록에 대한 입력 데이터 구조
 class ProductItem(BaseModel):
-    product_name: str
+    name: str
     price: float
     quantity: int
 
 # 가장 빈도가 높은 제품명을 찾는 함수
 def find_most_frequent_product_name(product_items):
-    product_names = [item.product_name for item in product_items]
+    product_names = [item.name for item in product_items]
     most_common_product = Counter(product_names).most_common(1)
     
     if most_common_product:
