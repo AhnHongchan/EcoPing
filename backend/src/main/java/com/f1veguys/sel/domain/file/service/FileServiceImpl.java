@@ -33,16 +33,7 @@ public class FileServiceImpl implements FileService {
     public File saveFile(MultipartFile file, Campaign campaign) throws IOException {
         String originalFileName = file.getOriginalFilename();
         String storedFileName = UUID.randomUUID() + "." + FileUtil.getFileExt(originalFileName);
-
-        if (!FileUtil.isImageFile(originalFileName)) {
-            throw new UnsupportedFormatException();
-        }
-
-        Path savePath = Paths.get(uploadDir, storedFileName);
-        Files.createDirectories(savePath.getParent());
-        file.transferTo(savePath);
-
-        String ext = FileUtil.getFileExt(originalFileName);
+        String ext = getFileExt(file);
         File fileEntity = File.builder()
                 .type("image/" + ext)
                 .name(originalFileName)
@@ -72,15 +63,6 @@ public class FileServiceImpl implements FileService {
 
         String originalFileName = file.getOriginalFilename();
         String storedFileName = UUID.randomUUID() + "." + FileUtil.getFileExt(originalFileName);
-
-        if (!FileUtil.isImageFile(originalFileName)) {
-            throw new UnsupportedFormatException();
-        }
-
-        Path newFilePath = Paths.get(uploadDir, storedFileName);
-        Files.createDirectories(newFilePath.getParent()); // 디렉토리가 없으면 생성
-        file.transferTo(newFilePath); // 새 파일 저장
-
         String ext = FileUtil.getFileExt(originalFileName);
         oldFileEntity.setType("image/" + ext);
         oldFileEntity.setName(originalFileName);
@@ -95,5 +77,21 @@ public class FileServiceImpl implements FileService {
         File fileEntity = fileRepository.findById(fileId)
                 .orElseThrow(FileNotFoundException::new);
         return new FileResponse(fileEntity);
+    }
+
+    @Override
+    public String getFileExt(MultipartFile file) throws IOException {
+        String originalFileName = file.getOriginalFilename();
+        String storedFileName = UUID.randomUUID() + "." + FileUtil.getFileExt(originalFileName);
+
+        if (!FileUtil.isImageFile(originalFileName)) {
+            throw new UnsupportedFormatException();
+        }
+
+        Path savePath = Paths.get(uploadDir, storedFileName);
+        Files.createDirectories(savePath.getParent());
+        file.transferTo(savePath);
+
+        return FileUtil.getFileExt(originalFileName);
     }
 }

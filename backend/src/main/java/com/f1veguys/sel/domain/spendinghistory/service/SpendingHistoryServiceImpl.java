@@ -24,6 +24,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -105,7 +106,15 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
     public List<PeriodStatisticsResponse> getYearlySpendingSummary(int userId) {
         LocalDateTime endDate = LocalDateTime.now().withDayOfMonth(1);
         LocalDateTime startDate = endDate.minusYears(1);
-        List<MonthlySpendingDto> list = spendingHistoryRepository.getMonthlySpendingData(userId, startDate, endDate);
+        List<Object[]> results = spendingHistoryRepository.getMonthlySpendingData(userId, startDate, endDate);
+        List<MonthlySpendingDto> list = results.stream()
+                .map(result -> new MonthlySpendingDto(
+                        ((Number) result[0]).intValue(),
+                        ((Number) result[1]).intValue(),
+                        ((Number) result[2]).longValue(),
+                        ((Number) result[3]).longValue()
+                ))
+                .toList();
         List<PeriodStatisticsResponse> responses = new ArrayList<>();
         for(MonthlySpendingDto monthlySpendingDto : list){
             PeriodStatisticsResponse monthly = new PeriodStatisticsResponse((int)monthlySpendingDto.getTotalSpending(),
