@@ -1,15 +1,18 @@
 package com.f1veguys.sel.domain.UserStockTransaction.service;
 
 import com.f1veguys.sel.domain.UserStockTransaction.domain.UserStockTransaction;
+import com.f1veguys.sel.domain.UserStockTransaction.dto.UserStockTransactionResponse;
 import com.f1veguys.sel.domain.UserStockTransaction.repository.UserStockTransactionRepository;
 import com.f1veguys.sel.domain.company.domain.Company;
 import com.f1veguys.sel.domain.points.service.PointsService;
 import com.f1veguys.sel.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +23,7 @@ public class UserStockTransactionServiceImpl implements UserStockTransactionServ
 
     @Override
     @Transactional
-    public UserStockTransaction buyStock(User user, Company company, int quantity, double currentPrice) {
+    public UserStockTransactionResponse buyStock(User user, Company company, int quantity, double currentPrice) {
         int totalPrice = (int) (quantity * currentPrice);
 
         // 포인트 차감
@@ -35,12 +38,12 @@ public class UserStockTransactionServiceImpl implements UserStockTransactionServ
         transaction.setBuy(true);
         transactionRepository.save(transaction);
 
-        return transaction;
+        return new UserStockTransactionResponse(transaction);
     }
 
     @Override
     @Transactional
-    public UserStockTransaction sellStock(User user, Company company, int quantity, double currentPrice) {
+    public UserStockTransactionResponse sellStock(User user, Company company, int quantity, double currentPrice) {
         int totalPrice = (int) (quantity * currentPrice);
 
         // 포인트 추가
@@ -55,11 +58,16 @@ public class UserStockTransactionServiceImpl implements UserStockTransactionServ
         transaction.setBuy(false);
         transactionRepository.save(transaction);
 
-        return transaction;
+
+        return new UserStockTransactionResponse(transaction);
     }
 
     @Override
-    public List<UserStockTransaction> getUserTransactions(User user) {
-        return transactionRepository.findByUser(user);
+    @Transactional(readOnly = true)
+    public List<UserStockTransactionResponse> getUserTransactions(User user) {
+        List<UserStockTransaction> transactions = transactionRepository.findByUser(user);
+        return transactions.stream()
+            .map(UserStockTransactionResponse::new)
+            .collect(Collectors.toList());
     }
 }
