@@ -11,4 +11,6 @@ public interface TreeRepository extends JpaRepository<Tree, Integer> {
 
     Optional<Tree> findByUser_Id(int userId);
 
+    Tree findFirstByUserIdAndGrownFalseOrderByCreatedDateDesc(int userId);
+
 }

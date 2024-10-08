@@ -11,7 +11,8 @@ public interface TreeService {
 
     void endTree(int id);
 
-    Tree waterTree(int id);
+    Tree waterTree(Tree tree, int userId);
 
-    Tree getGift(int id);
+    void getGift(int id);
+
 }

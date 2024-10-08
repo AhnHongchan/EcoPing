@@ -28,7 +28,7 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public Tree getTree(int userId) {
-        return treeRepository.findByUser_Id(userId).orElseThrow(TreeNotFoundException::new);
+        return treeRepository.findFirstByUserIdAndGrownFalseOrderByCreatedDateDesc(userId);
     }
 
     @Override
@@ -55,11 +55,9 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public Tree waterTree(int id) {
-        Tree tree = treeRepository.findById(id)
-                .orElseThrow(TreeNotFoundException::new);
+    public Tree waterTree(Tree tree, int userId) {
 
-        Points userPoints = pointsRepository.findByUserId(tree.getUser().getId())
+        Points userPoints = pointsRepository.findByUserId(userId)
                 .orElseThrow(PointsNotFoundException::new);
 
         if (500 > userPoints.getBalance()) {
@@ -83,9 +81,10 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public Tree getGift(int id) {
-        Tree tree = treeRepository.findById(id).orElseThrow(TreeNotFoundException::new);
-        tree.setCount(0);
-        return treeRepository.save(tree);
+    public void getGift(int id) {
+        Tree tree = treeRepository.findFirstByUserIdAndGrownFalseOrderByCreatedDateDesc(id);
+        tree.setCount(3000);
+        tree.setGrown(true);
+        treeRepository.save(tree);
     }
 }
