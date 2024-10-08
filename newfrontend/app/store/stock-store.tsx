@@ -1,13 +1,20 @@
 import { create } from 'zustand';
 
-interface StockStore {
-  companyStoreDict: { [key: string]: string };
-  setCompanyStoreDict: (dict: { [key: string]: string }) => void;
+interface CompanyInfo {
+  name: string;
+  ecoScore: number;
+  ranking: number;
 }
 
-const useStockStore = create((set) => ({
+
+interface StockStore {
+  companyStoreDict: { [key: string]: CompanyInfo };
+  setCompanyStoreDict: (dict: { [key: string]: CompanyInfo }) => void;
+}
+
+const useStockStore = create<StockStore>((set) => ({
   companyStoreDict: {},
-  setCompanyStoreDict: (dict: string) => set({ companyStoreDict: dict }),
-}))
+  setCompanyStoreDict: (dict: { [key: string]: CompanyInfo }) => set({ companyStoreDict: dict }),
+}));
 
 export default useStockStore;

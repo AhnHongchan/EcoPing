@@ -14,7 +14,16 @@ interface StockItem {
   priceDifference: string;
   currentPrice: string;
   holdAmount?: number; 
+  avgPrice: number;
+  profitRate: number;
 }
+
+interface HoldItem {
+  companyNumber: string;
+  quantity: number;
+  averagePurchasePrice: number;
+}
+
 
 const Investment = (): JSX.Element => {
   const [stockList, setStockList] = useState<StockItem[]>([]);
@@ -48,7 +57,7 @@ const Investment = (): JSX.Element => {
         return acc;
       }, {});
 
-      const holdDict = holdData.reduce((acc: { [key: string]: { hold: number; avg: number } }, item) => {
+      const holdDict = holdData.reduce((acc: { [key: string]: { hold: number; avg: number } }, item: HoldItem) => {
         acc[item.companyNumber] = {
           hold: item.quantity,
           avg: item.averagePurchasePrice,
@@ -179,7 +188,7 @@ const Investment = (): JSX.Element => {
                     현재가: {parseInt(stock.currentPrice).toLocaleString()}원
                   </p>
                   <p className="text-black text-base font-bold leading-normal line-clamp-1">
-                    보유 주식 수: {parseInt(stock.holdAmount!.toString()).toLocaleString()}
+                    보유 주식 수: {stock.holdAmount ? stock.holdAmount.toLocaleString() : '0'}
                   </p>
                   <p
                     className={`text-sm font-bold leading-normal line-clamp-2 ${
@@ -205,7 +214,7 @@ const Investment = (): JSX.Element => {
             className="flex justify-between items-center gap-4 px-4 py-2 my-2 min-h-[72px] rounded-md bg-white w-full cursor-pointer flex-shrink-0 border-2 border-loginLightGreen"
           >
             <div className="text-left flex items-center min-h-12">
-              <BiSolidHeart className={`text-red-500 ${stock.holdAmount > 0 ? '' : 'invisible'}`} />
+              <BiSolidHeart className={`text-red-500 ${stock.holdAmount && stock.holdAmount > 0 ? '' : 'invisible'}`} />
               <p className="text-md text-center font-bold ml-2">
                 {nameList[stock.companyNumber]?.name || stock.companyNumber}
               </p>
