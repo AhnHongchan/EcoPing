@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import instance from "@/lib/axios";
 import useStockStore from "@/app/store/stock-store";
 import Company from "@/app/types/company";
@@ -19,21 +19,25 @@ interface StockItem {
 const Investment = (): JSX.Element => {
   const [stockList, setStockList] = useState<StockItem[]>([]);
   const [nameList, setNameList] = useState<{ [key: string]: { name: string; ecoScore: number; ranking: number } }>({});
-  const [holdList, setHoldList] = useState<{ [key: string]: { hold: number } }>({});
+  const [holdList, setHoldList] = useState<{ [key: string]: { hold: number; avg: number } }>({});
+  const holdListRef = useRef(holdList); // holdList를 참조하는 ref
   const { companyStoreDict, setCompanyStoreDict } = useStockStore();
   const router = useRouter();
+
+  // holdList 변경 시 ref 업데이트
+  useEffect(() => {
+    holdListRef.current = holdList;
+  }, [holdList]);
 
   // 데이터를 가져오는 함수
   const fetchWholeStockData = async () => {
     try {
-      // const initialResponse = await instance.get("/stock/initial-data");
       const nameResponse = await instance.get("/stock/list");
       const holdResponse = await instance.get("holdings/list");
       
-      // const initialData = initialResponse.data.data;
       const nameData = nameResponse.data.data;
       const holdData = holdResponse.data;
-      // console.log(initialData)
+
       // nameList와 holdList 설정
       const companyDict = nameData.reduce((acc: { [key: string]: { name: string; ecoScore: number; ranking: number } }, item: Company) => {
         acc[item.companyNumber] = {
@@ -44,17 +48,17 @@ const Investment = (): JSX.Element => {
         return acc;
       }, {});
 
-      const holdDict = holdData.reduce((acc: { [key: string]: { hold: number } }, item) => {
+      const holdDict = holdData.reduce((acc: { [key: string]: { hold: number; avg: number } }, item) => {
         acc[item.companyNumber] = {
-          hold: item.holdAmount,
+          hold: item.quantity,
+          avg: item.averagePurchasePrice,
         };
         return acc;
       }, {});
-      // console.log(initialData)
-      // setStockList(initialData);
+
       setCompanyStoreDict(companyDict);
       setNameList(companyDict);
-      setHoldList(holdDict);
+      setHoldList(holdDict); // holdList 업데이트
     } catch (error) {
       console.error("데이터 가져오기 중 오류:", error);
     }
@@ -84,11 +88,20 @@ const Investment = (): JSX.Element => {
           updatedStockList = [...stockList];
         }
 
-        // holdList 정보를 각 stockItem에 추가
-        updatedStockList = updatedStockList.map((stock) => ({
-          ...stock,
-          holdAmount: holdList[stock.companyNumber]?.hold || 0,
-        }));
+        // 최신 holdList 정보를 각 stockItem에 추가
+        updatedStockList = updatedStockList.map((stock) => {
+          const avgPrice = holdListRef.current[stock.companyNumber]?.avg ?? 0;
+          const currentPrice = parseFloat(stock.currentPrice) / 100;
+          const profitRate = ((avgPrice - currentPrice) / currentPrice) * 100;
+
+          return {
+            ...stock,
+            holdAmount: holdListRef.current[stock.companyNumber]?.hold ?? 0, // 최신 holdList 참조
+            avgPrice: avgPrice,
+            profitRate: profitRate.toFixed(2), // 소수점 2자리까지 수익률 계산
+          };
+        });
+
         setStockList(updatedStockList);
       } catch (error) {
         console.error("WebSocket 메시지 처리 중 오류:", error);
@@ -105,9 +118,32 @@ const Investment = (): JSX.Element => {
   };
 
   useEffect(() => {
-    fetchWholeStockData();
-    const cleanupWebSocket = initializeWebSocket();
-    return cleanupWebSocket;
+    const fetchDataAndInitializeWebSocket = async () => {
+      // 데이터 요청이 완료될 때까지 대기
+      await fetchWholeStockData();
+
+      // 데이터 요청이 완료된 후에 웹소켓 초기화
+      const cleanupWebSocket = initializeWebSocket();
+      return cleanupWebSocket;
+    };
+
+    // 비동기 함수를 호출
+    const initialize = async () => {
+      const cleanupWebSocket = await fetchDataAndInitializeWebSocket();
+
+      // 컴포넌트 언마운트 시 웹소켓 정리
+      return cleanupWebSocket;
+    };
+
+    const cleanup = initialize();
+
+    return () => {
+      cleanup.then((cleanupWebSocket) => {
+        if (cleanupWebSocket) {
+          cleanupWebSocket();
+        }
+      });
+    };
   }, []);
 
   const handleClick = (stock: StockItem): void => {
@@ -133,17 +169,24 @@ const Investment = (): JSX.Element => {
                 onClick={() => handleClick(stock)}
                 className="grid grid-cols-12 text-left items-center gap-4 px-4 py-2 my-2 min-h-[72px] rounded-md justify-between bg-white w-full cursor-pointer flex-shrink-0 border-2 border-loginLightGreen"
               >
-                <div className="shrink-0 col-span-7">
+                <div className="shrink-0 col-span-6">
                   <p className="text-black font-bold text-base leading-normal">
                     {nameList[stock.companyNumber]?.name || stock.companyNumber}
                   </p>
                 </div>
-                <div className="flex flex-col justify-center col-span-5">
-                  <p className="text-black text-base font-bold leading-normal line-clamp-1">
-                    현재가: {parseInt(stock.holdAmount!.toString()).toLocaleString()}
+                <div className="flex flex-col justify-center col-span-6">
+                  <p>
+                    현재가: {parseInt(stock.currentPrice).toLocaleString()}원
                   </p>
-                  <p className="text-[#93a7c8] text-sm font-medium leading-normal line-clamp-2">
-                    내 수익률: 5%
+                  <p className="text-black text-base font-bold leading-normal line-clamp-1">
+                    보유 주식 수: {parseInt(stock.holdAmount!.toString()).toLocaleString()}
+                  </p>
+                  <p
+                    className={`text-sm font-bold leading-normal line-clamp-2 ${
+                      stock.profitRate > 0 ? 'text-red-500' : 'text-blue-700'
+                    }`}
+                  >
+                    내 수익률: {stock.profitRate}%
                   </p>
                 </div>
               </div>
@@ -162,7 +205,7 @@ const Investment = (): JSX.Element => {
             className="flex justify-between items-center gap-4 px-4 py-2 my-2 min-h-[72px] rounded-md bg-white w-full cursor-pointer flex-shrink-0 border-2 border-loginLightGreen"
           >
             <div className="text-left flex items-center min-h-12">
-              {stock.holdAmount && stock.holdAmount > 0 && <BiSolidHeart />}
+              <BiSolidHeart className={`text-red-500 ${stock.holdAmount > 0 ? '' : 'invisible'}`} />
               <p className="text-md text-center font-bold ml-2">
                 {nameList[stock.companyNumber]?.name || stock.companyNumber}
               </p>
@@ -173,7 +216,7 @@ const Investment = (): JSX.Element => {
                 전일 대비:{" "}
                 <span
                   className={
-                    parseFloat(stock.rateDifference) > 0 ? "text-red-500" : "text-blue-700"
+                    parseFloat(stock.rateDifference) >= 0 ? "text-red-500" : "text-blue-700"
                   }
                 >
                   {stock.rateDifference}%

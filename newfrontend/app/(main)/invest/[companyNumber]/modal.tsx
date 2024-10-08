@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import FinalModal from './final-modal';
 import instance from '@/lib/axios';
 import StockDetailData from '@/app/types/stock-detail';
+import { useRouter } from 'next/navigation';
 
 interface ModalProps {
   onClose: () => void;
@@ -9,6 +10,7 @@ interface ModalProps {
 }
 
 const Modal = ({ onClose, stockData }: ModalProps) => {
+  const router = useRouter();
   const [quantity, setQuantity] = useState(0);
   const [inputValue, setInputValue] = useState('0'); // 입력 필드를 위한 문자열 상태 추가
   const [isFinalModalOpen, setIsFinalModalOpen] = useState(false);
@@ -49,11 +51,7 @@ const Modal = ({ onClose, stockData }: ModalProps) => {
   const formattedPoints = totalPoints.toLocaleString();
 
   const getMyPoint = async () => {
-    const response = await instance.get('points/mypoint', {
-      headers: {
-        userId: 1,
-      }
-    });
+    const response = await instance.get('points/mypoint');
 
     const data = response.data;
     setMyPoint(data);
@@ -64,18 +62,26 @@ const Modal = ({ onClose, stockData }: ModalProps) => {
       setErrorMessage('포인트를 초과하여 매수할 수 없습니다.');
     } else if (quantity < 0 && Math.abs(quantity) > stockData.hold) {
       setErrorMessage('보유량을 초과하여 매도할 수 없습니다.');
-    } else {
+    } else if (quantity == 0) {
+      setErrorMessage('거래량을 입력해주세요');
+    } 
+    else {
       setErrorMessage('');
     }
   }, [quantity, totalPoints, myPoint, stockData.hold]);
 
-  const handleFinalModal = async () => {
+  const handleFinalModal = () => {
     if (errorMessage) return;
+    
+    // 최종 확인 모달 열기만 수행
+    setIsFinalModalOpen(true);
+  };
 
+  const handleTransaction = async () => {
     const endpoint = quantity > 0 
       ? `transaction/stock/${stockData.companyNumber}/buy` 
       : `transaction/stock/${stockData.companyNumber}/sell`;
-
+  
     try {
       const response = await instance.post(
         endpoint,
@@ -85,10 +91,10 @@ const Modal = ({ onClose, stockData }: ModalProps) => {
         },
         {}
       );
-      
-      setIsFinalModalOpen(true);
+      console.log('Transaction successful:', response);
     } catch (error) {
       console.error('Error during transaction:', error);
+      router.push('')
     }
   };
 
@@ -149,7 +155,14 @@ const Modal = ({ onClose, stockData }: ModalProps) => {
           <button onClick={onClose} className="p-2 bg-red-500 text-white rounded-md text-sm">닫기</button>        
         </div>
       </div>
-      {isFinalModalOpen && <FinalModal onClose={closeFinalModal} stockData={stockData} />}
+      {isFinalModalOpen && <FinalModal 
+      onClose={closeFinalModal} 
+      stockData={stockData} 
+      onConfirm={handleTransaction}
+      quantity={quantity} 
+      totalPoints={totalPoints}
+      myPoint={myPoint}
+      />}
     </div>
   );
 };
