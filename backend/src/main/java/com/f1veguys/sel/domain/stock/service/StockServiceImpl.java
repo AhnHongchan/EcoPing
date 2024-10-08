@@ -112,7 +112,7 @@ public class StockServiceImpl implements StockService {
 
         return chartDataList;
     }
-
+// 기업코드 확인
     @Override
     public List<String> getAllCompanyCodes() {
         // DB에서 모든 기업 코드를 가져와 리스트로 반환
