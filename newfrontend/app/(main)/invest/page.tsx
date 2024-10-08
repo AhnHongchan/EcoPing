@@ -66,7 +66,7 @@ const Investment = (): JSX.Element => {
 
   // WebSocket 연결 및 데이터 처리 함수
   const initializeWebSocket = () => {
-    const socket = new WebSocket("ws://j11a304.p.ssafy.io/websocket/stock");
+    const socket = new WebSocket("wss://j11a304.p.ssafy.io/websocket/stock");
 
     socket.onopen = () => {
       console.log("WebSocket 연결 성공");
