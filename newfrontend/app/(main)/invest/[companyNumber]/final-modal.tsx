@@ -5,6 +5,10 @@ import StockDetailData from "@/app/types/stock-detail";
 interface ModalProps {
   onClose: () => void;
   stockData: StockDetailData;
+  onConfirm: () => Promise<void>;
+  quantity: number;
+  totalPoints: number;
+  myPoint: number;
 }
 
 
