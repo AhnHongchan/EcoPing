@@ -6,9 +6,12 @@ import com.f1veguys.sel.domain.consumption.service.ConsumptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,26 +25,31 @@ public class ConsumptionController {
 
     @GetMapping("/")
     @Operation(summary = "최근 30일 구매목록 전송")
-    public ResponseEntity<ProductResponse> findSimilarProducts() {
+    public ResponseEntity<List<ProductResponse>> findSimilarProducts() {
         List<ConsumptionResponse> consumptionResponseList = consumptionService.findRecentConsumption();
 
         String url = "https://j11a304.p.ssafy.io/py/find_similar_products";
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, consumptionResponseList, Map.class);
+        ResponseEntity<List> response = restTemplate.postForEntity(url, consumptionResponseList, List.class);
 
-        // 외부 API의 응답 데이터 처리
-        Map<String, Object> responseBody = response.getBody();
+        List<Map<String, Object>> responseBody = response.getBody();
 
         if (responseBody != null) {
-            String query = (String) responseBody.get("query");
-            String similarProduct = (String) responseBody.get("similar_product");
-            String manufacturer = (String) responseBody.get("manufacturer");
-            double similarity = (Double) responseBody.get("similarity");
+            List<ProductResponse> productResponseList = new ArrayList<>();
 
-            ProductResponse similarProductResponse = new ProductResponse(
-                    query, similarProduct, manufacturer, similarity
-            );
+            for (Map<String, Object> productData : responseBody) {
+                String query = (String) productData.get("query");
+                String similarProduct = (String) productData.get("similar_product");
+                String manufacturer = (String) productData.get("manufacturer");
 
-            return ResponseEntity.ok(similarProductResponse);
+                Double similarity = productData.get("similarity") != null ? ((Double) productData.get("similarity")) : 0.0;
+
+                ProductResponse productResponse = new ProductResponse(
+                        query, similarProduct, manufacturer, similarity
+                );
+                productResponseList.add(productResponse);
+            }
+
+            return ResponseEntity.ok(productResponseList);
         }
 
         return ResponseEntity.status(500).build();
