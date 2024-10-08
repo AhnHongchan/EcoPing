@@ -81,38 +81,31 @@ public class StockServiceImpl implements StockService {
             .bodyToMono(JsonNode.class)
             .block();
 
-// JSON 응답을 DTO 리스트로 변환
+        // JSON 응답을 DTO 리스트로 변환
         List<StockChartDataDto> chartDataList = new ArrayList<>();
 
-        if (response != null) {  // response가 널인지 확인
-            JsonNode outputList = response.get("output");
-            if (outputList != null && outputList.isArray()) {  // outputList가 널인지 확인
-                for (JsonNode node : outputList) {
-                    StockChartDataDto dto = new StockChartDataDto(
-                        node.has("stck_bsop_date") ? node.get("stck_bsop_date").asText("0") : "0",
-                        node.has("stck_clpr") ? node.get("stck_clpr").asText("0") : "0",
-                        node.has("stck_oprc") ? node.get("stck_oprc").asText("0") : "0",
-                        node.has("stck_hgpr") ? node.get("stck_hgpr").asText("0") : "0",
-                        node.has("stck_lwpr") ? node.get("stck_lwpr").asText("0") : "0",
-                        node.has("acml_vol") ? node.get("acml_vol").asText("0") : "0",
-                        node.has("acml_tr_pbmn") ? node.get("acml_tr_pbmn").asText("0") : "0"
-                    );
-                    chartDataList.add(dto);
-                }
-            } else {
-                // outputList가 널이거나 배열이 아닌 경우 기본값으로 하나의 DTO 추가
-                StockChartDataDto defaultDto = new StockChartDataDto("0", "0", "0", "0", "0", "0", "0");
-                chartDataList.add(defaultDto);
+        if (response != null && response.has("output2") && response.get("output2").isArray()) {
+            JsonNode outputList = response.get("output2");
+            for (JsonNode node : outputList) {
+                StockChartDataDto dto = new StockChartDataDto(
+                    node.has("stck_bsop_date") ? node.get("stck_bsop_date").asText() : "",
+                    node.has("stck_clpr") ? node.get("stck_clpr").asText() : "",
+                    node.has("stck_oprc") ? node.get("stck_oprc").asText() : "",
+                    node.has("stck_hgpr") ? node.get("stck_hgpr").asText() : "",
+                    node.has("stck_lwpr") ? node.get("stck_lwpr").asText() : "",
+                    node.has("acml_vol") ? node.get("acml_vol").asText() : "",
+                    node.has("acml_tr_pbmn") ? node.get("acml_tr_pbmn").asText() : ""
+                );
+                chartDataList.add(dto);
             }
         } else {
-            // response가 널인 경우 기본값으로 하나의 DTO 추가
-            StockChartDataDto defaultDto = new StockChartDataDto("0", "0", "0", "0", "0", "0", "0");
-            chartDataList.add(defaultDto);
+            // output2가 비어있거나 배열이 아닌 경우 로그 출력
+            System.out.println("output2 데이터가 없습니다. 응답이 비어있거나 형식이 잘못되었습니다.");
         }
 
         return chartDataList;
     }
-// 기업코드 확인
+
     @Override
     public List<String> getAllCompanyCodes() {
         // DB에서 모든 기업 코드를 가져와 리스트로 반환
