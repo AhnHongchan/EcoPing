@@ -81,19 +81,19 @@ public class StockServiceImpl implements StockService {
             .bodyToMono(JsonNode.class)
             .block();
 
-        // JSON 응답을 DTO 리스트로 변환
+// JSON 응답을 DTO 리스트로 변환
         List<StockChartDataDto> chartDataList = new ArrayList<>();
         JsonNode outputList = response.get("output");
         if (outputList.isArray()) {
             for (JsonNode node : outputList) {
                 StockChartDataDto dto = new StockChartDataDto(
-                    node.get("stck_bsop_date").asText(),
-                    node.get("stck_clpr").asText(),
-                    node.get("stck_oprc").asText(),
-                    node.get("stck_hgpr").asText(),
-                    node.get("stck_lwpr").asText(),
-                    node.get("acml_vol").asText(),
-                    node.get("acml_tr_pbmn").asText()
+                    node.has("stck_bsop_date") ? node.get("stck_bsop_date").asText("0") : "0",
+                    node.has("stck_clpr") ? node.get("stck_clpr").asText("0") : "0",
+                    node.has("stck_oprc") ? node.get("stck_oprc").asText("0") : "0",
+                    node.has("stck_hgpr") ? node.get("stck_hgpr").asText("0") : "0",
+                    node.has("stck_lwpr") ? node.get("stck_lwpr").asText("0") : "0",
+                    node.has("acml_vol") ? node.get("acml_vol").asText("0") : "0",
+                    node.has("acml_tr_pbmn") ? node.get("acml_tr_pbmn").asText("0") : "0"
                 );
                 chartDataList.add(dto);
             }
