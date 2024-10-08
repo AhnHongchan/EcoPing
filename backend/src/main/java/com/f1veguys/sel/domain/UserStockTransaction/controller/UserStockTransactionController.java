@@ -1,13 +1,12 @@
 package com.f1veguys.sel.domain.UserStockTransaction.controller;
 
-import com.f1veguys.sel.domain.UserStockTransaction.domain.UserStockTransaction;
 import com.f1veguys.sel.domain.UserStockTransaction.dto.StockTransactionRequest;
+import com.f1veguys.sel.domain.UserStockTransaction.dto.UserStockTransactionResponse;
 import com.f1veguys.sel.domain.UserStockTransaction.service.UserStockTransactionService;
 import com.f1veguys.sel.domain.UserStockHoldings.service.UserStockHoldingsService;
 import com.f1veguys.sel.domain.company.domain.Company;
 import com.f1veguys.sel.domain.company.service.CompanyService;
 import com.f1veguys.sel.domain.customuser.CustomUserDetails;
-import com.f1veguys.sel.domain.user.domain.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +32,7 @@ public class UserStockTransactionController {
 
     // 매수
     @PostMapping("/{companyNumber}/buy")
-    public ResponseEntity<UserStockTransaction> buyStock(
+    public ResponseEntity<UserStockTransactionResponse> buyStock(
         @PathVariable("companyNumber") String companyNumber,
         @AuthenticationPrincipal CustomUserDetails userDetails,
         @RequestBody StockTransactionRequest request) {
@@ -43,16 +42,21 @@ public class UserStockTransactionController {
             throw new RuntimeException("Company not found");
         }
 
-        UserStockTransaction transaction = transactionService.buyStock(userDetails.getUser(), company.get(), request.getQuantity(), request.getCurrentPrice());
+        UserStockTransactionResponse transactionResponse = transactionService.buyStock(
+            userDetails.getUser(),
+            company.get(),
+            request.getQuantity(),
+            request.getCurrentPrice()
+        );
 
         holdingsService.updateHoldings(userDetails.getUser(), company.get(), request.getQuantity(), true, request.getCurrentPrice());
 
-        return ResponseEntity.ok(transaction);
+        return ResponseEntity.ok(transactionResponse);
     }
 
     // 매도
     @PostMapping("/{companyNumber}/sell")
-    public ResponseEntity<UserStockTransaction> sellStock(
+    public ResponseEntity<UserStockTransactionResponse> sellStock(
         @PathVariable("companyNumber") String companyNumber,
         @AuthenticationPrincipal CustomUserDetails userDetails,
         @RequestBody StockTransactionRequest request) {
@@ -62,11 +66,16 @@ public class UserStockTransactionController {
             throw new RuntimeException("Company not found");
         }
 
-        UserStockTransaction transaction = transactionService.sellStock(userDetails.getUser(), company.get(), request.getQuantity(), request.getCurrentPrice());
+        UserStockTransactionResponse transactionResponse = transactionService.sellStock(
+            userDetails.getUser(),
+            company.get(),
+            request.getQuantity(),
+            request.getCurrentPrice()
+        );
 
         holdingsService.updateHoldings(userDetails.getUser(), company.get(), request.getQuantity(), false, request.getCurrentPrice());
 
-        return ResponseEntity.ok(transaction);
+        return ResponseEntity.ok(transactionResponse);
     }
 
     // 주식 보유량 조회
@@ -86,9 +95,10 @@ public class UserStockTransactionController {
 
     // 사용자 트랜잭션 조회
     @GetMapping("/my-transactions")
-    public ResponseEntity<List<UserStockTransaction>> getUserTransactions(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        User user = userDetails.getUser();
-        List<UserStockTransaction> transactions = transactionService.getUserTransactions(user);
+    public ResponseEntity<List<UserStockTransactionResponse>> getUserTransactions(
+        @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        List<UserStockTransactionResponse> transactions = transactionService.getUserTransactions(userDetails.getUser());
         return ResponseEntity.ok(transactions);
     }
 }
