@@ -102,18 +102,27 @@ async def api_find_similar_products(products: list[ProductItem]):
         if most_frequent_product_name:
             # 해당 제품명을 사용하여 유사한 제품 찾기
             similar_product, manufacturer, similarity = find_similar_products(most_frequent_product_name)
+            
             if similar_product:
                 return {
                     "query": most_frequent_product_name,
                     "similar_product": similar_product,
-                    "manufacturer": manufacturer  # 제조사/유통사 포함
-                }
+                    "manufacturer": manufacturer,  # 제조사/유통사 포함
+                    "similarity": similarity  # 유사도 추가
+                }, 200
             else:
-                return {"query": most_frequent_product_name, "result": "유사한 제품을 찾지 못했습니다."}
+                return {
+                    "query": most_frequent_product_name,
+                    "error": "유사한 제품을 찾지 못했습니다."
+                }, 404
         else:
-            return {"result": "제품명이 충분하지 않습니다."}
+            return {
+                "error": "제품명이 충분하지 않습니다."
+            }, 400
+    
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"서버 오류: {str(e)}")
+
 
 if __name__ == "__main__":
     import uvicorn
