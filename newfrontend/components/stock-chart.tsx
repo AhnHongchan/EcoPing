@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart, LineElement, CategoryScale, LinearScale, PointElement, Filler, Title, Tooltip, Legend } from 'chart.js';
-import annotationPlugin from 'chartjs-plugin-annotation';
+import annotationPlugin, {AnnotationOptions} from 'chartjs-plugin-annotation';
 import commonAxisOptions from './chart-options';
 import dayjs from 'dayjs';
 
@@ -10,6 +10,7 @@ Chart.register(LineElement, CategoryScale, LinearScale, PointElement, Filler, Ti
 interface StockChartProps {
   stockGraphData: Array<{ stckBsopDate: string; stckClpr: number }>;
 }
+
 
 const Stockchart = ({ stockGraphData }: StockChartProps) => {
   const chartRef = useRef(null);
@@ -53,7 +54,7 @@ const labels = reversedData.map(stock => dayjs(stock.stckBsopDate).format("YY.MM
       annotation: {
         annotations: {
           line1: {
-            type: 'line',
+            type: 'line' as const,
             yMin: firstPrice,
             yMax: firstPrice,
             borderColor: 'rgba(0, 0, 0, 0.8)',
@@ -62,7 +63,7 @@ const labels = reversedData.map(stock => dayjs(stock.stckBsopDate).format("YY.MM
             label: {
               enabled: true,
               content: `기준 가격: ${firstPrice}`,
-              position: 'end',
+              position: 'end' as const,
             },
           },
         },
@@ -76,7 +77,7 @@ const labels = reversedData.map(stock => dayjs(stock.stckBsopDate).format("YY.MM
           text: '날짜',
           color: '#000',
           font: {
-            weight: 'bold',
+            weight: 'bold' as const,
           },
         },
       },
@@ -87,7 +88,7 @@ const labels = reversedData.map(stock => dayjs(stock.stckBsopDate).format("YY.MM
           text: '주가(원)',
           color: '#000',
           font: {
-            weight: 'bold',
+            weight: 'bold' as const,
           },
         },
         beginAtZero: false,
