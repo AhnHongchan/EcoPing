@@ -36,13 +36,20 @@ const LineChart = ({ totalSpendData, ecoSpendData }: LineChartProps) => {
   const lightWalnutBrown = "#9C8772";
   const coralRed = "#e57373";
 
+  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  const currentMonth = new Date().getMonth();
+  const lastOneYear = [];
+
+  for (let i = 0; i < 12; i++) {
+    lastOneYear.push(months[(currentMonth + i) % 12]);
+  } 
+
   // 에코 소비 비율 계산
   const fetchRatioData = async () => {
     try {
       const response = await instance.get('statistics/ratio');
       setRatio(response.data);
     } catch (error) {
-      console.log(error)
     }
   };
 
@@ -51,7 +58,7 @@ const LineChart = ({ totalSpendData, ecoSpendData }: LineChartProps) => {
   }, []);
 
   const lineChartData = {
-    labels: ["9", "10", "11", "12", "1", "2", "3", "4", "5", "6", "7", "8"], // 짧은 레이블 사용
+    labels: lastOneYear, // 짧은 레이블 사용
     datasets: showRatio
       ? [
           {

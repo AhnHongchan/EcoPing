@@ -10,7 +10,6 @@ const DailyConsumption = (): JSX.Element => {
       const response = await instance.get('statistics/1');
       setDailyData(response.data[0]); // Assuming the response is an array and we need the first object
     } catch (error) {
-      console.error('Error fetching daily data:', error);
     }
   };
 
