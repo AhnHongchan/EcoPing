@@ -31,7 +31,7 @@ const Login = (): JSX.Element => {
     const password = passwordRef.current?.value || "";
 
     try {
-      const response = await axios.post("https://j11a304.p.ssafy.io/api/users/login", {
+      const response = await axios.post("https://j11a304.p.ssafy.io/api/api/users/login", {
         email: id,
         password: password,
       }, {
@@ -42,8 +42,6 @@ const Login = (): JSX.Element => {
       });
       const accessToken = Cookies.get("accessToken");
       const refreshToken = Cookies.get("refreshToken");
-      console.log(accessToken);
-      console.log(refreshToken);
 
       if (
         response.status === 200 &&

@@ -44,6 +44,12 @@ public class Campaign {
 //    @OneToOne(mappedBy = "campaign", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private File file;
 
+    @Column(name = "thumbnail_url", length = 512)
+    private String thumbnailUrl;
+
+    @Column(name = "content_url", length = 512)
+    private String contentUrl;
+
     @CreationTimestamp
     private LocalDateTime uploadDate;
 }

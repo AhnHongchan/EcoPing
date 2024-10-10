@@ -1,16 +1,16 @@
 package com.f1veguys.sel.domain.spendinghistory.service;
 
 import com.f1veguys.sel.domain.ecocompany.repository.EcoCompanyRepository;
+import com.f1veguys.sel.domain.ecogroupratio.domain.EcoGroupRatio;
+import com.f1veguys.sel.domain.ecogroupratio.repository.EcoGroupRatioRepository;
 import com.f1veguys.sel.domain.ecoratio.domain.EcoRatio;
 import com.f1veguys.sel.domain.ecoratio.repository.EcoRatioRepository;
 import com.f1veguys.sel.domain.points.service.PointsService;
 import com.f1veguys.sel.domain.pointshistory.service.PointsHistoryService;
 import com.f1veguys.sel.domain.spendinghistory.domain.SpendingHistory;
-import com.f1veguys.sel.domain.spendinghistory.dto.PeriodStatisticsResponse;
-import com.f1veguys.sel.domain.spendinghistory.dto.PreviousMonthSummaryDto;
+import com.f1veguys.sel.domain.spendinghistory.dto.*;
 import com.f1veguys.sel.domain.user.repository.UserRepository;
 import com.f1veguys.sel.dto.Operation;
-import com.f1veguys.sel.domain.spendinghistory.dto.StatisticsResponse;
 import com.f1veguys.sel.domain.spendinghistory.repository.SpendingHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
     private final PointsHistoryService pointsHistoryService;
     private final EcoRatioRepository ecoRatioRepository;
     private final UserRepository userRepository;
+    private final EcoGroupRatioRepository ecoGroupRatioRepository;
     @Override
     public StatisticsResponse getStatistics(int userId) {
         int period = 30;
@@ -46,11 +50,11 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
         }else{
             previousMonth = 0;
         }
-        Optional<EcoRatio> ratio = ecoRatioRepository.findMostRecent();
+        Optional<EcoGroupRatio> ratio = ecoGroupRatioRepository.findMostRecentUnknownGenderAndAllAgeGroup();
         double eco;
         if(ratio.isPresent()) {
-            EcoRatio ecoRatio = ratio.get();
-            eco = ecoRatio.getAverageRatio();
+            EcoGroupRatio ecoRatio = ratio.get();
+            eco = ecoRatio.getEcoSum() / ecoRatio.getTotalSum();
         }else{
             eco = 0;
         }
@@ -60,13 +64,27 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
     }
 
     @Override
-    public PeriodStatisticsResponse getPeriodStatistics(int userId, int period) {
-        LocalDateTime endDate = LocalDateTime.now();
-        LocalDateTime startDate = endDate.minusDays(period);
-        int totalAmount = spendingHistoryRepository.getTotalAmount(userId, startDate, endDate);
-        int ecoAmount = spendingHistoryRepository.getEcoAmount(userId, startDate, endDate);
-        return new PeriodStatisticsResponse(totalAmount, ecoAmount);
+    public PeriodCompareResponse getPeriodStatistics(int userId, int period) {
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusDays(period);
+        LocalDate previousDate = startDate.minusDays(period);
 
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = today.atStartOfDay();
+        LocalDateTime previousDateTime = previousDate.atStartOfDay();
+
+        int totalAmount = spendingHistoryRepository.getTotalAmount(userId, startDateTime, endDateTime);
+        int ecoAmount = spendingHistoryRepository.getEcoAmount(userId, startDateTime, endDateTime);
+        int previousEco = spendingHistoryRepository.getEcoAmount(userId, previousDateTime, startDateTime);
+        int previousTotal = spendingHistoryRepository.getTotalAmount(userId, previousDateTime, endDateTime);
+        double previousRatio;
+        if(previousTotal!=0) {
+            previousRatio = (double) previousEco / previousTotal;
+            previousRatio = (double) Math.round(previousRatio * 100) /100;
+        }else{
+            previousRatio = 0d;
+        }
+        return new PeriodCompareResponse(totalAmount, ecoAmount, previousRatio);
     }
 
     @Override
@@ -74,8 +92,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
         SpendingHistory spendingHistory = new SpendingHistory(userId, amount, description);
         if(ecoCompanyRepository.existsByName(description)){
             spendingHistory.setIsEco(true);
-            pointsService.addPoints(userId, (int)(amount*0.005d));
-            pointsHistoryService.savePointsHistory(userId, Operation.EARN, (int)(amount*0.005d), "친환경 소비 : "+description);
+            pointsService.addPoints(userId, (int)(amount*0.005d), "친환경 소비 : "+description);
         }
         spendingHistoryRepository.save(spendingHistory);
     }
@@ -94,5 +111,45 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
             previousMonth = (double) summaryDto.getEcoPreviousMonth() / summaryDto.getTotalPreviousMonth();
         }
         return previousMonth;
+    }
+
+    @Override
+    public List<PeriodStatisticsResponse> getYearlySpendingSummary(int userId) {
+        LocalDateTime endDate = LocalDateTime.now().withDayOfMonth(1);
+        LocalDateTime startDate = endDate.minusYears(1);
+        List<Object[]> results = spendingHistoryRepository.getMonthlySpendingData(userId, startDate, endDate);
+        List<MonthlySpendingDto> list = results.stream()
+                .map(result -> new MonthlySpendingDto(
+                        ((Number) result[0]).intValue(),
+                        ((Number) result[1]).intValue(),
+                        ((Number) result[2]).longValue(),
+                        ((Number) result[3]).longValue()
+                ))
+                .toList();
+        List<PeriodStatisticsResponse> responses = new ArrayList<>();
+        for(MonthlySpendingDto monthlySpendingDto : list){
+            PeriodStatisticsResponse monthly = new PeriodStatisticsResponse((int)monthlySpendingDto.getTotalSpending(),
+                    (int)monthlySpendingDto.getEcoSpending());
+            responses.add(monthly);
+        }
+        return responses;
+    }
+
+    @Override
+    public List<Double> getYearlySpendingRates(int userId) {
+        List<Double> result = new ArrayList<>();
+        List<PeriodStatisticsResponse> spendingSummary = getYearlySpendingSummary(userId);
+        for(int i=0; i<spendingSummary.size(); i++){
+            PeriodStatisticsResponse periodSummary = spendingSummary.get(i);
+            if(periodSummary.getTotalSpend()==0){
+                result.add(0d);
+                continue;
+            }
+            double ratio = (double) periodSummary.getEcoSpend()/periodSummary.getTotalSpend();
+            ratio = ratio*100;
+            ratio = Math.round(ratio*10)/10.0;
+            result.add(ratio);
+        }
+        return result;
     }
 }

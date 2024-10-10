@@ -15,16 +15,13 @@ import java.util.List;
 public class PointsHistoryServiceImpl implements PointsHistoryService {
     private final PointsHistoryRepository pointsHistoryRepository;
     @Override
-    public void savePointsHistory(int userId, Operation action, int amount, String description) {
-        PointsHistory pointsHistory = new PointsHistory(userId, action, amount, description);
+    public void savePointsHistory(int userId, Operation action, int amount, String description, int nowPoint) {
+        PointsHistory pointsHistory = new PointsHistory(userId, action, amount, description, nowPoint);
         pointsHistoryRepository.save(pointsHistory);
     }
 
     @Override
     public List<PointsHistory> getPointsHistory(int userId) {
-        List<PointsHistory> response = new ArrayList<>();
-        LocalDateTime from = LocalDateTime.now().minusMonths(1L);
-        response = pointsHistoryRepository.findLastMonthHistoryByUserId(userId, from);
-        return response;
+        return pointsHistoryRepository.findHistoryByUserId(userId);
     }
 }

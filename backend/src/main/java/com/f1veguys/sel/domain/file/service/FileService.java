@@ -12,4 +12,5 @@ public interface FileService {
     void deleteFile(int fileId) throws IOException;
     FileResponse updateFile(int fileId, MultipartFile file) throws IOException;
     FileResponse getFile(int fileId);
+    String getFileExt(MultipartFile file) throws IOException;
 }

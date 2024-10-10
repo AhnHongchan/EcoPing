@@ -3,7 +3,7 @@
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import instance from "@/lib/axios";
-import axios from 'axios';
+import axios from "axios";
 
 import useStockStore from "@/app/store/stock-store";
 import Company from "@/app/types/company";
@@ -81,10 +81,10 @@ const StockDetail = (): JSX.Element => {
       const graphResponse = await instance.get(
         `stock/chart/${companyNumber}/${period}`,
         {
-          params: { startDate, endDate }
+          params: { startDate, endDate },
         }
       );
-  
+
       const graphData = graphResponse.data.data;
       setStockGraphData(graphData);
     } catch (error) {
@@ -93,7 +93,6 @@ const StockDetail = (): JSX.Element => {
       }
     }
   };
-  
 
   const handleClick = () => {
     router.push(
@@ -114,18 +113,16 @@ const StockDetail = (): JSX.Element => {
       await handlePeriodChange("D");
       fetchData();
     };
-  
+
     initializeData();
   }, [companyNumber]);
 
   if (!stockData) {
     return (
-    <div>
-        <p className="small-title ml-2">
-          상세 정보를 불러옵니다
-        </p>
-    </div>
-    )
+      <div>
+        <p className="small-title ml-2">상세 정보를 불러옵니다</p>
+      </div>
+    );
   }
 
   return (
@@ -142,10 +139,30 @@ const StockDetail = (): JSX.Element => {
       </div>
       <br />
       <div className="flex gap-4 justify-end">
-        <button onClick={() => handlePeriodChange("D")}>일</button>
-        <button onClick={() => handlePeriodChange("W")}>주</button>
-        <button onClick={() => handlePeriodChange("M")}>월</button>
-        <button onClick={() => handlePeriodChange("Y")}>년</button>
+        <button
+          className="font-bold rounded-md shadow-md px-2 py-1 bg-loginLightGreen"
+          onClick={() => handlePeriodChange("D")}
+        >
+          일
+        </button>
+        <button
+          className="font-bold rounded-md shadow-md px-2 py-1 bg-loginLightGreen"
+          onClick={() => handlePeriodChange("W")}
+        >
+          주
+        </button>
+        <button
+          className="font-bold rounded-md shadow-md px-2 py-1 bg-loginLightGreen"
+          onClick={() => handlePeriodChange("M")}
+        >
+          월
+        </button>
+        <button
+          className="font-bold rounded-md shadow-md px-2 py-1 bg-loginLightGreen"
+          onClick={() => handlePeriodChange("Y")}
+        >
+          년
+        </button>
       </div>
       <br />
       <div>
@@ -153,32 +170,43 @@ const StockDetail = (): JSX.Element => {
       </div>
       <br />
       <div className="box-style bg-loginLightGreen">
-        <p>현재가: {Number(stockData.currentPrice).toLocaleString()}원</p>
-        <p>52주 최저가: {Number(stockData.min52).toLocaleString()}원</p>
-        <p>52주 최고가: {Number(stockData.max52).toLocaleString()}원</p>
-
-        <p>
-          전일 대비:{" "}
-          <span
+        <div className="flex justify-between">
+          <p>현재가: </p>
+          <p>{Number(stockData.currentPrice).toLocaleString()}원</p>
+        </div>
+        <div className="flex justify-between">
+          <p>52주 최저가: </p>
+          <p>{Number(stockData.min52).toLocaleString()}원</p>
+        </div>
+        <div className="flex justify-between">
+          <p>52주 최고가: </p>
+          <p>{Number(stockData.max52).toLocaleString()}원</p>
+        </div>
+        <div className="flex justify-between">
+          <p>전일 대비: </p>
+          <p
             className={
               parseFloat(stockData.priceDifference) > 0
-                ? "text-red-500"
-                : "text-blue-700"
+                ? "text-red-500 font-bold"
+                : "text-blue-700 font-bold"
             }
           >
-            {Math.abs(parseFloat(stockData.priceDifference)).toLocaleString()}원{" "}
+            {Math.abs(parseFloat(stockData.priceDifference)).toLocaleString()}원
             ({parseFloat(stockData.rateDifference).toLocaleString()}%)
             {parseFloat(stockData.priceDifference) > 0 ? " 상승" : " 하락"}
-          </span>
-        </p>
-        <p></p>
+          </p>
+        </div>
       </div>
       <br />
       <div className="box-style bg-loginLightGreen">
-        <p>
-          친환경 지수: {companyStoreDict[companyNumber]?.ecoScore.toFixed(2)}
-        </p>
-        <p>추천 순위: {companyStoreDict[companyNumber]?.ranking}위</p>
+        <div className="flex justify-between">
+          <p>친환경 지수:</p>
+          <p>{companyStoreDict[companyNumber]?.ecoScore.toFixed(2)}</p>
+        </div>
+        <div className="flex justify-between">
+          <p>추천 순위: </p>
+          <p>{companyStoreDict[companyNumber]?.ranking}위</p>
+        </div>
       </div>
       <br />
       {stockData.hold > 0 && (
@@ -215,7 +243,7 @@ const StockDetail = (): JSX.Element => {
         <p>
           보다 많은 주식 정보는?
           <span
-            className="cursor-pointer text-red-500 ml-3"
+            className="cursor-pointer text-red-500 ml-3 font-bold"
             onClick={handleClick}
           >
             여기!
