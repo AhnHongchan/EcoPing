@@ -31,7 +31,7 @@ const Login = (): JSX.Element => {
     const password = passwordRef.current?.value || "";
 
     try {
-      const response = await axios.post("http://j11a304.p.ssafy.io/api/users/login", {
+      const response = await axios.post("https://j11a304.p.ssafy.io/api/users/login", {
         email: id,
         password: password,
       }, {
