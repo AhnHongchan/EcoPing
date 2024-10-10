@@ -57,14 +57,14 @@ public class UserServiceImpl implements UserService {
                 .filter(u -> passwordEncoder.matches(loginRequest.getPassword(), u.getPassword())) // 비밀번호 비교
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
         Cookie accessCookie = new Cookie("accessToken", jwtUtil.generateAccessToken(user.getEmail()));
-        //accessCookie.setHttpOnly(true);
-        //accessCookie.setSecure(true);
+        accessCookie.setHttpOnly(false);
+        accessCookie.setSecure(false);
         accessCookie.setPath("/");
         accessCookie.setMaxAge(60*60*12);
         accessCookie.setAttribute("SameSite", "None"); // 크로스 오리진 요청 허용
         Cookie refreshCookie = new Cookie("refreshToken", jwtUtil.generateRefreshToken(user.getEmail()));
-        //refreshCookie.setHttpOnly(true);
-        //refreshCookie.setSecure(true);
+        refreshCookie.setHttpOnly(false);
+        refreshCookie.setSecure(false);
         refreshCookie.setPath("/");
         refreshCookie.setMaxAge(60*60*24*3);
         refreshCookie.setAttribute("SameSite", "None"); // 크로스 오리진 요청 허용
