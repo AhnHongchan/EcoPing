@@ -89,9 +89,7 @@ const StockDetail = (): JSX.Element => {
       setStockGraphData(graphData);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error('Axios error:', error.response?.data);
       } else {
-        console.error('Unexpected error:', error);
       }
     }
   };
@@ -112,11 +110,22 @@ const StockDetail = (): JSX.Element => {
   };
 
   useEffect(() => {
-    fetchData();
+    const initializeData = async () => {
+      await handlePeriodChange("D");
+      fetchData();
+    };
+  
+    initializeData();
   }, [companyNumber]);
 
   if (!stockData) {
-    return <p>해당하는 데이터가 없습니다.</p>;
+    return (
+    <div>
+        <p className="small-title ml-2">
+          상세 정보를 불러옵니다
+        </p>
+    </div>
+    )
   }
 
   return (

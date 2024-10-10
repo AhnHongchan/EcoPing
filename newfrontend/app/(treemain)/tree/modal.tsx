@@ -11,11 +11,10 @@ const Modal = ({ onClose, onResetTree }: ModalProps) => {
 
   const choiceGift = async (gift: string) => {
     try {
-      const response = await instance.put(`/tree/1/gifticon`);
+      const response = await instance.put(`/tree/gifticon`);
       console.log("Watering successful:", response.data);
       setSelectedGift(gift); 
     } catch (error) {
-      console.error("Failed to send watering request:", error);
       onClose();
     }
   };

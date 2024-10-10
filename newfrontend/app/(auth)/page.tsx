@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import instance from "@/lib/axios";
+import axios from 'axios';
 
 import Cookies from "js-cookie";
 import useAuthStore from "../store/use-auth-store";
@@ -29,21 +29,33 @@ const Login = (): JSX.Element => {
     const password = passwordRef.current?.value || "";
 
     try {
-      const response = await instance.post("/users/login", {
+      const response = await axios.post("http://j11a304.p.ssafy.io/api/users/login", {
         email: id,
         password: password,
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
       });
+      const accessToken = Cookies.get("accessToken");
+      const refreshToken = Cookies.get("refreshToken");
+      console.log(accessToken);
+      console.log(refreshToken);
 
       if (
         response.status === 200 &&
-        Cookies.get("accessToken") &&
-        Cookies.get("refreshToken")
+        accessToken &&
+        refreshToken
       ) {
         setUserId(response.data);
         router.push("/dashboard");
       } else {
+        console.log('200 아님:', response)
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const togglePasswordVisibility = () => {
