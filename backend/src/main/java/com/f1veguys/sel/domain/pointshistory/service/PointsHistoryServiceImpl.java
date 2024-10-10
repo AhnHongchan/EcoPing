@@ -22,9 +22,6 @@ public class PointsHistoryServiceImpl implements PointsHistoryService {
 
     @Override
     public List<PointsHistory> getPointsHistory(int userId) {
-        List<PointsHistory> response = new ArrayList<>();
-        LocalDateTime from = LocalDateTime.now().minusMonths(1L);
-        response = pointsHistoryRepository.findLastMonthHistoryByUserId(userId, from);
-        return response;
+        return pointsHistoryRepository.findHistoryByUserId(userId);
     }
 }
