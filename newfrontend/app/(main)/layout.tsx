@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "EcoPing",
   description: "Eco-friendly financial App",
   icons: {
-    icon: '/icon.png'
+    icon: 'icons/icon.png'
   },
 };
 
