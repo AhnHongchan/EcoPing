@@ -121,7 +121,11 @@ const Stockchart = ({ stockGraphData }: StockChartProps) => {
     <div>
       <Line ref={chartRef} data={chartData} options={options} />
       <p className="text-center">
-        기준 가격: <strong className="font-bold">{firstPrice ? firstPrice.toLocaleString() : '가격 정보 없음'}</strong>원
+        기준 가격:{" "}
+        <strong className="font-bold">
+          {firstPrice ? firstPrice.toLocaleString("ko-KR") : "가격 정보 없음"}
+        </strong>
+        원
       </p>
     </div>
   );
