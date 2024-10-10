@@ -160,7 +160,7 @@ const Investment = (): JSX.Element => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center h-screen">
-        <p className="text-center text-2xl mb-32">모의 투자</p>
+        <p className="text-center text-2xl font-bold mb-32">모의 투자</p>
         <div className="flex justify-center items-center">
           <div className="spinner border-t-4 border-loginLightGreen w-8 h-8 rounded-full animate-spin mb-10"></div>
         </div>
@@ -174,7 +174,7 @@ const Investment = (): JSX.Element => {
   return (
     <div>
       <div>
-        <p className="text-center text-2xl">모의 투자</p>
+        <p className="text-center font-bold text-2xl">모의 투자</p>
       </div>
       <br />
       <div>
