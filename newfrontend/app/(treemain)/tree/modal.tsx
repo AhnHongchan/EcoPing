@@ -15,7 +15,6 @@ const Modal = ({ onClose, onResetTree }: ModalProps) => {
       console.log("Watering successful:", response.data);
       setSelectedGift(gift); 
     } catch (error) {
-      console.error("Failed to send watering request:", error);
       onClose();
     }
   };

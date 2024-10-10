@@ -62,7 +62,6 @@ const Tree = () => {
         setWaterPoint(response.data.count / 500); 
         // setWaterPoint(2);
       } catch (error) {
-        console.error("Failed to fetch water point data:", error);
       }
     };
 
@@ -394,7 +393,6 @@ const Tree = () => {
   };
 
   // useEffect(() => {
-  //   console.log(waterPoint+ " " + level)
   // }, [level, waterPoint]);
 
   

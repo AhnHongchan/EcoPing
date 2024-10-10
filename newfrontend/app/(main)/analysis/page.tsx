@@ -36,10 +36,11 @@ ChartJS.register(
 
 
 const Analysis = (): JSX.Element => {
-  const [statistics, setStatistics] = useState([]);
+  const [statistics, setStatistics] = useState<{ totalSpend: number; ecoSpend: number }[]>([]);
+  const [recommends, setRecommends] = useState([]);
   const [selectedButton, setSelectedButton] = useState<string>("일간");
-  const totalSpendData: number[] = [1200, 1500, 1800, 1400, 1600, 1700, 1900, 2100, 2000, 2300, 2200, 2400];
-  const ecoSpendData: number[] = [200, 300, 250, 220, 350, 280, 400, 450, 680, 500, 620, 860];
+  const totalSpendData = statistics.map((stat) => stat.totalSpend);
+  const ecoSpendData = statistics.map((stat) => stat.ecoSpend);
 
   const handleButtonClick = (button: string) => {
     setSelectedButton(button);
@@ -55,8 +56,18 @@ const Analysis = (): JSX.Element => {
     }
   };
 
+  // const fetchRecommend = async () => {
+  //   try {
+  //     const response = await instance.get("/py/find_similar_products");
+  //     const data = response.data;
+  //     setRecommends(data);
+  //   } catch (error) {
+  //   }
+  // }
+
   useEffect(() => {
     fetchStatistics();
+    // fetchRecommend();
   }, []);
 
   return (
@@ -68,7 +79,7 @@ const Analysis = (): JSX.Element => {
         <LineChart totalSpendData={totalSpendData} ecoSpendData={ecoSpendData}/>
       </div>
       <div className="my-2 pb-6 border-b-4 m-auto border-loginLightGreen">
-        <p className="text-center font-bold text-mainDarkGreen">20대 남성 중 회원님은 상위 5%입니다</p>
+        {/* <p className="text-center font-bold text-mainDarkGreen">{recommends}</p> */}
       </div>
       <div className="mt-6">
         <div className="flex justify-around mb-5">
