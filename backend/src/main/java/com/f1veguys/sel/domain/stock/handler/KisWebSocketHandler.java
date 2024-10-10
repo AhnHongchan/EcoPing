@@ -39,6 +39,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
         this.companyNumbers = stockService.getAllCompanyCodes();
     }
 
+    //연결 직후
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         sessions.add(session);
