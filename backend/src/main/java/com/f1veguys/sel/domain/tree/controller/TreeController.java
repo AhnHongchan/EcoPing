@@ -12,10 +12,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @RestController
@@ -42,16 +44,30 @@ public class TreeController {
 //    }
 
     // 물주기
+    @Transactional
     @PutMapping("/water")
     @Operation(summary = "나무에 물주기", description = "나무에 물(포인트, 500)를 줍니다.")
-    public ResponseEntity<Tree> waterTree(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> waterTree(@AuthenticationPrincipal CustomUserDetails userDetails) {
         User user = userDetails.getUser();
         Tree tree = treeService.getTree(user.getId());
         if(tree==null){
             tree = treeService.startTree(user);
         }
+        Map<String, Object> response = new HashMap<>();
         tree = treeService.waterTree(tree, user.getId());
-        return ResponseEntity.ok(tree);
+        response.put("count", tree.getCount());
+        if(tree.getCount()==3000){
+            int userId = user.getId();
+            Random random = new Random();
+            int randomNum = random.nextInt(9)+1;
+            boolean newTree = badgeService.isNewBadge(userId, randomNum);
+            if(newTree){
+                badgeService.addBadge(userId, randomNum);
+            }
+            response.put("newTree", newTree);
+            response.put("badgeNum", randomNum);
+        }
+        return ResponseEntity.ok(response);
     }
 
 //    // 트리 종료 (id로 찾아서 종료)
@@ -66,16 +82,6 @@ public class TreeController {
     public ResponseEntity<?> getGift(@AuthenticationPrincipal CustomUserDetails userDetails) {
         int userId = userDetails.getId();
         treeService.getGift(userId);
-        Random random = new Random();
-        int randomNum = random.nextInt(9)+1;
-        boolean newTree = badgeService.isNewBadge(userId, randomNum);
-        if(newTree){
-            badgeService.addBadge(userId, randomNum);
-        }
-        HashMap<String, Object> response = new HashMap<>();
-        response.put("newTree", newTree);
-        response.put("badgeNum", randomNum);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(200).build();
     }
-
 }

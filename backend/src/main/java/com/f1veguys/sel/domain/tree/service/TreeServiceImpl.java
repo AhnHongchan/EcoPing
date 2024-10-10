@@ -3,7 +3,6 @@ package com.f1veguys.sel.domain.tree.service;
 import com.f1veguys.sel.domain.points.service.PointsService;
 import com.f1veguys.sel.domain.pointshistory.service.PointsHistoryService;
 import com.f1veguys.sel.domain.tree.domain.Tree;
-import com.f1veguys.sel.dto.Operation;
 import com.f1veguys.sel.global.error.exception.*;
 import com.f1veguys.sel.global.error.exception.InsufficientPointsException;
 import com.f1veguys.sel.domain.points.domain.Points;
@@ -51,7 +50,6 @@ public class TreeServiceImpl implements TreeService {
             tree.setGrown(true);
             treeRepository.save(tree);
         }
-
     }
 
     @Override
