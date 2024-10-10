@@ -24,7 +24,7 @@ Fin-Tech와 친환경적 요소를 결합한 프로젝트입니다.
 
 ### 아키텍쳐<hr>
 
-![아키텍쳐.png](./exec/img/아키텍쳐.png)
+<img src="./exec/img/아키텍쳐.png" alt="아키텍쳐" width="50%">
 
 ### ERD<hr>
 
