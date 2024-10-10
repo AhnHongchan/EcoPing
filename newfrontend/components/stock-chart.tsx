@@ -40,8 +40,9 @@ const Stockchart = ({ stockGraphData }: StockChartProps) => {
   );
   const data = reversedData.map((stock) => stock.stckClpr);
 
-  const firstPrice = data[0]; // 기준점 설정\
+  const firstPrice = data[0] || 0; 
   const standardPrice = firstPrice.toLocaleString();
+  
 
   const chartData = {
     labels: labels,
