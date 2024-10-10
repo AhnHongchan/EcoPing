@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BiChevronLeft } from "react-icons/bi";
 import { useParams } from 'next/navigation';
 import CampaignSlide from '@/components/campaign/campaign-slide'
+import CampaignPopup from '@/components/campaign/campaign-popup'
+import instance from "@/lib/axios";
 
 // Define types for props and refs
 interface CampaignSlideProps {
@@ -16,12 +18,40 @@ interface CampaignUrls {
   [key: number]: string;
 }
 
-const Campaign = () => {
-  const params = useParams();
-  const campaignId = params?.id as string;
-  const campaignSlideRef = useRef<{ donateDirectly: () => void }>(null);
+interface Campaign {
+  id: number;
+  title: string;
+  endDate: string;
+  nowAmount: number;
+  goalAmount: number;
+  completed: boolean;
+}
 
-  // Campaign URLs 타입 지정
+const Campaign = () => {
+  const [showFilterPopup, setShowFilterPopup] = useState<boolean>(false);
+  const [localCampaigns, setLocalCampaigns] = useState<Campaign[]>([]);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const params = useParams();
+  const campaignId = Number(params?.id);
+
+  const fetchLocalCampaigns = async () => {
+    try {
+      const response = await instance.get('/campaigns');
+      setLocalCampaigns(response.data);
+
+      // Fetch the specific campaign and check if it is completed
+      const selectedCampaign = response.data.find((campaign: Campaign) => campaign.id === campaignId);
+      setIsDisabled(selectedCampaign ? selectedCampaign.completed : false);
+      
+    } catch (error) {
+      console.error("Failed to fetch local campaigns:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLocalCampaigns();
+  }, [campaignId]);
+
   const campaignUrls: CampaignUrls = {
     1: "https://slowalk.co.kr/archives/portfolio/%EC%BA%A0%ED%8E%98%EC%9D%B8-i-%EA%B7%B8%EB%A6%B0%ED%94%BC%EC%8A%A4-%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B9%99%EC%B2%B4%EC%9D%B8%EC%A7%80-%EA%B7%B8%EB%9E%98-%EA%B2%B0%EC%8B%AC%ED%96%88%EC%96%B4",
     2: "https://www.gihoo.or.kr/menu.es?mid=a20300000000",
@@ -33,14 +63,14 @@ const Campaign = () => {
     8: "https://www.shinhancard.com/pconts/html/benefit/event/1227874_2239.html",
   };
 
-  const iframeUrl = campaignUrls[Number(campaignId)] || 
-    "https://www.shinhancard.com/pconts/html/benefit/event/1227874_2239.html";
+  const iframeUrl = campaignUrls[campaignId] || "https://www.shinhancard.com/pconts/html/benefit/event/1227874_2239.html";
 
   const handleParticipateClick = () => {
-    console.log(campaignSlideRef.current)
-    if (campaignSlideRef.current) {
-      campaignSlideRef.current.donateDirectly();
-    }
+    setShowFilterPopup(!showFilterPopup);
+  };
+
+  const toggleFilterPopup = () => {
+    setShowFilterPopup(!showFilterPopup);
   };
 
   return (
@@ -57,19 +87,23 @@ const Campaign = () => {
           src={iframeUrl}
           title=""
           className="w-full h-[calc(100vh-200px)] border-none "
-        />  
+        />
 
         <button 
           onClick={handleParticipateClick}
-          className="relative bottom-36 left-1/2 transform -translate-x-1/2 w-11/12
-                     bg-loginDarkGreen text-white px-6 py-3 rounded-full 
-                     shadow-lg hover:bg-hoverloginDarkGreen transition-colors"
+          disabled={isDisabled}
+          className={`fixed bottom-24 left-1/2 transform -translate-x-1/2 w-72
+                      px-6 py-3 rounded-full shadow-lg transition-colors
+                      ${isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-loginDarkGreen text-white hover:bg-hoverloginDarkGreen'}`}
         >
-          바로 참여하기
+          {isDisabled ? "종료된 캠페인 입니다." : "바로 참여하기"}
         </button>
 
-        {/* CampaignSlide 컴포넌트는 별도로 TypeScript로 변환이 필요합니다 */}
-        <CampaignSlide ref={campaignSlideRef} className="fixed bottom-0 left-0 right-0" />
+        <CampaignPopup
+  campaignId={String(campaignId)}
+  isOpen={showFilterPopup}
+  onClose={toggleFilterPopup}
+/>
       </div>
     </div>
   );

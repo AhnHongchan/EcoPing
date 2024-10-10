@@ -22,7 +22,6 @@ const CampaignSlide = forwardRef<CampaignSlideRef, CampaignSlideProps>(({ classN
     const fetchPoints = async () => {
       try {
         const response = await instance.get("/points/mypoint", {
-          headers: { userId: userId },
         });
         setRemainingPoints(response.data);
       } catch (error) {
