@@ -40,7 +40,8 @@ const Stockchart = ({ stockGraphData }: StockChartProps) => {
   );
   const data = reversedData.map((stock) => stock.stckClpr);
 
-  const firstPrice = data[0]; // 기준점 설정
+  const firstPrice = data[0]; // 기준점 설정\
+  const standardPrice = firstPrice.toLocaleString();
 
   const chartData = {
     labels: labels,
@@ -121,7 +122,7 @@ const Stockchart = ({ stockGraphData }: StockChartProps) => {
     <div>
       <Line ref={chartRef} data={chartData} options={options} />
       <p className="text-center font-bold">
-        기준 가격: {firstPrice.toLocaleString()}원
+        기준 가격: {standardPrice}원
       </p>
     </div>
   );
