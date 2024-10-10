@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,10 +25,11 @@ public class CampaignHistoryController {
     @PostMapping("/participate")
     @Operation(summary = "캠페인 참여", description = "사용자가 특정 캠페인에 참여합니다.")
     public ResponseEntity<CampaignHistory> participateInCampaign(
-            @RequestParam int campaignId,
-            @RequestParam int donatePoints,
+            @RequestBody Map<String, Object> request,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         int userId = userDetails.getId();
+        int campaignId = Integer.parseInt(request.get("campaignId").toString());
+        int donatePoints = Integer.parseInt(request.get("donatePoints").toString());
         CampaignHistory campaignHistory = campaignHistoryService.participateInCampaign(campaignId, userId, donatePoints);
         return ResponseEntity.ok(campaignHistory);
     }
