@@ -29,15 +29,15 @@ public class CampaignController {
         return ResponseEntity.ok(campaignResponse);
     }
 
-    @PutMapping(value = "/{campaignId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "캠페인 수정", description = "관리자가 캠페인을 수정합니다")
-    public ResponseEntity<CampaignResponse> updateCampaign(
-            @PathVariable("campaignId") int id,
-            @RequestPart("campaign") CampaignRequest campaignRequest,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        CampaignResponse updatedCampaign = campaignService.updateCampaign(id, campaignRequest, files);
-        return ResponseEntity.ok(updatedCampaign);
-    }
+//    @PutMapping(value = "/{campaignId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @Operation(summary = "캠페인 수정", description = "관리자가 캠페인을 수정합니다")
+//    public ResponseEntity<CampaignResponse> updateCampaign(
+//            @PathVariable("campaignId") int id,
+//            @RequestPart("campaign") CampaignRequest campaignRequest,
+//            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
+//        CampaignResponse updatedCampaign = campaignService.updateCampaign(id, campaignRequest, files);
+//        return ResponseEntity.ok(updatedCampaign);
+//    }
 
     @DeleteMapping("/{campaignId}")
     @Operation(summary = "캠페인 삭제", description = "관리자가 캠페인을 삭제합니다")
