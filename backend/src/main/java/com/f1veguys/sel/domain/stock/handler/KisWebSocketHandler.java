@@ -5,6 +5,7 @@ import com.f1veguys.sel.global.util.KisAccessTokenUtil;
 import com.f1veguys.sel.global.config.KisConfig;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -54,6 +55,12 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
             aggregatedData.add(initialData);
             lastCollectedData.add(initialData);
         }
+    }
+
+    @PostConstruct
+    public void init() {
+        // 애플리케이션 시작 시 데이터를 즉시 수집
+        collectStockData();
     }
 
     @Override
