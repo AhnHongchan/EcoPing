@@ -53,7 +53,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
             initialData.put("priceDifference", "");
             initialData.put("rateDifference", "");
             aggregatedData.add(initialData);
-            lastCollectedData.add(initialData);
+            lastCollectedData.add(new HashMap<>(initialData));
         }
     }
 
@@ -96,6 +96,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
     private void sendInitialStockUpdates(WebSocketSession session) {
         try {
+            // 초기 데이터로 현재 주식 정보를 전송
             String stockDataJson = objectMapper.writeValueAsString(getCurrentStockData());
             if (session.isOpen()) {
                 session.sendMessage(new TextMessage(stockDataJson));
@@ -136,7 +137,9 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
     private void updateLastCollectedData() {
         lastCollectedData.clear();
-        lastCollectedData.addAll(aggregatedData);
+        for (Map<String, Object> data : aggregatedData) {
+            lastCollectedData.add(new HashMap<>(data));
+        }
     }
 
     @Scheduled(fixedRate = 3000)  // 3초마다 실행
