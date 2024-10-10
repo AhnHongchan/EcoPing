@@ -3,7 +3,7 @@
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import instance from "@/lib/axios";
-import axios from 'axios';
+import axios from "axios";
 
 import useStockStore from "@/app/store/stock-store";
 import Company from "@/app/types/company";
@@ -81,10 +81,10 @@ const StockDetail = (): JSX.Element => {
       const graphResponse = await instance.get(
         `stock/chart/${companyNumber}/${period}`,
         {
-          params: { startDate, endDate }
+          params: { startDate, endDate },
         }
       );
-  
+
       const graphData = graphResponse.data.data;
       setStockGraphData(graphData);
     } catch (error) {
@@ -93,7 +93,6 @@ const StockDetail = (): JSX.Element => {
       }
     }
   };
-  
 
   const handleClick = () => {
     router.push(
@@ -114,18 +113,16 @@ const StockDetail = (): JSX.Element => {
       await handlePeriodChange("D");
       fetchData();
     };
-  
+
     initializeData();
   }, [companyNumber]);
 
   if (!stockData) {
     return (
-    <div>
-        <p className="small-title ml-2">
-          상세 정보를 불러옵니다
-        </p>
-    </div>
-    )
+      <div>
+        <p className="small-title ml-2">상세 정보를 불러옵니다</p>
+      </div>
+    );
   }
 
   return (
@@ -141,11 +138,19 @@ const StockDetail = (): JSX.Element => {
         </p>
       </div>
       <br />
-      <div className="flex gap-4 justify-end">
-        <button onClick={() => handlePeriodChange("D")}>일</button>
-        <button onClick={() => handlePeriodChange("W")}>주</button>
-        <button onClick={() => handlePeriodChange("M")}>월</button>
-        <button onClick={() => handlePeriodChange("Y")}>년</button>
+      <div className="flex gap-4 justify-end rounded-md shadow-md">
+        <button className="font-bold" onClick={() => handlePeriodChange("D")}>
+          일
+        </button>
+        <button className="font-bold" onClick={() => handlePeriodChange("W")}>
+          주
+        </button>
+        <button className="font-bold" onClick={() => handlePeriodChange("M")}>
+          월
+        </button>
+        <button className="font-bold" onClick={() => handlePeriodChange("Y")}>
+          년
+        </button>
       </div>
       <br />
       <div>
@@ -162,8 +167,8 @@ const StockDetail = (): JSX.Element => {
           <span
             className={
               parseFloat(stockData.priceDifference) > 0
-                ? "text-red-500"
-                : "text-blue-700"
+                ? "text-red-500 font-bold"
+                : "text-blue-700 font-bold"
             }
           >
             {Math.abs(parseFloat(stockData.priceDifference)).toLocaleString()}원{" "}
@@ -215,7 +220,7 @@ const StockDetail = (): JSX.Element => {
         <p>
           보다 많은 주식 정보는?
           <span
-            className="cursor-pointer text-red-500 ml-3"
+            className="cursor-pointer text-red-500 ml-3 font-bold"
             onClick={handleClick}
           >
             여기!
