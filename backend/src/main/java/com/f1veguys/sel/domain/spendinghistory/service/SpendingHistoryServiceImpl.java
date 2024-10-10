@@ -8,12 +8,9 @@ import com.f1veguys.sel.domain.ecoratio.repository.EcoRatioRepository;
 import com.f1veguys.sel.domain.points.service.PointsService;
 import com.f1veguys.sel.domain.pointshistory.service.PointsHistoryService;
 import com.f1veguys.sel.domain.spendinghistory.domain.SpendingHistory;
-import com.f1veguys.sel.domain.spendinghistory.dto.MonthlySpendingDto;
-import com.f1veguys.sel.domain.spendinghistory.dto.PeriodStatisticsResponse;
-import com.f1veguys.sel.domain.spendinghistory.dto.PreviousMonthSummaryDto;
+import com.f1veguys.sel.domain.spendinghistory.dto.*;
 import com.f1veguys.sel.domain.user.repository.UserRepository;
 import com.f1veguys.sel.dto.Operation;
-import com.f1veguys.sel.domain.spendinghistory.dto.StatisticsResponse;
 import com.f1veguys.sel.domain.spendinghistory.repository.SpendingHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -67,13 +64,27 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
     }
 
     @Override
-    public PeriodStatisticsResponse getPeriodStatistics(int userId, int period) {
-        LocalDateTime endDate = LocalDateTime.now();
-        LocalDateTime startDate = endDate.minusDays(period);
-        int totalAmount = spendingHistoryRepository.getTotalAmount(userId, startDate, endDate);
-        int ecoAmount = spendingHistoryRepository.getEcoAmount(userId, startDate, endDate);
-        return new PeriodStatisticsResponse(totalAmount, ecoAmount);
+    public PeriodCompareResponse getPeriodStatistics(int userId, int period) {
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusDays(period);
+        LocalDate previousDate = startDate.minusDays(period);
 
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = today.atStartOfDay();
+        LocalDateTime previousDateTime = previousDate.atStartOfDay();
+
+        int totalAmount = spendingHistoryRepository.getTotalAmount(userId, startDateTime, endDateTime);
+        int ecoAmount = spendingHistoryRepository.getEcoAmount(userId, startDateTime, endDateTime);
+        int previousEco = spendingHistoryRepository.getEcoAmount(userId, previousDateTime, startDateTime);
+        int previousTotal = spendingHistoryRepository.getTotalAmount(userId, previousDateTime, endDateTime);
+        double previousRatio;
+        if(previousTotal!=0) {
+            previousRatio = (double) previousEco / previousTotal;
+            previousRatio = (double) Math.round(previousRatio * 100) /100;
+        }else{
+            previousRatio = 0d;
+        }
+        return new PeriodCompareResponse(totalAmount, ecoAmount, previousRatio);
     }
 
     @Override
