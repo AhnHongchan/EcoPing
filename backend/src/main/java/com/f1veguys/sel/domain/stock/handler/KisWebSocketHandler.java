@@ -101,7 +101,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
     @Scheduled(fixedRate = 1000)  // 1초마다 실행
     public void collectStockData() {
-        if (isMarketOpen()) {  // 시장이 열려 있을 때만 데이터 수집
+        if (isMarketOpen()) {  // 시장이 열려 있을 때만 데이터 수집으로 변경
             try {
                 int endIndex = Math.min(currentBatchIndex + 20, companyNumbers.size());
 
