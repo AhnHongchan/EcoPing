@@ -191,12 +191,12 @@ const Investment = (): JSX.Element => {
                 className="grid grid-cols-12 text-left items-center gap-4 px-4 py-2 my-2 min-h-[72px] rounded-md justify-between bg-white w-full cursor-pointer flex-shrink-0 border-2 border-loginLightGreen"
               >
                 <div className="shrink-0 col-span-6">
-                  <p className="text-black font-bold text-base leading-normal">
+                  <p className="text-black font-bold text-base leading-normal m1-2">
                     {nameList[stock.companyNumber]?.name || stock.companyNumber}
                   </p>
                 </div>
                 <div className="flex flex-col justify-center col-span-6">
-                  <p>
+                  <p className="font-bold">
                     현재가: {parseInt(stock.currentPrice).toLocaleString()}원
                   </p>
                   <p className="text-black text-base font-bold leading-normal line-clamp-1">
@@ -231,7 +231,7 @@ const Investment = (): JSX.Element => {
                 {nameList[stock.companyNumber]?.name || stock.companyNumber}
               </p>
             </div>
-            <div className="text-right">
+            <div className="text-right font-bold">
               <p>현재가: {parseInt(stock.currentPrice).toLocaleString()}원</p>
               <p>
                 전일 대비:{" "}
