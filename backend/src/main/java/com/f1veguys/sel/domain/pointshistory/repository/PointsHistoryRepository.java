@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface PointsHistoryRepository extends JpaRepository<PointsHistory, Integer> {
 
-    @Query("SELECT ph FROM PointsHistory ph WHERE ph.userId = :userId AND ph.createdTime >= :startDate ORDER BY ph.createdTime DESC")
-    List<PointsHistory> findLastMonthHistoryByUserId(@Param("userId") int userId, @Param("startDate") LocalDateTime startDate);
+    @Query("SELECT ph FROM PointsHistory ph WHERE ph.userId = :userId ORDER BY ph.createdTime DESC")
+    List<PointsHistory> findHistoryByUserId(@Param("userId") int userId);
 }
