@@ -208,7 +208,7 @@ const Investment = (): JSX.Element => {
                 className="flex justify-between items-center gap-4 px-4 py-2 my-2 min-h-[72px] rounded-md bg-white w-full cursor-pointer flex-shrink-0 border-2 border-loginLightGreen"
               >
                 <div className="shrink-0">
-                  <p className="text-black font-bold text-base leading-normal m1-4">
+                  <p className="text-black font-bold text-base leading-normal ml-4">
                     {nameList[stock.companyNumber]?.name || stock.companyNumber}
                   </p>
                 </div>
@@ -249,7 +249,7 @@ const Investment = (): JSX.Element => {
                   stock.holdAmount && stock.holdAmount > 0 ? "" : "invisible"
                 }`}
               />
-              <p className="text-md text-center font-bold ml-4">
+              <p className="text-md text-center font-bold">
                 {nameList[stock.companyNumber]?.name || stock.companyNumber}
               </p>
             </div>
