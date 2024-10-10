@@ -61,13 +61,11 @@ public class UserServiceImpl implements UserService {
         //accessCookie.setSecure(true);
         accessCookie.setPath("/");
         accessCookie.setMaxAge(60*60*12);
-        accessCookie.setAttribute("SameSite", "None"); // 크로스 오리진 요청 허용
         Cookie refreshCookie = new Cookie("refreshToken", jwtUtil.generateRefreshToken(user.getEmail()));
         //refreshCookie.setHttpOnly(true);
         //refreshCookie.setSecure(true);
         refreshCookie.setPath("/");
         refreshCookie.setMaxAge(60*60*24*3);
-        refreshCookie.setAttribute("SameSite", "None"); // 크로스 오리진 요청 허용
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
         System.out.println(accessCookie);
