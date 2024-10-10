@@ -121,7 +121,7 @@ const Stockchart = ({ stockGraphData }: StockChartProps) => {
     <div>
       <Line ref={chartRef} data={chartData} options={options} />
       <p className="text-center">
-        기준 가격: <span className="font-bold">{firstPrice}</span>원
+        기준 가격: <span className="font-bold">{firstPrice.toLocaleString()}</span>원
       </p>
     </div>
   );
