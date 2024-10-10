@@ -25,8 +25,7 @@ public class PointsHistoryController {
     @GetMapping("/info")
     public ResponseEntity<?> getHistoryInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
         int userId = userDetails.getId();
-        List<PointsHistory> list = new ArrayList<>();
-        list = pointsHistoryService.getPointsHistory(userId);
+        List<PointsHistory> list = pointsHistoryService.getPointsHistory(userId);
         Map<String, Object> response = new HashMap<>();
         response.put("PointHistory", list);
         return ResponseEntity.ok(response);
