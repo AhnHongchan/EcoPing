@@ -40,8 +40,6 @@ const Login = (): JSX.Element => {
       });
       const accessToken = Cookies.get("accessToken");
       const refreshToken = Cookies.get("refreshToken");
-      console.log(accessToken);
-      console.log(refreshToken);
 
       if (
         response.status === 200 &&

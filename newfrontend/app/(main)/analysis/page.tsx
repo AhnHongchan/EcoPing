@@ -65,7 +65,7 @@ const Analysis = (): JSX.Element => {
 
   const fetchRecommend = async () => {
     try {
-      const response = await instance.get("/consumption");
+      const response = await instance.get("/consumption/");
       const data = response.data;
       setRecommends(data);
     } catch (error) {
