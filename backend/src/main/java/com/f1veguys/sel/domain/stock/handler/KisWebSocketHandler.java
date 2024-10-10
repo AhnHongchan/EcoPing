@@ -5,7 +5,6 @@ import com.f1veguys.sel.global.util.KisAccessTokenUtil;
 import com.f1veguys.sel.global.config.KisConfig;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -14,7 +13,6 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,13 +27,9 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
     private final KisConfig kisConfig;
     private final ObjectMapper objectMapper;
     private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-    private final List<Map<String, Object>> aggregatedData = new ArrayList<>();
-    private final List<Map<String, Object>> lastCollectedData = new ArrayList<>();
+    private final List<Map<String, Object>> aggregatedData = new ArrayList<>(); // 데이터를 고정된 순서로 유지하는 리스트
     private List<String> companyNumbers;
     private int currentBatchIndex = 0;
-
-    private static final LocalTime MARKET_OPEN = LocalTime.of(9, 0);
-    private static final LocalTime MARKET_CLOSE = LocalTime.of(15, 30);
 
     public KisWebSocketHandler(StockService stockService, KisAccessTokenUtil kisAccessTokenUtil, KisConfig kisConfig, ObjectMapper objectMapper) {
         this.stockService = stockService;
@@ -53,14 +47,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
             initialData.put("priceDifference", "");
             initialData.put("rateDifference", "");
             aggregatedData.add(initialData);
-            lastCollectedData.add(new HashMap<>(initialData));
         }
-    }
-
-    @PostConstruct
-    public void init() {
-        // 애플리케이션 시작 시 데이터를 즉시 수집
-        collectStockData();
     }
 
     @Override
@@ -96,8 +83,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
     private void sendInitialStockUpdates(WebSocketSession session) {
         try {
-            // 초기 데이터로 현재 주식 정보를 전송
-            String stockDataJson = objectMapper.writeValueAsString(getCurrentStockData());
+            String stockDataJson = objectMapper.writeValueAsString(aggregatedData);
             if (session.isOpen()) {
                 session.sendMessage(new TextMessage(stockDataJson));
             } else {
@@ -111,34 +97,22 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
     @Scheduled(fixedRate = 1000)  // 1초마다 실행
     public void collectStockData() {
-        if (isMarketOpen()) {
-            try {
-                int endIndex = Math.min(currentBatchIndex + 20, companyNumbers.size());
+        try {
+            int endIndex = Math.min(currentBatchIndex + 20, companyNumbers.size());
 
-                for (int i = currentBatchIndex; i < endIndex; i++) {
-                    String companyCode = companyNumbers.get(i);
-                    JsonNode stockData = stockService.getRealTimeStockData(companyCode);
-                    Map<String, Object> filteredStockData = extractStockData(stockData);
+            for (int i = currentBatchIndex; i < endIndex; i++) {
+                String companyCode = companyNumbers.get(i);
+                JsonNode stockData = stockService.getRealTimeStockData(companyCode);
+                Map<String, Object> filteredStockData = extractStockData(stockData);
 
-                    // 기존 데이터 업데이트 (회사 코드 순서 유지)
-                    aggregatedData.set(i, filteredStockData);
-                }
-
-                currentBatchIndex = (currentBatchIndex + 20) % companyNumbers.size();
-
-                // 마지막 수집된 데이터로 업데이트
-                updateLastCollectedData();
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                // 기존 데이터 업데이트 (회사 코드 순서 유지)
+                aggregatedData.set(i, filteredStockData);
             }
-        }
-    }
 
-    private void updateLastCollectedData() {
-        lastCollectedData.clear();
-        for (Map<String, Object> data : aggregatedData) {
-            lastCollectedData.add(new HashMap<>(data));
+            currentBatchIndex = (currentBatchIndex + 20) % companyNumbers.size();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -146,7 +120,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
     public void sendAggregatedData() {
         if (!sessions.isEmpty() && !aggregatedData.isEmpty()) {
             try {
-                String stockDataJson = objectMapper.writeValueAsString(getCurrentStockData());
+                String stockDataJson = objectMapper.writeValueAsString(aggregatedData);
 
                 for (WebSocketSession session : sessions) {
                     if (session.isOpen()) {
@@ -168,10 +142,6 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private List<Map<String, Object>> getCurrentStockData() {
-        return isMarketOpen() ? aggregatedData : lastCollectedData;
-    }
-
     private Map<String, Object> extractStockData(JsonNode stockData) {
         Map<String, Object> filteredStockData = new HashMap<>();
         filteredStockData.put("companyNumber", stockData.get("output").get("stck_shrn_iscd").asText());
@@ -180,11 +150,6 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
         filteredStockData.put("priceDifference", stockData.get("output").get("prdy_vrss").asText());
         filteredStockData.put("rateDifference", stockData.get("output").get("prdy_ctrt").asText());
         return filteredStockData;
-    }
-
-    private boolean isMarketOpen() {
-        LocalTime now = LocalTime.now();
-        return !now.isBefore(MARKET_OPEN) && !now.isAfter(MARKET_CLOSE);
     }
 
     @Override
