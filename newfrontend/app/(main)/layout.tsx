@@ -19,9 +19,9 @@ const RootLayout = ({
       <div className="w-full h-16 bg-loginLightGreen z-20 fixed top-0 left-0">
         <Header />
       </div>
-
+    
       {/* Main Content */}
-      <main className="px-4 py-24 w-[400px] mx-auto relative z-10 overflow-x-auto">
+      <main className="px-4 py-24 w-[400px] mx-auto relative z-10 overflow-hidden">
         {children}
       </main>
 

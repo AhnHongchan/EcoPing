@@ -7,8 +7,9 @@ import Modal from './modal';
 import Modal2 from './modal2';
 
 import {BiCloudRain , BiGift, BiBookOpen, BiInfoCircle } from "react-icons/bi";
+import { ToastContainer, toast } from 'react-toastify';
 import instance from "@/lib/axios";
-
+import 'react-toastify/dist/ReactToastify.css';
 
 const Tree = () => {
   const [level, setLevel] = useState(0); 
@@ -57,7 +58,7 @@ const Tree = () => {
   useEffect(() => {
     const fetchWaterPoint = async () => {
       try {
-        const response = await instance.get(`/tree/1`); // 나중에 userId로 수정하기
+        const response = await instance.get(`/tree/info`); 
         setWaterPoint(response.data.count / 500); 
         // setWaterPoint(2);
       } catch (error) {
@@ -205,14 +206,12 @@ const Tree = () => {
       const branchs = document.querySelectorAll(
         ".branch1, .branch1 .branch-inner, .branch1 .leaf, .branch1 .flower1, .branch1 .branch-inner1, .branch1 .branch-inner2, .branch1 .branch-inner3"
       );
-      console.log(branchs); 
   
       const depths = [0, 0, 0];
   
       for (let i = 0; i < branchs.length; ++i) {
         const sceneItem = sceneTree.newItem("item2" + i); 
         const className = branchs[i].className;
-        console.log(className);
   
         if (className.includes("branch-inner")) {
           ++depths[1];
@@ -245,7 +244,6 @@ const Tree = () => {
       const branchs = document.querySelectorAll(
         ".branch2, .branch2 .branch-inner, .branch2 .leaf, .branch2 .flower1, .branch2 .branch-inner1, .branch2 .branch-inner2, .branch2 .branch-inner3, .branch2 .branch-inner4"
       );
-            console.log(branchs);
       const depths = [0, 0, 0];
   
       for (let i = 0; i < branchs.length; ++i) {
@@ -278,7 +276,6 @@ const Tree = () => {
     if (level === 4) {
       const sceneTree = new Scene({}, { selector: true });
       const branchs = document.querySelectorAll(".branch3, .branch3 .branch-inner, .branch3 .leaf, .branch3 .flower1, .branch3 .branch-inner1, .branch3 .branch-inner2");
-      console.log(branchs)
       const depths = [0, 0, 0];
   
       for (let i = 0; i < branchs.length; ++i) { 
@@ -375,13 +372,14 @@ const Tree = () => {
 
   const handleButtonClick = async () => {
     try {
-      const response = await instance.put(`/tree/1/water`);
+      const response = await instance.put(`/tree/water`);
   
-      console.log("Watering successful:", response.data);
+      toast.success("물을 주었습니다.");
       const newLevel = response.data.count / 500;
       setLevel(newLevel); 
     } catch (error) {
         console.error("Failed to send watering request:", error);
+        toast.error("포인트가 부족합니다.");
     }
   };
 
@@ -405,6 +403,7 @@ const Tree = () => {
     <div>
 
 <div className="">
+<ToastContainer draggable  theme="light"  position="top-center" autoClose={1000}  className="mt-10"/> 
   
 {isClient && (
       <div className={isDark ? 'dark' : ''}>

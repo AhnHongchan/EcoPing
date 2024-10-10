@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import instance from "@/lib/axios";
 
 interface ModalProps {
   onClose: () => void;
