@@ -7,6 +7,8 @@ import axios from 'axios';
 
 import Cookies from "js-cookie";
 import useAuthStore from "../store/use-auth-store";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import "../../styles/globals.css";
 import {
@@ -52,7 +54,7 @@ const Login = (): JSX.Element => {
         console.log('200 아님:', response)
       }
     } catch (error) {
-      console.log(error)
+      alert("로그인 실패")
     }
   };
 
@@ -62,6 +64,7 @@ const Login = (): JSX.Element => {
 
   return (
     <div>
+      <ToastContainer draggable  theme="light"  position="top-center" autoClose={1000}  className="mt-10"/> 
       <div className="image-container">
         <img className="image1" src="/assets/plant.jpg" alt="Plant" />
         <img className="image2" src="/assets/wave-mask.svg" alt="Plant" />

@@ -82,9 +82,6 @@ const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
   const fetchPointHistory = async () => {
     try {
       const response = await instance.get<ApiResponse>('/points-history/info', {
-        headers: {
-          userId: dummyUser,
-        },
       });
       setPointData(response.data.PointHistory);
       // setPointData(dummyData); // 더미데이터 테스터용 나중에 지우기
@@ -188,14 +185,15 @@ const MypagePointHistory = ({ filter }: MypagePointHistoryProps) => {
                   <div className="flex justify-between items-start mb-1">
                     <div className="text-sm text-gray-800">{item.description}</div>
                     <div className="flex flex-col items-end ml-5">
-                      <div
-                        className={`text-sm font-bold ${
-                          item.operation === 'EARN' ? 'text-red-500' : 'text-blue-600'
-                        }`}
-                      >
-                        {item.operation === 'EARN' ? '+' : '-'}
-                        {item.amount} 포인트
-                      </div>
+                    <div
+  className={`text-sm font-bold ${
+    item.operation === 'EARN' ? 'text-red-500' : 'text-blue-600'
+  }`}
+>
+  {item.operation === 'EARN' ? '+' : '-'}
+  {item.amount.toLocaleString()} 포인트
+</div>
+
                     </div>
                   </div>
                 </div>
