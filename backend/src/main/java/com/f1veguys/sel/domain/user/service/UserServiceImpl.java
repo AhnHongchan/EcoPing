@@ -61,15 +61,14 @@ public class UserServiceImpl implements UserService {
         //accessCookie.setSecure(true);
         accessCookie.setPath("/");
         accessCookie.setMaxAge(60*60*12);
-
         Cookie refreshCookie = new Cookie("refreshToken", jwtUtil.generateRefreshToken(user.getEmail()));
         //refreshCookie.setHttpOnly(true);
         //refreshCookie.setSecure(true);
         refreshCookie.setPath("/");
         refreshCookie.setMaxAge(60*60*24*3);
-
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
+        System.out.println(accessCookie);
         return user.getEmail();
     }
 

@@ -4,6 +4,6 @@ public record ProductResponse(
         String query,
         String similarProduct,
         String manufacturer,
-        double similarity
+        Double similarity
 ) {
 }

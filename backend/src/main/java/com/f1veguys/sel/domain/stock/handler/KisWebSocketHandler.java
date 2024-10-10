@@ -114,7 +114,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
     }
 
 
-    @Scheduled(fixedRate = 3000)  // 3초마다 실행
+    @Scheduled(fixedDelay = 3000)  // 3초마다 실행
     public void sendStockUpdates() {
         if (!sessions.isEmpty()) {
             try {
