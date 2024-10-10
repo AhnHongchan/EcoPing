@@ -16,8 +16,8 @@ const Stockchart = ({ stockGraphData }: StockChartProps) => {
   const chartRef = useRef(null);
   const reversedData = [...stockGraphData].reverse();
 
-const labels = reversedData.map(stock => dayjs(stock.stckBsopDate).format("YY.MM.DD"));
-    const data = reversedData.map(stock => stock.stckClpr);
+  const labels = reversedData.map(stock => dayjs(stock.stckBsopDate).format("YY.MM.DD"));
+  const data = reversedData.map(stock => stock.stckClpr);
 
   const firstPrice = data[0]; // 기준점 설정
 
@@ -96,7 +96,12 @@ const labels = reversedData.map(stock => dayjs(stock.stckBsopDate).format("YY.MM
     },
   };
 
-  return <Line ref={chartRef} data={chartData} options={options} />;
+  return (
+    <div>
+      <Line ref={chartRef} data={chartData} options={options} />;
+      <p>기준 가격: {firstPrice}</p>
+    </div>
+  )
 };
 
 export default Stockchart;
