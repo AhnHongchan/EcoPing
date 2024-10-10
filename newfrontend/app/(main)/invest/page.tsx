@@ -13,7 +13,7 @@ interface StockItem {
   rateDifference: string;
   priceDifference: string;
   currentPrice: string;
-  holdAmount?: number; 
+  holdAmount?: number;
   avgPrice: number;
   profitRate: number;
 }
@@ -24,11 +24,14 @@ interface HoldItem {
   averagePurchasePrice: number;
 }
 
-
 const Investment = (): JSX.Element => {
   const [stockList, setStockList] = useState<StockItem[]>([]);
-  const [nameList, setNameList] = useState<{ [key: string]: { name: string; ecoScore: number; ranking: number } }>({});
-  const [holdList, setHoldList] = useState<{ [key: string]: { hold: number; avg: number } }>({});
+  const [nameList, setNameList] = useState<{
+    [key: string]: { name: string; ecoScore: number; ranking: number };
+  }>({});
+  const [holdList, setHoldList] = useState<{
+    [key: string]: { hold: number; avg: number };
+  }>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const holdListRef = useRef(holdList); // holdList를 참조하는 ref
   const { companyStoreDict, setCompanyStoreDict } = useStockStore();
@@ -44,41 +47,55 @@ const Investment = (): JSX.Element => {
     try {
       const nameResponse = await instance.get("/stock/list");
       const holdResponse = await instance.get("holdings/list");
-      
+
       const nameData = nameResponse.data.data;
       const holdData = holdResponse.data;
 
       // nameList와 holdList 설정
-      const companyDict = nameData.reduce((acc: { [key: string]: { name: string; ecoScore: number; ranking: number } }, item: Company) => {
-        acc[item.companyNumber] = {
-          name: item.companyName,
-          ecoScore: item.ecoScore,
-          ranking: item.ranking,
-        };
-        return acc;
-      }, {});
+      const companyDict = nameData.reduce(
+        (
+          acc: {
+            [key: string]: { name: string; ecoScore: number; ranking: number };
+          },
+          item: Company
+        ) => {
+          acc[item.companyNumber] = {
+            name: item.companyName,
+            ecoScore: item.ecoScore,
+            ranking: item.ranking,
+          };
+          return acc;
+        },
+        {}
+      );
 
-      const holdDict = holdData.reduce((acc: { [key: string]: { hold: number; avg: number } }, item: HoldItem) => {
-        acc[item.companyNumber] = {
-          hold: item.quantity,
-          avg: item.averagePurchasePrice,
-        };
-        return acc;
-      }, {});
+      const holdDict = holdData.reduce(
+        (
+          acc: { [key: string]: { hold: number; avg: number } },
+          item: HoldItem
+        ) => {
+          acc[item.companyNumber] = {
+            hold: item.quantity,
+            avg: item.averagePurchasePrice,
+          };
+          return acc;
+        },
+        {}
+      );
 
       setCompanyStoreDict(companyDict);
       setNameList(companyDict);
       setHoldList(holdDict); // holdList 업데이트
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   // WebSocket 연결 및 데이터 처리 함수
   const initializeWebSocket = () => {
-    const socket = new WebSocket("wss://j11a304.p.ssafy.io/api/websocket/stock");
+    const socket = new WebSocket(
+      "wss://j11a304.p.ssafy.io/api/websocket/stock"
+    );
 
-    socket.onopen = () => {
-    };
+    socket.onopen = () => {};
 
     socket.onmessage = (event) => {
       try {
@@ -112,12 +129,10 @@ const Investment = (): JSX.Element => {
 
         setStockList(updatedStockList);
         setIsLoading(false);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
-    socket.onclose = () => {
-    };
+    socket.onclose = () => {};
 
     return () => {
       socket.close();
@@ -166,7 +181,9 @@ const Investment = (): JSX.Element => {
         </div>
         <p>실시간 주식 정보를 받아오는 중입니다</p>
         <br />
-        <p className="text-xl font-bold text-green-600">1/100 가격으로 참여하는 모의 투자</p>
+        <p className="text-xl font-bold text-green-600">
+          1/100 가격으로 참여하는 모의 투자
+        </p>
       </div>
     );
   }
@@ -190,8 +207,8 @@ const Investment = (): JSX.Element => {
                 onClick={() => handleClick(stock)}
                 className="flex justify-between items-center gap-4 px-4 py-2 my-2 min-h-[72px] rounded-md bg-white w-full cursor-pointer flex-shrink-0 border-2 border-loginLightGreen"
               >
-                <div className="shrink-0 col-span-6">
-                  <p className="text-black font-bold text-base leading-normal m1-2">
+                <div className="shrink-0">
+                  <p className="text-black font-bold text-base leading-normal m1-4">
                     {nameList[stock.companyNumber]?.name || stock.companyNumber}
                   </p>
                 </div>
@@ -200,11 +217,12 @@ const Investment = (): JSX.Element => {
                     현재가: {parseInt(stock.currentPrice).toLocaleString()}원
                   </p>
                   <p className="text-black text-left font-bold leading-normal line-clamp-1">
-                    보유 주식 수: {stock.holdAmount ? stock.holdAmount.toLocaleString() : '0'}
+                    보유 주식 수:{" "}
+                    {stock.holdAmount ? stock.holdAmount.toLocaleString() : "0"}
                   </p>
                   <p
                     className={`text-sm text-left font-bold leading-normal line-clamp-2 ${
-                      stock.profitRate > 0 ? 'text-red-500' : 'text-blue-700'
+                      stock.profitRate > 0 ? "text-red-500" : "text-blue-700"
                     }`}
                   >
                     내 수익률: {stock.profitRate}%
@@ -226,7 +244,11 @@ const Investment = (): JSX.Element => {
             className="flex justify-between items-center gap-4 px-4 py-2 my-2 min-h-[72px] rounded-md bg-white w-full cursor-pointer flex-shrink-0 border-2 border-loginLightGreen"
           >
             <div className="text-left flex items-center min-h-12">
-              <BiSolidHeart className={`text-red-500 ${stock.holdAmount && stock.holdAmount > 0 ? '' : 'invisible'}`} />
+              <BiSolidHeart
+                className={`text-red-500 ${
+                  stock.holdAmount && stock.holdAmount > 0 ? "" : "invisible"
+                }`}
+              />
               <p className="text-md text-center font-bold ml-4">
                 {nameList[stock.companyNumber]?.name || stock.companyNumber}
               </p>
@@ -237,7 +259,9 @@ const Investment = (): JSX.Element => {
                 전일 대비:{" "}
                 <span
                   className={
-                    parseFloat(stock.rateDifference) >= 0 ? "text-red-500" : "text-blue-700"
+                    parseFloat(stock.rateDifference) >= 0
+                      ? "text-red-500"
+                      : "text-blue-700"
                   }
                 >
                   {stock.rateDifference}%

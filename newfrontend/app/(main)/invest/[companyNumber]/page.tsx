@@ -140,25 +140,25 @@ const StockDetail = (): JSX.Element => {
       <br />
       <div className="flex gap-4 justify-end">
         <button
-          className="font-bold rounded-md shadow-md"
+          className="font-bold rounded-md shadow-md p-1"
           onClick={() => handlePeriodChange("D")}
         >
           일
         </button>
         <button
-          className="font-bold rounded-md shadow-md"
+          className="font-bold rounded-md shadow-md p-1"
           onClick={() => handlePeriodChange("W")}
         >
           주
         </button>
         <button
-          className="font-bold rounded-md shadow-md"
+          className="font-bold rounded-md shadow-md p-1"
           onClick={() => handlePeriodChange("M")}
         >
           월
         </button>
         <button
-          className="font-bold rounded-md shadow-md"
+          className="font-bold rounded-md shadow-md p-1"
           onClick={() => handlePeriodChange("Y")}
         >
           년
