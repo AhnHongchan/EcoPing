@@ -6,12 +6,12 @@ import {BiUser, BiCreditCard, BiArchive, BiHelpCircle   } from "react-icons/bi";
 const MypageUserButton = () => {
   return (
     <div className="flex justify-center">
-      <div className="bg-gray-200  rounded-lg p-5 mt-6 w-11/12 shadow-custom-lg">
-        <div className="flex justify-between items-center">
-          <Link href="/profile" className="flex flex-col items-center text-sm text-gray-800">
+      <div className="bg-white  rounded-lg p-5 mt-6 w-11/12 shadow-custom-lg">
+        <div className="flex justify-evenly items-center">
+          {/* <Link href="/profile" className="flex flex-col items-center text-sm text-gray-800">
           <BiUser className="mb-2 text-mainDarkGreen" size={24}/>
             내 정보
-          </Link>
+          </Link> */}
           <Link href="/cards" className="flex flex-col items-center text-sm text-gray-800">
           <BiCreditCard className="mb-2 text-mainDarkGreen" size={24}/>
             등록된 카드

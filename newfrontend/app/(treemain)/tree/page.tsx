@@ -7,8 +7,9 @@ import Modal from './modal';
 import Modal2 from './modal2';
 
 import {BiCloudRain , BiGift, BiBookOpen, BiInfoCircle } from "react-icons/bi";
+import { ToastContainer, toast } from 'react-toastify';
 import instance from "@/lib/axios";
-
+import 'react-toastify/dist/ReactToastify.css';
 
 const Tree = () => {
   const [level, setLevel] = useState(0); 
@@ -57,7 +58,7 @@ const Tree = () => {
   useEffect(() => {
     const fetchWaterPoint = async () => {
       try {
-        const response = await instance.get(`/tree/1`); // 나중에 userId로 수정하기
+        const response = await instance.get(`/tree/info`); 
         setWaterPoint(response.data.count / 500); 
         // setWaterPoint(2);
       } catch (error) {
@@ -370,11 +371,14 @@ const Tree = () => {
 
   const handleButtonClick = async () => {
     try {
-      const response = await instance.put(`/tree/1/water`);
+      const response = await instance.put(`/tree/water`);
   
+      toast.success("물을 주었습니다.");
       const newLevel = response.data.count / 500;
       setLevel(newLevel); 
     } catch (error) {
+        console.error("Failed to send watering request:", error);
+        toast.error("포인트가 부족합니다.");
     }
   };
 
@@ -397,6 +401,7 @@ const Tree = () => {
     <div>
 
 <div className="">
+<ToastContainer draggable  theme="light"  position="top-center" autoClose={1000}  className="mt-10"/> 
   
 {isClient && (
       <div className={isDark ? 'dark' : ''}>

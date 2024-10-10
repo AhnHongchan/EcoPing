@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../../styles/globals.css";
 import Header from "@/components/header/header";
 import Navbar from "@/components/navbar/navbar";
+import ClientLayout from "@/components/client-layout";
 
 // 메타데이터 설정
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
+    <ClientLayout>
     <div className="min-h-screen flex flex-col items-center relative">
       <div className="w-full h-16 bg-loginLightGreen z-20 fixed top-0 left-0">
         <Header />
@@ -29,6 +31,7 @@ const RootLayout = ({
         <Navbar />
       </div>
     </div>
+    </ClientLayout>
   );
 };
 
