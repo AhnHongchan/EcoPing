@@ -27,9 +27,9 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
     private final KisConfig kisConfig;
     private final ObjectMapper objectMapper;
     private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+    private final List<Map<String, Object>> aggregatedData = new ArrayList<>(); // 데이터를 고정된 순서로 유지하는 리스트
     private List<String> companyNumbers;
     private int currentBatchIndex = 0;
-    private List<Map<String, Object>> aggregatedData = new ArrayList<>(); // 데이터를 누적할 리스트
 
     public KisWebSocketHandler(StockService stockService, KisAccessTokenUtil kisAccessTokenUtil, KisConfig kisConfig, ObjectMapper objectMapper) {
         this.stockService = stockService;
@@ -37,9 +37,19 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
         this.kisConfig = kisConfig;
         this.objectMapper = objectMapper;
         this.companyNumbers = stockService.getAllCompanyCodes();
+
+        // 회사 순서에 맞게 빈 데이터로 초기화
+        for (String companyNumber : companyNumbers) {
+            Map<String, Object> initialData = new HashMap<>();
+            initialData.put("companyNumber", companyNumber);
+            initialData.put("stockName", "");
+            initialData.put("currentPrice", "");
+            initialData.put("priceDifference", "");
+            initialData.put("rateDifference", "");
+            aggregatedData.add(initialData);
+        }
     }
 
-    //연결 직후
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         sessions.add(session);
@@ -63,7 +73,6 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
                 }
             }, kisConfig.getWebsocketUrl() + "?approval_key=" + approvalKey);
 
-            // 웹소켓 연결 후 초기 데이터 전송
             sendInitialStockUpdates(session);
 
         } catch (Exception e) {
@@ -72,23 +81,9 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    // 초기 데이터 전송 메서드
     private void sendInitialStockUpdates(WebSocketSession session) {
         try {
-            List<Map<String, Object>> stockDataList = new ArrayList<>();
-
-            for (String companyCode : companyNumbers) {
-                try {
-                    JsonNode stockData = stockService.getRealTimeStockData(companyCode);
-                    Map<String, Object> filteredStockData = extractStockData(stockData);
-                    stockDataList.add(filteredStockData);
-                } catch (Exception e) {
-                    System.err.println("회사 코드 [" + companyCode + "]에 대한 실시간 주식 데이터 요청 중 오류 발생: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-
-            String stockDataJson = objectMapper.writeValueAsString(stockDataList);
+            String stockDataJson = objectMapper.writeValueAsString(aggregatedData);
             if (session.isOpen()) {
                 session.sendMessage(new TextMessage(stockDataJson));
             } else {
@@ -100,7 +95,6 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    // 실시간 데이터 수집 메서드 (1초마다 호출)
     @Scheduled(fixedRate = 1000)  // 1초마다 실행
     public void collectStockData() {
         try {
@@ -110,10 +104,11 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
                 String companyCode = companyNumbers.get(i);
                 JsonNode stockData = stockService.getRealTimeStockData(companyCode);
                 Map<String, Object> filteredStockData = extractStockData(stockData);
-                aggregatedData.add(filteredStockData); // 데이터를 누적
+
+                // 기존 데이터 업데이트 (회사 코드 순서 유지)
+                aggregatedData.set(i, filteredStockData);
             }
 
-            // 다음 배치의 인덱스 계산
             currentBatchIndex = (currentBatchIndex + 20) % companyNumbers.size();
 
         } catch (Exception e) {
@@ -121,7 +116,6 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    // 누적된 데이터를 3초마다 프론트로 전송
     @Scheduled(fixedRate = 3000)  // 3초마다 실행
     public void sendAggregatedData() {
         if (!sessions.isEmpty() && !aggregatedData.isEmpty()) {
@@ -138,12 +132,9 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
                         }
                     } else {
                         System.out.println("WebSocket 세션이 닫혀 있어 메시지를 전송할 수 없습니다.");
-                        sessions.remove(session);  // 세션이 닫혀있다면 리스트에서 제거
+                        sessions.remove(session);
                     }
                 }
-
-                // 전송 후 누적된 데이터를 초기화
-                aggregatedData.clear();
 
             } catch (Exception e) {
                 e.printStackTrace();
