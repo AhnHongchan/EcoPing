@@ -95,7 +95,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    @Scheduled(fixedRate = 1000)  // 1초마다 실행
+    @Scheduled(fixedRate = 3000)  // 3초마다 실행
     public void collectStockData() {
         try {
             int endIndex = Math.min(currentBatchIndex + 20, companyNumbers.size());
@@ -116,7 +116,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    @Scheduled(fixedRate = 3000)  // 3초마다 실행
+    @Scheduled(fixedRate = 7000)  // 7초마다 실행
     public void sendAggregatedData() {
         if (!sessions.isEmpty() && !aggregatedData.isEmpty()) {
             try {
