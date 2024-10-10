@@ -41,7 +41,12 @@ const Stockchart = ({ stockGraphData }: StockChartProps) => {
   const data = reversedData.map((stock) => stock.stckClpr);
 
   const firstPrice = data[0] || 0; 
-  const standardPrice = firstPrice.toLocaleString();
+  const formatNumber = (number: number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+  
+  const standardPrice = formatNumber(firstPrice);
+  
   
 
   const chartData = {
