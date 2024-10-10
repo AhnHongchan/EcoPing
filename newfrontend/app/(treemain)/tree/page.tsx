@@ -61,7 +61,6 @@ const Tree = () => {
         setWaterPoint(response.data.count / 500); 
         // setWaterPoint(2);
       } catch (error) {
-        console.error("Failed to fetch water point data:", error);
       }
     };
 
@@ -205,14 +204,12 @@ const Tree = () => {
       const branchs = document.querySelectorAll(
         ".branch1, .branch1 .branch-inner, .branch1 .leaf, .branch1 .flower1, .branch1 .branch-inner1, .branch1 .branch-inner2, .branch1 .branch-inner3"
       );
-      console.log(branchs); 
   
       const depths = [0, 0, 0];
   
       for (let i = 0; i < branchs.length; ++i) {
         const sceneItem = sceneTree.newItem("item2" + i); 
         const className = branchs[i].className;
-        console.log(className);
   
         if (className.includes("branch-inner")) {
           ++depths[1];
@@ -245,7 +242,6 @@ const Tree = () => {
       const branchs = document.querySelectorAll(
         ".branch2, .branch2 .branch-inner, .branch2 .leaf, .branch2 .flower1, .branch2 .branch-inner1, .branch2 .branch-inner2, .branch2 .branch-inner3, .branch2 .branch-inner4"
       );
-            console.log(branchs);
       const depths = [0, 0, 0];
   
       for (let i = 0; i < branchs.length; ++i) {
@@ -278,7 +274,6 @@ const Tree = () => {
     if (level === 4) {
       const sceneTree = new Scene({}, { selector: true });
       const branchs = document.querySelectorAll(".branch3, .branch3 .branch-inner, .branch3 .leaf, .branch3 .flower1, .branch3 .branch-inner1, .branch3 .branch-inner2");
-      console.log(branchs)
       const depths = [0, 0, 0];
   
       for (let i = 0; i < branchs.length; ++i) { 
@@ -377,11 +372,9 @@ const Tree = () => {
     try {
       const response = await instance.put(`/tree/1/water`);
   
-      console.log("Watering successful:", response.data);
       const newLevel = response.data.count / 500;
       setLevel(newLevel); 
     } catch (error) {
-        console.error("Failed to send watering request:", error);
     }
   };
 
@@ -396,7 +389,6 @@ const Tree = () => {
   };
 
   // useEffect(() => {
-  //   console.log(waterPoint+ " " + level)
   // }, [level, waterPoint]);
 
   

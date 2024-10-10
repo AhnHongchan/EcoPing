@@ -29,6 +29,7 @@ const Investment = (): JSX.Element => {
   const [stockList, setStockList] = useState<StockItem[]>([]);
   const [nameList, setNameList] = useState<{ [key: string]: { name: string; ecoScore: number; ranking: number } }>({});
   const [holdList, setHoldList] = useState<{ [key: string]: { hold: number; avg: number } }>({});
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const holdListRef = useRef(holdList); // holdList를 참조하는 ref
   const { companyStoreDict, setCompanyStoreDict } = useStockStore();
   const router = useRouter();
@@ -69,16 +70,14 @@ const Investment = (): JSX.Element => {
       setNameList(companyDict);
       setHoldList(holdDict); // holdList 업데이트
     } catch (error) {
-      console.error("데이터 가져오기 중 오류:", error);
     }
   };
 
   // WebSocket 연결 및 데이터 처리 함수
   const initializeWebSocket = () => {
-    const socket = new WebSocket("wss://j11a304.p.ssafy.io/websocket/stock");
+    const socket = new WebSocket("ws://localhost:8080/websocket/stock");
 
     socket.onopen = () => {
-      console.log("WebSocket 연결 성공");
     };
 
     socket.onmessage = (event) => {
@@ -112,13 +111,12 @@ const Investment = (): JSX.Element => {
         });
 
         setStockList(updatedStockList);
+        setIsLoading(false);
       } catch (error) {
-        console.error("WebSocket 메시지 처리 중 오류:", error);
       }
     };
 
     socket.onclose = () => {
-      console.log("WebSocket 연결 종료");
     };
 
     return () => {
@@ -158,6 +156,20 @@ const Investment = (): JSX.Element => {
   const handleClick = (stock: StockItem): void => {
     router.push(`/invest/${stock.companyNumber}`);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center h-screen">
+        <p className="text-center text-2xl mb-32">모의 투자</p>
+        <div className="flex justify-center items-center">
+          <div className="spinner border-t-4 border-loginLightGreen w-8 h-8 rounded-full animate-spin mb-10"></div>
+        </div>
+        <p>실시간 주식 정보를 받아오는 중입니다</p>
+        <br />
+        <p className="text-xl font-bold text-green-600">1/100 가격으로 참여하는 모의 투자</p>
+      </div>
+    );
+  }
 
   return (
     <div>

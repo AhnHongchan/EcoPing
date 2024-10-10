@@ -1,18 +1,26 @@
-import React from 'react';
+import {useState, useEffect} from 'react';
+import instance from '@/lib/axios';
 import PieChart from '../pie-chart';
 
 const MonthlyConsumption = ():JSX.Element => {
-  const consumptions = [38000, 45000, 51000, 41000];
-  const ecoConsumptions = [8000, 14500, 20000, 13500];
-  const sumConsumptions = consumptions.reduce((acc, value) => acc + value, 0);
-  const sumEcoConsumptions = ecoConsumptions.reduce((acc, value) => acc + value, 0);
-  const lastWeekEcoAverageConsumption = 30;
-  const percentageCompare = ((sumEcoConsumptions / sumConsumptions) * 100 - lastWeekEcoAverageConsumption).toFixed(2);
+  const [monthlyData, setMonthlyData] = useState<{ totalSpend: number; ecoSpend: number } | null>(null);
 
+  const fetchMonthlyData = async () => {
+    const response = await instance.get('statistics/30');
+    const data = response.data;
+    setMonthlyData(data);
+  }
+  const monthlyConsumption = monthlyData ? monthlyData.totalSpend : 0;
+  const monthlyEcoConsumption = monthlyData ? monthlyData.ecoSpend : 0;
+  const percentageCompare = ((monthlyEcoConsumption / monthlyConsumption) * 100 - 30).toFixed(2);
+
+  useEffect(() => {
+    fetchMonthlyData();
+  }, [])
   return (
     <PieChart 
       labels = {['에코 소비', '기타 소비']}
-      data = {[sumEcoConsumptions, sumConsumptions - sumEcoConsumptions]}
+      data = {[monthlyEcoConsumption, monthlyConsumption - monthlyEcoConsumption]}
       percentageCompare = {parseFloat(percentageCompare)}
       title = "월간 에코 소비 비율"
       period = "monthly"

@@ -23,8 +23,6 @@ const FinalModal = ({onClose, stockData, onConfirm, quantity, totalPoints, myPoi
       // 거래 성공 시 결과 모달 열기
       setIsResultModalOpen(true);
     } catch (error) {
-      console.error('Transaction failed:', error);
-      // 에러 처리 로직 추가 가능
     }
   };
   

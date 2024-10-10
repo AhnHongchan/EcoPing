@@ -91,9 +91,7 @@ const Modal = ({ onClose, stockData }: ModalProps) => {
         },
         {}
       );
-      console.log('Transaction successful:', response);
     } catch (error) {
-      console.error('Error during transaction:', error);
       router.push('')
     }
   };
