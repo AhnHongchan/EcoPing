@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
 
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
+        System.out.println(accessCookie);
         return user.getEmail();
     }
 
