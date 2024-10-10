@@ -23,9 +23,6 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="font-bold text-2xl text-red-500">
-          비로그인 시 접근 불가능합니다
-        </p>
       </div>
     );
   }
