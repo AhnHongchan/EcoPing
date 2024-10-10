@@ -3,18 +3,13 @@ package com.f1veguys.sel.domain.spendinghistory.controller;
 import com.f1veguys.sel.domain.customuser.CustomUserDetails;
 import com.f1veguys.sel.domain.ecogroupratio.dto.EcoGroupRatioDto;
 import com.f1veguys.sel.domain.ecogroupratio.service.EcoGroupRatioService;
-import com.f1veguys.sel.domain.ecoratio.repository.EcoRatioRepository;
 import com.f1veguys.sel.domain.ecoratio.service.EcoRatioService;
 import com.f1veguys.sel.domain.file.service.FileService;
-import com.f1veguys.sel.domain.spendinghistory.dto.MonthlySpendingDto;
+import com.f1veguys.sel.domain.spendinghistory.dto.PeriodCompareResponse;
 import com.f1veguys.sel.domain.spendinghistory.dto.PeriodStatisticsResponse;
 import com.f1veguys.sel.domain.spendinghistory.service.SpendingHistoryService;
-import com.f1veguys.sel.domain.spendinghistory.dto.StatisticsResponse;
-import com.f1veguys.sel.domain.user.domain.User;
-import com.f1veguys.sel.domain.user.repository.UserRepository;
 import com.f1veguys.sel.dto.AgeGroup;
 import com.f1veguys.sel.dto.Gender;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,7 +31,6 @@ public class SpendingHistoryController {
     private final SpendingHistoryService spendingHistoryService;
     private final EcoRatioService ecoRatioService;
     private final EcoGroupRatioService ecoGroupRatioService;
-    private final FileService fileService;
 
 
     @GetMapping("/year")
@@ -89,7 +83,7 @@ public class SpendingHistoryController {
     public ResponseEntity<?> getPeriodStatistics(@PathVariable(value = "period") int period,
                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
         int userId = userDetails.getId();
-        PeriodStatisticsResponse periodStatistics = spendingHistoryService.getPeriodStatistics(userId, period);
+        PeriodCompareResponse periodStatistics = spendingHistoryService.getPeriodStatistics(userId, period);
         return ResponseEntity.status(HttpStatus.OK).body(periodStatistics);
     }
 
