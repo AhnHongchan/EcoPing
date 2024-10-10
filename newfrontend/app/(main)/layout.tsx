@@ -23,15 +23,11 @@ const RootLayout = ({
     <ClientLayout>
       <div className="min-h-screen flex flex-col items-center relative">
         <div className="w-full h-16 bg-loginLightGreen z-20 fixed top-0 left-0">
-          <Header />
+            <Header />
         </div>
-
-        {/* Main Content */}
-        
-          <main className="px-4 py-24 w-[400px] mx-auto relative z-10 overflow-x-auto">
-            {children}
-          </main>
-
+        <main className="px-4 py-24 w-[400px] mx-auto relative z-10 overflow-x-auto">
+          {children}
+        </main>
         <div className="w-full fixed bottom-0 left-0 z-20">
           <Navbar />
         </div>

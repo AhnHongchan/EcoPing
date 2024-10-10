@@ -4,12 +4,13 @@ import instance from '@/lib/axios';
 import PieChart from '../pie-chart';
 
 const WeeklyConsumption = (): JSX.Element => {
-  const [weeklyData, setWeeklyData] = useState<{ totalSpend: number; ecoSpend: number } | null>(null);
+  const [weeklyData, setWeeklyData] = useState<{ totalSpend: number; ecoSpend: number; previousRatio: number; } | null>(null);
 
   const fetchWeeklyData = async () => {
     try {
       const response = await instance.get('statistics/7');
       const data = response.data
+      console.log(data)
       setWeeklyData(data); 
     } catch (error) {
     }
@@ -21,7 +22,9 @@ const WeeklyConsumption = (): JSX.Element => {
 
   const weeklyConsumption = weeklyData ? weeklyData.totalSpend : 0;
   const weeklyEcoConsumption = weeklyData ? weeklyData.ecoSpend : 0;
-  const percentageCompare = ((weeklyEcoConsumption / weeklyConsumption) * 100 - 30).toFixed(2);
+  const previousRatio = weeklyData ? weeklyData.previousRatio * 100 : 0;
+  console.log(previousRatio)
+  const percentageCompare = ((weeklyEcoConsumption / weeklyConsumption) * 100 - previousRatio).toFixed(2);
 
   return (
     <PieChart 
