@@ -29,6 +29,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper;
     private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
     private final List<Map<String, Object>> aggregatedData = new ArrayList<>();
+    private final List<Map<String, Object>> lastCollectedData = new ArrayList<>();
     private List<String> companyNumbers;
     private int currentBatchIndex = 0;
 
@@ -51,6 +52,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
             initialData.put("priceDifference", "");
             initialData.put("rateDifference", "");
             aggregatedData.add(initialData);
+            lastCollectedData.add(initialData);
         }
     }
 
@@ -87,7 +89,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
     private void sendInitialStockUpdates(WebSocketSession session) {
         try {
-            String stockDataJson = objectMapper.writeValueAsString(aggregatedData);
+            String stockDataJson = objectMapper.writeValueAsString(getCurrentStockData());
             if (session.isOpen()) {
                 session.sendMessage(new TextMessage(stockDataJson));
             } else {
@@ -101,7 +103,7 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
     @Scheduled(fixedRate = 1000)  // 1초마다 실행
     public void collectStockData() {
-        if (isMarketOpen()) {  // 시장이 열려 있을 때만 데이터 수집으로 변경
+        if (isMarketOpen()) {
             try {
                 int endIndex = Math.min(currentBatchIndex + 20, companyNumbers.size());
 
@@ -116,17 +118,25 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
 
                 currentBatchIndex = (currentBatchIndex + 20) % companyNumbers.size();
 
+                // 마지막 수집된 데이터로 업데이트
+                updateLastCollectedData();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
+    private void updateLastCollectedData() {
+        lastCollectedData.clear();
+        lastCollectedData.addAll(aggregatedData);
+    }
+
     @Scheduled(fixedRate = 3000)  // 3초마다 실행
     public void sendAggregatedData() {
         if (!sessions.isEmpty() && !aggregatedData.isEmpty()) {
             try {
-                String stockDataJson = objectMapper.writeValueAsString(aggregatedData);
+                String stockDataJson = objectMapper.writeValueAsString(getCurrentStockData());
 
                 for (WebSocketSession session : sessions) {
                     if (session.isOpen()) {
@@ -146,6 +156,10 @@ public class KisWebSocketHandler extends TextWebSocketHandler {
                 e.printStackTrace();
             }
         }
+    }
+
+    private List<Map<String, Object>> getCurrentStockData() {
+        return isMarketOpen() ? aggregatedData : lastCollectedData;
     }
 
     private Map<String, Object> extractStockData(JsonNode stockData) {
