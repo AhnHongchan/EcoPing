@@ -16,6 +16,8 @@ interface MainProps<T = {}> {
   // 필요한 props가 있다면 여기 추가
 }
 
+
+
 const Main = <T extends {}>({}: MainProps<T>): JSX.Element => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
@@ -26,6 +28,7 @@ const Main = <T extends {}>({}: MainProps<T>): JSX.Element => {
       try {
         const response : AxiosResponse<Campaign[]> = await instance.get("/campaigns/ongoing")
         setCampaigns(response.data);
+        console.log(response.data)
       } catch (error) {
 
       }

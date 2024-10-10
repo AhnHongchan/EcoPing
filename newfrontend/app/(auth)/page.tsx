@@ -32,6 +32,7 @@ const Login = (): JSX.Element => {
 
     try {
       const response = await axios.post("https://j11a304.p.ssafy.io/api/api/users/login", {
+        // const response = await axios.post("http://localhost:8080/api/users/login", {
         email: id,
         password: password,
       }, {

@@ -63,6 +63,7 @@ const CampaignCarousel = ({
                       <img
                         className="w-full h-96 object-cover mb-4"
                         src={`/assets/${campaign.id}.png`}
+                        // src={`${campaign.thumbnailUrl}`}
                         alt="Campaign Image"
                       />
                       <p className="text-xl font-semibold mt-6">{campaign.title}</p>
