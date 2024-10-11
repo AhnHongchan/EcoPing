@@ -23,7 +23,6 @@ public class JwtUtil {
 
     // 주어진 사용자 이메일로 JWT 토큰을 생성
     public String generateAccessToken(String userEmail) {
-        System.out.println("util : " + userEmail);
         return Jwts.builder()
                 .setSubject(userEmail) // 토큰의 주체 설정 (사용자 이름)
                 .setIssuedAt(new Date()) // 토큰 발급 시간 설정

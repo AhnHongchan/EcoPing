@@ -9,9 +9,11 @@ public record CampaignHistoryResponse(
         int userId,
         int amount,
         LocalDateTime startDate,
-        LocalDateTime endDate
+        LocalDateTime endDate,
+        String thumbnailUrl,
+        String contentUrl
 ) {
-    public CampaignHistoryResponse(CampaignHistory campaignHistory, LocalDateTime startDate, LocalDateTime endDate) {
-        this(campaignHistory.getCampaignId(), campaignHistory.getUserId(), campaignHistory.getAmount(),startDate, endDate);
+    public CampaignHistoryResponse(CampaignHistory campaignHistory, LocalDateTime startDate, LocalDateTime endDate, String thumbnailUrl, String contentUrl) {
+        this(campaignHistory.getCampaignId(), campaignHistory.getUserId(), campaignHistory.getAmount(),startDate, endDate, thumbnailUrl, contentUrl);
     }
 }
