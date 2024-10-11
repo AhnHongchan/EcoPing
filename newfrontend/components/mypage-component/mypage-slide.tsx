@@ -15,26 +15,27 @@ interface Campaign {
     amount: number;
     startDate: string;
     endDate: string;
+    thumbnailUrl: string;  
 }
 
 const MypageSlide = () => {
     const dummyData: Campaign[] = [
-      {
-        campaignId: 0,
-        title: '더미 캠페인 1',
-        completed: false,
-        amount: 0,
-        startDate: "2024-09-09T06:59:00.910Z",
-        endDate: "2024-09-09T06:59:00.910Z",
-      },
-      {
-        campaignId: 1,
-        title: '더미 캠페인 2',
-        completed: true,
-        amount: 5000,
-        startDate: "2024-09-08T06:59:00.910Z",
-        endDate: "2024-09-08T06:59:00.910Z",
-      },
+      // {
+      //   campaignId: 0,
+      //   title: '더미 캠페인 1',
+      //   completed: false,
+      //   amount: 0,
+      //   startDate: "2024-09-09T06:59:00.910Z",
+      //   endDate: "2024-09-09T06:59:00.910Z",
+      // },
+      // {
+      //   campaignId: 1,
+      //   title: '더미 캠페인 2',
+      //   completed: true,
+      //   amount: 5000,
+      //   startDate: "2024-09-08T06:59:00.910Z",
+      //   endDate: "2024-09-08T06:59:00.910Z",
+      // },
     ];
 
     const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -46,6 +47,7 @@ const MypageSlide = () => {
     const fetchCampaigns = async () => {
       try {
         const response = await instance.get(`/campaignhistory/info`);
+        console.log(response.data)
         setCampaigns(response.data);
       } catch (error) {
       }
@@ -84,7 +86,8 @@ const MypageSlide = () => {
                 <div className="w-full overflow-hidden rounded-lg">
                   <img
                     className="w-full h-[300px] object-cover"
-                    src={`/assets/${campaign.campaignId + 1}.png`}
+                    // src={`/assets/${campaign.campaignId + 1}.png`}
+                    src={`${campaign.thumbnailUrl}`}
                     alt={`Campaign ${campaign.campaignId}`}
                   />
                 </div>
