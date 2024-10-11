@@ -4,6 +4,7 @@ interface Campaign {
   endDate: string;
   nowAmount: number;
   goalAmount: number;
+  thumbnailUrl: string;  
 }
 
 export default Campaign;
