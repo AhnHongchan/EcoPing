@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    environment {
+        // 공통 환경 변수
+        GITLAB_CREDENTIALS_ID = "haejun"
+        GITLAB_REPO = "https://lab.ssafy.com/s11-fintech-finance-sub1/S11P21A304.git"
+        BRANCH = "python"
+        DOCKER_CREDENTIALS_ID = "docker-hub-haejun"
+        SSH_CREDENTIALS_ID = "ssafy-ec2-user"
+        SERVER_IP = "13.124.102.223"
+
+        PYTHON_DOCKER_IMAGE = "seajun/python"
+        PYTHON_DOCKER_TAG = "${GIT_BRANCH.tokenize('/').last()}-${GIT_COMMIT.substring(0,7)}"
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git credentialsId: "${GITLAB_CREDENTIALS_ID}", branch: "${BRANCH}", url: "${GITLAB_REPO}"
+            }
+        }
+        stage('Python - Docker Build') {
+            steps {
+                script {
+                    docker.build("${PYTHON_DOCKER_IMAGE}:${PYTHON_DOCKER_TAG}", "python")
+                }
+            }
+        }
+
+        stage('Python - Push to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('', "${DOCKER_CREDENTIALS_ID}") {
+                        docker.image("${PYTHON_DOCKER_IMAGE}:${PYTHON_DOCKER_TAG}").push()
+                        docker.image("${PYTHON_DOCKER_IMAGE}:${PYTHON_DOCKER_TAG}").push("latest")
+                    }
+                }
+            }
+        }
+
+        // 배포 단계 (백엔드 및 프론트엔드 모두)
+        stage('Deploy') {
+            steps {
+                sshagent([SSH_CREDENTIALS_ID]) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ubuntu@${SERVER_IP} '
+                            # 백엔드 배포
+                            docker pull ${PYTHON_DOCKER_IMAGE}:${PYTHON_DOCKER_TAG}
+                            docker stop python || true
+                            docker rm python || true
+                            docker run -d --name python -p 8000:8000 ${PYTHON_DOCKER_IMAGE}:${PYTHON_DOCKER_TAG}
+                        '
+                    """
+                }
+            }
+        }
+    }
+}
