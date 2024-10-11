@@ -76,7 +76,7 @@ public class SpendingHistoryServiceImpl implements SpendingHistoryService{
         int totalAmount = spendingHistoryRepository.getTotalAmount(userId, startDateTime, endDateTime);
         int ecoAmount = spendingHistoryRepository.getEcoAmount(userId, startDateTime, endDateTime);
         int previousEco = spendingHistoryRepository.getEcoAmount(userId, previousDateTime, startDateTime);
-        int previousTotal = spendingHistoryRepository.getTotalAmount(userId, previousDateTime, endDateTime);
+        int previousTotal = spendingHistoryRepository.getTotalAmount(userId, previousDateTime, startDateTime);
         double previousRatio;
         if(previousTotal!=0) {
             previousRatio = (double) previousEco / previousTotal;
