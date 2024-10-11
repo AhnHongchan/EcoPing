@@ -39,8 +39,6 @@ public class UserController {
     // 로그인 API
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) throws JsonProcessingException { //로그인 성공시 UniqueNo 반환
-        System.out.println(loginRequest.getEmail() + " " + loginRequest.getPassword());
-        System.out.println("통과");
         String user = userService.login(loginRequest, response);
         return ResponseEntity.ok(user); //user Name
     }
