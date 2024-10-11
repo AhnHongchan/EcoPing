@@ -100,7 +100,6 @@ public class StockServiceImpl implements StockService {
             }
         } else {
             // output2가 비어있거나 배열이 아닌 경우 로그 출력
-            System.out.println("output2 데이터가 없습니다. 응답이 비어있거나 형식이 잘못되었습니다.");
         }
 
         return chartDataList;

@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService {
         refreshCookie.setMaxAge(60*60*24*3);
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
-        System.out.println(accessCookie);
         return user.getEmail();
     }
 
