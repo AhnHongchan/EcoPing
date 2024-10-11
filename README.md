@@ -28,6 +28,8 @@ Fin-Tech와 친환경적 요소를 결합한 프로젝트입니다.
 
 ### ERD<hr>
 
+<img src="./exec/img/erd.png" alt="erd" width="50%">
+
 ### 주요 기술<hr>
 
 **개발 환경**

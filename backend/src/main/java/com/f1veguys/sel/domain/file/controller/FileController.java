@@ -23,7 +23,6 @@ public class FileController {
     @Operation(summary = "이미지 업로드", description = "이미지 파일을 DB에 업로드합니다.")
     public ResponseEntity<?> upload(@RequestPart("file") MultipartFile file,
                                     @RequestParam("campaignId") int campaignId) throws Exception {
-        System.out.println("file:" + file.getOriginalFilename());
         Campaign campaign = campaignRepository.findById(campaignId).orElse(null);
         return ResponseEntity.ok(fileService.saveFile(file, campaign));
     }

@@ -7,14 +7,15 @@ import moment from 'moment';
 import ProgressLine from './../../../components/ProgressLine';
 import { BiSearch, BiUser, BiDotsVerticalRounded } from 'react-icons/bi';
 import instance from "@/lib/axios";
+import Campaign from "../../types/campaign";
 
-interface Campaign {
-  id: number;
-  title: string;
-  endDate: string;
-  nowAmount: number;
-  goalAmount: number;
-}
+// interface Campaign {
+//   id: number;
+//   title: string;
+//   endDate: string;
+//   nowAmount: number;
+//   goalAmount: number;
+// }
 
 const CampaignList = () => {
   const router = useRouter();
@@ -75,7 +76,8 @@ const CampaignList = () => {
                     <div className="flex flex-col items-center text-gray-800">
                       <img
                         className="w-full h-60 object-cover rounded-md"
-                        src={`/assets/${campaign.id}.png`}
+                        // src={`/assets/${campaign.id}.png`}
+                        src={`${campaign.thumbnailUrl}`}
                         alt={campaign.title}
                       />
                       <div className="w-full mt-2">

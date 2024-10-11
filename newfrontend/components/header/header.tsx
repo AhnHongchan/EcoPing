@@ -16,7 +16,7 @@ const menuItems = [
   { href: "/campaignList", icon: BiSolidParty, text: "친환경 캠페인 보기" },
   { href: "/calendar", icon: BiCalendarCheck, text: "출석체크 하기" },
   { href: "/tree", icon: BiSolidTree, text: "나무 키우기" },
-  { href: "/todayquiz", icon: BiSolidSchool, text: "오늘의 퀴즈" },
+  // { href: "/todayquiz", icon: BiSolidSchool, text: "오늘의 퀴즈" },
   { href: "/invest", icon: BiSolidDollarCircle, text: "모의 투자"}
 ];
 

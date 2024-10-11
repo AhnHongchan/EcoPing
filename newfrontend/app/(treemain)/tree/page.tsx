@@ -5,6 +5,8 @@ import "./Tree.css";
 import Scene from "scenejs"; 
 import Modal from './modal';
 import Modal2 from './modal2';
+import Modal3 from './modal3';
+import Modal4 from './modal4';
 
 import {BiCloudRain , BiGift, BiBookOpen, BiInfoCircle } from "react-icons/bi";
 import { ToastContainer, toast } from 'react-toastify';
@@ -18,7 +20,9 @@ const Tree = () => {
   const [isClient, setIsClient] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModal2Open, setIsModal2Open] = useState(false);
-
+  const [isDogamModalOpen, setIsDogamModalOpen] = useState(false);
+  const [isNewTreeModalOpen, setIsNewTreeModalOpen] = useState(false);
+  const [newTreeNumber, setNewTreeNumber] = useState<number | null>(null); 
 
   const openModal = () => {
     setIsModalOpen(true); 
@@ -28,6 +32,23 @@ const Tree = () => {
     setIsModalOpen(false); 
   };
 
+
+  const openDogamModal = () => {
+    setIsDogamModalOpen(true); 
+  };
+
+  const closeDogamModal = () => {
+    setIsDogamModalOpen(false); 
+  };
+
+  const openNewTreeModal = () => {
+    setIsNewTreeModalOpen(true); 
+  };
+
+  const closeNewTreeModal = () => {
+    setIsNewTreeModalOpen(false); 
+  };
+  
   
 
   const openModal2 = () => {
@@ -68,59 +89,6 @@ const Tree = () => {
     fetchWaterPoint(); 
   }, []);
   
-
-  // useEffect(() => {
-  //   const sceneTree = new Scene({
-  //     ".tree": {
-  //       0: { transform: "scale(0)" },
-  //       1.5: { transform: "scale(1)" }
-  //     },
-  //     ".background>.flower": function (i: any) {
-  //       return {
-  //         0: { opacity: 0, transform: "translateY(0px) rotate(0deg)" },
-  //         1: { opacity: 1 },
-  //         4: { opacity: 1 },
-  //         5: { opacity: 0, transform: "translateY(300px) rotate(360deg)" },
-  //         options: {
-  //           delay: 7 + i,
-  //           iterationCount: "infinite"
-  //         },
-  //       };
-  //     },
-  //   }, {
-  //     selector: true
-  //   });
-
-  //   const branchs = document.querySelectorAll(".tree .branch, .tree .leaf, .tree .flower1");
-  //   let depths = [0, 0, 0];
-
-  //   for (let i = 0; i < branchs.length; ++i) {
-  //     const sceneItem = sceneTree.newItem("item" + i);
-  //     const className = branchs[i].className;
-
-  //     if (className.includes("branch-inner")) {
-  //       ++depths[1];
-  //       depths[2] = 0;
-  //     } else if (className.includes("branch")) {
-  //       ++depths[0];
-  //       depths[1] = 0;
-  //       depths[2] = 0;
-  //     } else if (className.includes("leaf") || className.includes("flower1")) {
-  //       ++depths[2];
-  //     }
-      
-  //     sceneItem.setElement(branchs[i]);
-  //     sceneItem.setCSS(0, ["transform"]);
-
-  //     const time = 1 + depths[0] * 0.5 + depths[1] * 0.5 + depths[2] * 0.5;
-  //     sceneItem.set(time, "transform", "scale", 0);
-  //     sceneItem.set(time + 1, "transform", "scale", 1);
-  //   }
-
-  //   sceneTree.playCSS();
-  // }, []);
-
-
   useEffect(() => {
     if (level < waterPoint) {
       if(level === 0){
@@ -369,16 +337,23 @@ const Tree = () => {
     }
   }, [level]);
 
+
   const handleButtonClick = async () => {
     try {
       const response = await instance.put(`/tree/water`);
+      const { count, badgeNum, newTree } = response.data;
   
       toast.success("물을 주었습니다.");
-      const newLevel = response.data.count / 500;
+      const newLevel = count / 500;
       setLevel(newLevel); 
+  
+      if (newTree) {
+        setNewTreeNumber(badgeNum);  // treeNum 상태 저장
+        setTimeout(() => openNewTreeModal(), 0);  // Modal4 열기
+      }      
     } catch (error) {
-        console.error("Failed to send watering request:", error);
-        toast.error("포인트가 부족합니다.");
+      console.error("Failed to send watering request:", error);
+      toast.error("포인트가 부족합니다.");
     }
   };
 
@@ -638,7 +613,7 @@ const Tree = () => {
       <button className="info-button" onClick={openModal2}>
       <BiInfoCircle />
       </button>
-      <button className="dogam-button">
+      <button className="dogam-button" onClick={openDogamModal}>
       <BiBookOpen />
       </button>
       {level >= 6 || waterPoint >= 6 ? (
@@ -652,6 +627,8 @@ const Tree = () => {
       </div>
       {isModalOpen && <Modal onClose={closeModal} onResetTree={resetTree} />}
       {isModal2Open && <Modal2 onClose={closeModal2} />}
+      {isDogamModalOpen && <Modal3 onClose={closeDogamModal} />}
+      {isNewTreeModalOpen && <Modal4 onClose={closeNewTreeModal} treeNum={newTreeNumber} />}
     </div>
   );
 };

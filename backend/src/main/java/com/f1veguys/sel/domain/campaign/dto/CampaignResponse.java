@@ -11,7 +11,9 @@ public record CampaignResponse(
         int nowAmount,
         boolean completed,
         LocalDateTime startDate,
-        LocalDateTime endDate
+        LocalDateTime endDate,
+        String thumbnailUrl,
+        String contentUrl
 ) {
     public CampaignResponse(Campaign campaign) {
         this(
@@ -21,7 +23,9 @@ public record CampaignResponse(
                 campaign.getNowAmount(),
                 campaign.isCompleted(),
                 campaign.getStartDate(),
-                campaign.getEndDate()
+                campaign.getEndDate(),
+                campaign.getThumbnailUrl(),
+                campaign.getContentUrl()
         );
     }
 }
