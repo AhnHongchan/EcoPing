@@ -1,10 +1,4 @@
-export const metadata = {
-  title: 'EcoPing',
-  description: 'Eco-friendly card app',
-  manifest: '/manifest.json',
-  icons: {
-    icon: 'icons/icon.png'
-  },
+ 
 };
 
 const GlobalLayout = ({
