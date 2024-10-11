@@ -33,7 +33,7 @@ const Navbar = (): JSX.Element => {
   ];
 
   return (
-    <header className="fixed bottom-0 w-full bg-mainGreen flex justify-around items-center h-16 border-t">
+    <header className="fixed bottom-0 w-full bg-loginLightGreen flex justify-around items-center h-16 border-t">
       {navItems.map((item) => (
         <NavItem
           key={item.href}

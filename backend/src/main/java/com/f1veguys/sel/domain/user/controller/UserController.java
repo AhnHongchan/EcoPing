@@ -8,6 +8,8 @@ import com.f1veguys.sel.dto.LoginRequest;
 import com.f1veguys.sel.domain.user.domain.User;
 import com.f1veguys.sel.domain.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,6 @@ public class UserController {
     // 회원가입 API
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) throws JsonProcessingException {
-        System.out.println("start");
         userService.register(user);
         int userId = user.getId();
         Points points = pointsService.makePoints(userId);
@@ -37,8 +38,17 @@ public class UserController {
 
     // 로그인 API
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) { //로그인 성공시 UniqueNo 반환
-        System.out.println("통과");
-        return userService.login(loginRequest);
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) throws JsonProcessingException { //로그인 성공시 UniqueNo 반환
+        String user = userService.login(loginRequest, response);
+        return ResponseEntity.ok(user); //user Name
+    }
+
+    // 로그인 API
+    @GetMapping("/emailExist")
+    public ResponseEntity<?> emailExist(@RequestParam(value = "email") String email) {
+        if(userService.emailExist(email)){
+            return ResponseEntity.status(409).body("email already exist");
+        }
+        return ResponseEntity.ok("email is available");
     }
 }

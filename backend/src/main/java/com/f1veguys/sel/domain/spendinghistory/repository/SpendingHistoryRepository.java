@@ -40,4 +40,19 @@ public interface SpendingHistoryRepository extends JpaRepository<SpendingHistory
             "WHERE sh.spendTime >= :startDate AND sh.spendTime < :endDate")
     List<Integer[]> calculateAvgEco(@Param("startDate") LocalDateTime startDate,
                                          @Param("endDate") LocalDateTime endDate);
+
+
+    @Query(value = "SELECT " +
+            "YEAR(sh.spend_time) AS year, " +
+            "MONTH(sh.spend_time) AS month, " +
+            "COALESCE(SUM(sh.amount), 0) AS totalAmount, " +
+            "COALESCE(SUM(CASE WHEN sh.is_eco = true THEN sh.amount ELSE 0 END), 0) AS ecoAmount " +
+            "FROM spending_history sh " +
+            "WHERE sh.users_id = :userId " +
+            "AND sh.spend_time >= :startDate AND sh.spend_time < :endDate " +
+            "GROUP BY YEAR(sh.spend_time), MONTH(sh.spend_time) " +
+            "ORDER BY YEAR(sh.spend_time), MONTH(sh.spend_time)", nativeQuery = true)
+    List<Object[]> getMonthlySpendingData(@Param("userId") int userId,
+                                                    @Param("startDate") LocalDateTime startDate,
+                                                    @Param("endDate") LocalDateTime endDate);
 }

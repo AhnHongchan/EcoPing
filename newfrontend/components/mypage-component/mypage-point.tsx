@@ -10,7 +10,6 @@ interface MypagePointProps {
 
 const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
   const router = useRouter();
-  const dummyUser: number = 1;  
 
   const [points, setPoints] = useState<number | null>(null); 
   const [loading, setLoading] = useState<boolean>(true); 
@@ -18,9 +17,7 @@ const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
   const fetchPoint = async () => {
     try {
       const response = await instance.get(`/points/mypoint`, {
-        headers: {
-          userId: dummyUser, 
-        },
+
       });
       setPoints(response.data); 
     } catch (error) {
@@ -44,7 +41,7 @@ const MypagePoint = ({ showHistoryButton = true }: MypagePointProps) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center">
-        <div className="spinner border-t-4 border-blue-500 w-8 h-8 rounded-full animate-spin"></div>
+        <div className="spinner border-t-4 border-loginDarkGreen w-8 h-8 rounded-full animate-spin mt-20 mb-20"></div>
       </div>
     );
   }

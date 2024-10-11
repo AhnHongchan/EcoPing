@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import instance from "@/lib/axios";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -30,22 +31,39 @@ interface LineChartProps {
 
 const LineChart = ({ totalSpendData, ecoSpendData }: LineChartProps) => {
   const [showRatio, setShowRatio] = useState(false);
+  const [ratio, setRatio] = useState([]);
   const mainGreen = "#9bc2a0";
-  const lightWalnutBrown = "#A68A6D";
+  const lightWalnutBrown = "#9C8772";
   const coralRed = "#e57373";
 
+  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  const currentMonth = new Date().getMonth();
+  const lastOneYear = [];
+
+  for (let i = 0; i < 12; i++) {
+    lastOneYear.push(months[(currentMonth + i) % 12]);
+  } 
+
   // 에코 소비 비율 계산
-  const ecoSpendRatioData = ecoSpendData.map(
-    (ecoSpend, index) => (ecoSpend / totalSpendData[index]) * 100
-  );
+  const fetchRatioData = async () => {
+    try {
+      const response = await instance.get('statistics/ratio');
+      setRatio(response.data);
+    } catch (error) {
+    }
+  };
+
+  useEffect(() => {
+    fetchRatioData();
+  }, []);
 
   const lineChartData = {
-    labels: ["9", "10", "11", "12", "1", "2", "3", "4", "5", "6", "7", "8"], // 짧은 레이블 사용
+    labels: lastOneYear, // 짧은 레이블 사용
     datasets: showRatio
       ? [
           {
             label: "에코 소비 비율 (%)",
-            data: ecoSpendRatioData,
+            data: ratio,
             borderColor: coralRed,
             backgroundColor: coralRed,
             tension: 0.4,
@@ -167,7 +185,7 @@ const LineChart = ({ totalSpendData, ecoSpendData }: LineChartProps) => {
             className={`px-4 py-2 rounded shadow-md ${
               isActive
                 ? "bg-lightWalnutBrown text-white font-bold"
-                : "bg-mainGreen text-black font-extrabold"
+                : "bg-loginLightGreen text-mainDarkGreen font-extrabold"
             }`}
           >
             {label}

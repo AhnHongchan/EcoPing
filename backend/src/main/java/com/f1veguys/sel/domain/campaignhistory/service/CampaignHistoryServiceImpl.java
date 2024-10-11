@@ -93,7 +93,8 @@ public class CampaignHistoryServiceImpl implements CampaignHistoryService {
                     .orElseThrow(CampaignNotFoundException::new);
             LocalDateTime startDate = campaign.getStartDate();
             LocalDateTime endDate = campaign.getEndDate();
-            return new CampaignHistoryResponse(campaignHistory, startDate, endDate);
+            return new CampaignHistoryResponse(campaignHistory, startDate, endDate,
+                    campaign.getThumbnailUrl(), campaign.getContentUrl());
         }).collect(Collectors.toList());
     }
 }

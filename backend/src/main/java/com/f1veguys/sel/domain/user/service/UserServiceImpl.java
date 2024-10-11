@@ -1,9 +1,11 @@
 package com.f1veguys.sel.domain.user.service;
-import com.f1veguys.sel.domain.points.domain.Points;
 import com.f1veguys.sel.domain.points.repository.PointsRepository;
 import com.f1veguys.sel.domain.user.domain.User;
+import com.f1veguys.sel.dto.AgeGroup;
 import com.f1veguys.sel.global.util.HeaderUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.f1veguys.sel.global.util.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -11,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.f1veguys.sel.dto.LoginRequest;
 import com.f1veguys.sel.domain.user.repository.UserRepository;
-import com.f1veguys.sel.global.util.UniqueNoGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -27,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private String baseUrl;
     @Value("${api.key}")
     private String apiKey;
-
+    private final JwtUtil jwtUtil;
     private final HeaderUtil headerUtil;
     @Autowired
     private RestTemplate restTemplate;
@@ -42,64 +44,62 @@ public class UserServiceImpl implements UserService {
         // 생성 날짜 설정
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreatedDate(LocalDateTime.now());
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("apiKey", apiKey);
-        requestBody.put("userId", user.getEmail());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-
-        String url = baseUrl + "member/";
-        System.out.println(url);
-
-        ResponseEntity<Map> response = restTemplate.exchange(
-                url,
-                HttpMethod.POST,
-                entity,
-                Map.class
-        );
-
-        Map<String, Object> responseBody = response.getBody();
-        String userKey = (String) responseBody.get("userKey");
-        user.setApiId(userKey);
-        System.out.println(userKey);
-
-        url = baseUrl + "edu/demandDeposit/createDemandDepositAccount";
-        String accountTypeUniqueNo = "088-1-44755da19ce64f";
-        String apiName = "createDemandDepositAccount";
-        Map<String, String> headerInfo = headerUtil.createHeaderUser(apiName, apiName, userKey);
-        System.out.println(url);
-        requestBody = new HashMap<>();
-        requestBody.put("Header", headerInfo);
-        requestBody.put("accountTypeUniqueNo", accountTypeUniqueNo);
-
-        entity = new HttpEntity<>(requestBody, headers);
-
-        response = restTemplate.exchange(
-                url,
-                HttpMethod.POST,
-                entity,
-                Map.class
-        );
-
-        responseBody = response.getBody();
-        Map<String, Object> rec = (Map<String, Object>) responseBody.get("REC");
-
-        String accountNo = (String) rec.get("accountNo");
-        System.out.println(accountNo);
-        user.setAccountNum(accountNo);
+        int age = LocalDateTime.now().getYear()-user.getBirthDate().getYear();
+        user.setAgeGroup(determineAgeGroup(age));
         // 회원 정보 저장
         return userRepository.save(user);
     }
 
     @Override
-    public String login(LoginRequest loginRequest) {
+    public String login(LoginRequest loginRequest, HttpServletResponse response) {
         // 이메일로 사용자 찾기
-        userRepository.findByEmail(loginRequest.getEmail())
+        User user = userRepository.findByEmail(loginRequest.getEmail())
                 .filter(u -> passwordEncoder.matches(loginRequest.getPassword(), u.getPassword())) // 비밀번호 비교
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+        Cookie accessCookie = new Cookie("accessToken", jwtUtil.generateAccessToken(user.getEmail()));
+        //accessCookie.setHttpOnly(true);
+        //accessCookie.setSecure(true);
+        accessCookie.setPath("/");
+        accessCookie.setMaxAge(60*60*12);
+        Cookie refreshCookie = new Cookie("refreshToken", jwtUtil.generateRefreshToken(user.getEmail()));
+        //refreshCookie.setHttpOnly(true);
+        //refreshCookie.setSecure(true);
+        refreshCookie.setPath("/");
+        refreshCookie.setMaxAge(60*60*24*3);
+        response.addCookie(accessCookie);
+        response.addCookie(refreshCookie);
+        return user.getEmail();
+    }
 
-        return UniqueNoGenerator.generateUniqueNo();
+    @Override
+    public boolean emailExist(String email) {
+        return userRepository.findByEmail(email).isPresent(); //있으면 true, 없으면 false
+    }
+
+    @Override
+    public AgeGroup determineAgeGroup(int age) {
+        if (age < 20) {
+            return AgeGroup.UNDER_20;
+        } else if (age < 30) {
+            return AgeGroup.TWENTIES;
+        } else if (age < 40) {
+            return AgeGroup.THIRTIES;
+        } else if (age < 50) {
+            return AgeGroup.FORTIES;
+        } else if (age < 60) {
+            return AgeGroup.FIFTIES;
+        } else if (age < 70) {
+            return AgeGroup.SIXTIES;
+        } else if (age < 80) {
+            return AgeGroup.SEVENTIES;
+        } else {
+            return AgeGroup.OVER_80;
+        }
+    }
+
+
+    @Override
+    public Optional<User> getUserById(int userId) {
+        return userRepository.findById(userId);
     }
 }

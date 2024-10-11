@@ -10,5 +10,7 @@ public interface BadgeService {
 
     List<Badge> addBadge(int userId, int type);
 
+    boolean isNewBadge(int userId, int badgeId);
+
 
 }

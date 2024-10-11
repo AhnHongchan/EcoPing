@@ -33,7 +33,7 @@ const CreateAccount = () => {
   const genderOptions = [
     { label: "남", value: "male" },
     { label: "여", value: "female" },
-    { label: "비공개", value: "private" },
+    { label: "비공개", value: "unknown" },
   ];
 
   const checkEmailDuplication = async () => {
@@ -127,7 +127,7 @@ const CreateAccount = () => {
         email,
         password,
         phoneNumber,
-      });
+      }); 
   
       if (response.status === 200) {
         alert("회원 가입이 성공적으로 완료되었습니다!");
