@@ -1,4 +1,10 @@
- 
+export const metadata = {
+  title: "EcoPing",
+  description: "Eco-friendly card app",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "icons/icon.png",
+  },
 };
 
 const GlobalLayout = ({
@@ -14,11 +20,14 @@ const GlobalLayout = ({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-white" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+      <body
+        className="bg-white"
+        style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
+      >
         {children}
       </body>
     </html>
   );
-}
+};
 
 export default GlobalLayout;
